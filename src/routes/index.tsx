@@ -1,15 +1,14 @@
-import { Button, Icon } from '@mui/material';
 import { Navigate, Route, Routes } from 'react-router';
-import { useDrawerContext } from '../shared/Contexts';
+
+import { PaginaInicial } from '../pages/PaginaInicial';
 
 export const AppRoutes = () => {
-  const {toggleDrawerOpen} = useDrawerContext();
 
   return (
     <Routes>
-      <Route path='/menu' element={<Button  variant='contained' onClick={toggleDrawerOpen}><Icon>menu</Icon></Button>}/>
+      <Route path='/inicio' element={<PaginaInicial/>}/>
 
-      <Route path='*' element={<Navigate to={'/menu'}/>}/>
+      <Route path='*' element={<Navigate to={'/inicio'}/>}/>
 
     </Routes>
   );

@@ -1,8 +1,9 @@
 import { BrowserRouter } from 'react-router-dom';
-import { AppRoutes } from './routes';
+
 import { AppThemeProvider } from './shared/Contexts/ThemeContext';
 import { DrawerProvider } from './shared/Contexts';
-import { MenuLateral } from './shared/Components/menu-lateral/MenuLateral';
+import { MenuLateral } from './shared/Components';
+import { AppRoutes } from './routes';
 
 function App() {
   return (
