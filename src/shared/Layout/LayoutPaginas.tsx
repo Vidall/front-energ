@@ -14,49 +14,40 @@ export const LayoutPaginas: React.FC<IDetalheProps> = ({ titulo, children }) => 
   const {toggleDrawerOpen } = useDrawerContext();
 
   return (
-    <Box 
-      gap={2}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh'
-      }}
-    >
-      <Box padding={1}>
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          { smDown && (
-            <Button variant="contained" onClick={toggleDrawerOpen}>
-              <Icon>menu</Icon>
-            </Button>
-          )
 
-          }
+    <Box padding={1}  display={'flex'} flexDirection={'column'} gap={1} >
+      <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
+        { smDown && (
+          <Button variant="contained" onClick={toggleDrawerOpen}>
+            <Icon>menu</Icon>
+          </Button>
+        )
 
-          <Box flex={1} display="flex" justifyContent="end">
-            <Card sx={{ maxWidth: 90, border: 'none' }} variant="outlined">
-              <CardMedia
-                sx={{
-                  height: 30,
-                }}
-                component="img"
-                image="/logoEnerg.png"
-                alt="Logo"
-              />
-            </Card>
-          </Box>
+        }
+
+        <Box flex={1} display="flex" justifyContent="end">
+          <Card sx={{ maxWidth: 90, border: 'none' }} variant="outlined">
+            <CardMedia
+              sx={{
+                height: 30,
+              }}
+              component="img"
+              image="/logoEnerg.png"
+              alt="Logo"
+            />
+          </Card>
         </Box>
-
-        <TituloPagina titulo={titulo}/>
-
-        <Box flex={1} height={'80vh'} overflow={'auto'} >
-          
-          {children}
-          
-        </Box>
-
       </Box>
-      
-      <Box
+
+      <TituloPagina titulo={titulo}/>
+
+      <Box flex={1} overflow={'auto'} height={'85vh'}>
+        
+        {children}
+        
+      </Box>
+
+      {/* <Box
         component="footer"
         sx={{
           mt: 'auto',
@@ -66,8 +57,9 @@ export const LayoutPaginas: React.FC<IDetalheProps> = ({ titulo, children }) => 
         }}
       >
         footer
-      </Box>
+      </Box> */}
 
     </Box>
+
   );
 };
