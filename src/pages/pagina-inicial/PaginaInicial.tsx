@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 
-import { BotaoMenu } from '../shared/Components';
-import { LayoutPaginas } from '../shared/Layout';
+import { BotaoMenu } from '../../shared/Components';
+import { LayoutPaginas } from '../../shared/Layout';
 
 export const PaginaInicial = () => {
   return (

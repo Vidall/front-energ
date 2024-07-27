@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router';
 
-import { PaginaInicial } from '../pages/PaginaInicial';
+import { PaginaInicial } from '../pages';
+import { PaginaCliente } from '../pages/pagina-clientes/PaginaCliente';
 
 export const AppRoutes = () => {
 
@@ -10,7 +11,7 @@ export const AppRoutes = () => {
 
       <Route path='/ordens-de-servicos' element={<>ola</>}/>
 
-      <Route path='/clientes' element={<>ola</>}/>
+      <Route path='/clientes' element={<PaginaCliente/>}/>
 
       <Route path='/tecnicos' element={<>ola</>}/>
 
