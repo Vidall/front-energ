@@ -8,7 +8,6 @@ export const PaginaInicial = () => {
     <LayoutPaginas 
       titulo='seja bem vindo'
     >
-      
       <Grid container  >
 
         <Grid container item justifyContent={'center'}>

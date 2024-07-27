@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Card, CardMedia, Icon, useMediaQuery, Theme } from '@mui/material';
+import { Box, Button, Card, CardMedia, Icon, useMediaQuery, Theme, Typography } from '@mui/material';
 import { useDrawerContext } from '../Contexts';
 import { TituloPagina } from '../Components';
 
@@ -14,22 +14,18 @@ export const LayoutPaginas: React.FC<IDetalheProps> = ({ titulo, children }) => 
   const {toggleDrawerOpen } = useDrawerContext();
 
   return (
-
-    <Box padding={1}  display={'flex'} flexDirection={'column'} gap={1} >
-      <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
+    <Box display={'flex'} flexDirection={'column'} gap={1} height={'100vh'}>
+      <Box display={'flex'} alignItems={'center'} padding={1}>
         { smDown && (
           <Button variant="contained" onClick={toggleDrawerOpen}>
             <Icon>menu</Icon>
           </Button>
-        )
-
-        }
-
+        )}
         <Box flex={1} display="flex" justifyContent="end">
-          <Card sx={{ maxWidth: 90, border: 'none' }} variant="outlined">
+          <Card sx={{ maxWidth: 90, border: 'none', bgcolor:'transparent'}} variant="outlined">
             <CardMedia
               sx={{
-                height: 30,
+                height: 30      
               }}
               component="img"
               image="/logoEnerg.png"
@@ -39,27 +35,23 @@ export const LayoutPaginas: React.FC<IDetalheProps> = ({ titulo, children }) => 
         </Box>
       </Box>
 
-      <TituloPagina titulo={titulo}/>
-
-      <Box flex={1} overflow={'auto'} height={'85vh'}>
-        
-        {children}
-        
+      <Box padding={1}>
+        <TituloPagina titulo={titulo}/>
       </Box>
 
-      {/* <Box
+      <Box flex={1} overflow={'auto'} padding={1}>
+        {children}
+      </Box>
+
+      <Box
         component="footer"
-        sx={{
-          mt: 'auto',
-          py: 2,
-          textAlign: 'center',
-          backgroundColor: '#f5f5f5',
-        }}
+        textAlign={'center'}
+        padding={1}
       >
-        footer
-      </Box> */}
-
+        <Typography>
+          CopyRight©2024 - Luan vidal & Pedro Ivo
+        </Typography>
+      </Box>
     </Box>
-
   );
 };
