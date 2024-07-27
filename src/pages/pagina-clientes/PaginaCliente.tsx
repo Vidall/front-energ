@@ -1,94 +1,99 @@
-import { BottomNavigation, BottomNavigationAction, Box, Button, Icon, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
-import { useState } from 'react';
+import { LinearProgress, Pagination } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
 
+import { FerramentaPesquisar } from '../../shared/Components/ferramentas-pesquisar/FerramentaPesquisar';
+import { PessoaJuridicaService } from '../../shared/Service/api/clientes/PessoaJuridicaService';
+import { PessoaFisicaService } from '../../shared/Service/api/clientes/PessoaFisicaService';
+import { FerramentaNavegacao, FerramentaTabela } from '../../shared/Components';
+import { IPessoaFisica } from '../../shared/Service/api/models/Clientes';
+import { Environment } from '../../shared/Enviroment';
 import { LayoutPaginas } from '../../shared/Layout';
+import { useSearchParams } from 'react-router-dom';
+import { useDebounce } from 'use-debounce';
+import { VForm } from '../../shared/forms/VForm';
 
 export const PaginaCliente: React.FC = () => {
-  const [value, setValue] = useState(0);
+  const [searchParms, setSearchParams] = useSearchParams();
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [rows, setRows] = useState<IPessoaFisica[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoad, setIsload] = useState(true);
+  
+  const tipo = searchParms.get('tipo')||'';
+  const busca = useMemo(() => searchParms.get('busca') || '', [searchParms]);
+  const [debouncedBusca] = useDebounce(busca, 1000);
 
-  function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-  ) {
-    return { name, calories, fat, carbs, protein };
-  }
+  useEffect(() => {
+    setIsload(true);
 
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
+    if (tipo === 'Fisico') {
+      PessoaFisicaService.getAll(debouncedBusca, Number(searchParms.get('page') || 1))
+        .then(result => {
+          if (result instanceof Error) {
+            alert(result.message);
+            return;
+          }
+
+          setRows(result.data);
+          setTotalCount(result.totalCount);
+          setIsload(false);
+        });
+    }else if (tipo === 'Juridico') {
+      PessoaJuridicaService.getAll(debouncedBusca, Number(searchParms.get('page') || 1))
+        .then(result => {
+          if (result instanceof Error) {
+            alert(result.message);
+            return;
+          }
+
+          setRows(result.data);
+          setTotalCount(result.totalCount);
+          setIsload(false);
+        });
+    }
+    
+  }, [debouncedBusca, currentPage, tipo]);
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+    // Atualizar os parâmetros de pesquisa ou fazer outra ação necessária
+    setSearchParams({ ...Object.fromEntries(searchParms.entries()), page: value.toString() }, { replace: true });
+    setIsload(false);
+  };
 
   return (
     <LayoutPaginas titulo="Área do Cliente">
-      <Box>
-        <BottomNavigation
-          showLabels
-          value={value}  
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-        >
-          <BottomNavigationAction label={'Fisica'}/>
-          <BottomNavigationAction label={'Juridica'}/>
-          <BottomNavigationAction label={'Cadastrar'}/>
-        </BottomNavigation>
-      </Box>
+      { (tipo !== 'Cadastrar') && (
+        <FerramentaPesquisar textoDaBusca={busca} aoMudarTextoDaBusca={texto => setSearchParams({ ...Object.fromEntries(searchParms.entries()), busca: texto }, { replace: true })}/>
+      )
 
-      <Paper component={Box} display={'flex'} flexDirection={'row'}>
-        <Box >
-          <TextField id="outlined-basic" label="Pesquisar" variant="outlined" />  
-        </Box>
+      }
+      <FerramentaNavegacao listaNavegacao={['Fisico', 'Juridico', 'Cadastrar']}/>
+      { (tipo === 'Fisico') && (
+        <FerramentaTabela cabecalho={['nome', 'cpf', 'email', 'telefone']} dados={rows}/>
+      )
+      }
 
-        <Box flex={1} display={'flex'} justifyContent={'end'}>
-          <Button variant='contained'>
-            Buscar
-          </Button>
-        </Box>
-      </Paper>
+      { (tipo === 'Juridico') && (
+        <FerramentaTabela cabecalho={['nome', 'cnpj', 'email', 'telefone']} dados={rows}/>
+      )
+      }
+      {
+        (tipo !== 'Cadastrar') && (
+          <Pagination
+            count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHAS)}
+            page={currentPage}
+            onChange={handlePageChange}
+          />
+        )
+      }
 
-      <Paper component={Box} margin={1}>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>                
-                <TableCell></TableCell>
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell align="right" ><Icon>search</Icon></TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right" >{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell>
-                  <TableCell align="right">{row.protein}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-
-      <Pagination count={10} />
+      { (isLoad && (tipo !== 'Cadastrar')) && (
+        <LinearProgress/>
+      )}
+      
+      <VForm/>
 
     </LayoutPaginas>
   );
 };
-
