@@ -1,21 +1,21 @@
 import { LinearProgress, Pagination } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 import { FerramentaPesquisar } from '../../shared/Components/ferramentas-pesquisar/FerramentaPesquisar';
 import { PessoaJuridicaService } from '../../shared/Service/api/clientes/PessoaJuridicaService';
 import { PessoaFisicaService } from '../../shared/Service/api/clientes/PessoaFisicaService';
+import { IPessoaFisica, IPessoaJuridica } from '../../shared/Service/api/models/Clientes';
 import { FerramentaNavegacao, FerramentaTabela } from '../../shared/Components';
-import { IPessoaFisica } from '../../shared/Service/api/models/Clientes';
+import { VFormCliente } from '../../shared/forms/VFormCliente';
 import { Environment } from '../../shared/Enviroment';
 import { LayoutPaginas } from '../../shared/Layout';
 import { useSearchParams } from 'react-router-dom';
-import { useDebounce } from 'use-debounce';
-import { VForm } from '../../shared/forms/VForm';
 
 export const PaginaCliente: React.FC = () => {
   const [searchParms, setSearchParams] = useSearchParams();
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [rows, setRows] = useState<IPessoaFisica[]>([]);
+  const [rows, setRows] = useState<IPessoaFisica[] | IPessoaJuridica[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoad, setIsload] = useState(true);
   
@@ -91,8 +91,12 @@ export const PaginaCliente: React.FC = () => {
       { (isLoad && (tipo !== 'Cadastrar')) && (
         <LinearProgress/>
       )}
-      
-      <VForm/>
+
+      { tipo === 'Cadastrar' && (
+        <VFormCliente/>
+      )
+
+      }
 
     </LayoutPaginas>
   );

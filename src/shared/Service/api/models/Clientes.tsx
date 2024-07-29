@@ -1,4 +1,4 @@
-export interface Endereco {
+export interface IEndereco {
   rua: string,
   numero: number,
   bairro: string,
@@ -8,23 +8,39 @@ export interface Endereco {
 export interface IPessoaFisica {
   id?: number
   nome: string,
-  endereco: Endereco | string,
+  endereco: IEndereco,
   email: string,
   cpf: string,
   tipo: 'fisico',
   nomeContato: string,
   possuiContrato: boolean,
-  tipoContrato: string
+  tipoContrato: 'padrão' | 'completo',
+  telefone: string
 }
 
 export interface IPessoaJuridica {
   id?: number
   nome: string,
-  endereco: Endereco | string,
+  endereco: IEndereco,
   email: string,
-  cpf: string,
-  tipo: 'fisico',
+  cnpj: string,
+  tipo: 'juridico',
   nomeContato: string,
   possuiContrato: boolean,
-  tipoContrato: string
+  tipoContrato: 'padrão' | 'completo',
+  telefone: string
+}
+
+export type TPessoaFisicaOuJuridica = {
+  id?: number
+  nome: string,
+  endereco: IEndereco,
+  email: string,
+  cnpj: string,
+  tipo: 'juridico' | 'fisico',
+  nomeContato: string,
+  possuiContrato: boolean,
+  tipoContrato: 'padrão' | 'completo',
+  cpf: string,
+  telefone: string
 }
