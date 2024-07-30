@@ -7,7 +7,7 @@ import { PessoaJuridicaService } from '../../shared/Service/api/clientes/PessoaJ
 import { PessoaFisicaService } from '../../shared/Service/api/clientes/PessoaFisicaService';
 import { IPessoaFisica, IPessoaJuridica } from '../../shared/Service/api/models/Clientes';
 import { FerramentaNavegacao, FerramentaTabela } from '../../shared/Components';
-import { VFormCliente } from '../../shared/forms/VFormCliente';
+import { VFormCliente } from '../../shared/forms/formCliente/VFormCliente';
 import { Environment } from '../../shared/Enviroment';
 import { LayoutPaginas } from '../../shared/Layout';
 import { useSearchParams } from 'react-router-dom';

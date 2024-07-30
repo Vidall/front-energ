@@ -1,16 +1,16 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, TextField } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
-import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../Service/api/models/Clientes';
-import { PessoaFisicaService } from '../Service/api/clientes/PessoaFisicaService';
-import { useNavigate } from 'react-router';
-import { Environment } from '../Enviroment';
+
+import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../Service/api/models/Clientes';
+import { PessoaFisicaService } from '../../Service/api/clientes/PessoaFisicaService';
+import { useSearchParams } from 'react-router-dom';
 
 export const VFormCliente: React.FC = () => {
+  const [data, setData] = useState<IPessoaFisica | IPessoaJuridica>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [step, setStep] = useState(1);
   const [finalStep] = useState(4);
-  const [data, setData] = useState<IPessoaFisica | IPessoaJuridica>();
-  const navigate = useNavigate();
 
   const { control, handleSubmit, formState: { errors }, trigger, watch, reset } = useForm<TPessoaFisicaOuJuridica>({
     defaultValues: { tipo: 'juridico' }  // Definindo o valor padrão
@@ -21,10 +21,10 @@ export const VFormCliente: React.FC = () => {
   useEffect(() => {
     if (selectedValueTipo === 'fisico') {
       // Resetar os campos de CNPJ e nome quando mudar para 'fisico'
-      reset(prev => ({ ...prev, cnpj: '', nome: '' }));
+      reset(prev => ({ ...prev, cnpj: undefined, nome: '' }));
     } else if (selectedValueTipo === 'juridico') {
       // Resetar os campos de CPF e nome quando mudar para 'juridico'
-      reset(prev => ({ ...prev, cpf: '', nome: '' }));
+      reset(prev => ({ ...prev, cpf: undefined, nome: '' }));
     }
   }, [selectedValueTipo, reset]);
 
@@ -61,10 +61,10 @@ export const VFormCliente: React.FC = () => {
           }
 
           alert('Criado com sucesso');
-          const urlRelativaPessoaFisica = `${Environment.URL_BASE_FRONT}/clientes?tipo=Fisico`;
-          const urlRelativaPessoaJuridica = `${Environment.URL_BASE_FRONT}/clientes?tipo=Juridica`;
-          navigate(data.tipo === 'fisico' ? urlRelativaPessoaFisica : urlRelativaPessoaJuridica);
-          console.log(urlRelativaPessoaFisica);
+          data.tipo === 'fisico' ? 
+            setSearchParams({ ...Object.fromEntries(searchParams.entries()), tipo: 'Fisico' }, { replace: true }) 
+            : 
+            setSearchParams({ ...Object.fromEntries(searchParams.entries()), tipo: 'Juridico' }, { replace: true });
         })
         .catch(error => console.log(error));
     }
