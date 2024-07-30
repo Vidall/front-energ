@@ -1,5 +1,5 @@
 import { Environment } from '../../../Enviroment';
-import { Api } from '../axios-config';
+import { ApiTS } from '../axios-config';
 import { IPessoaJuridica } from '../models/Clientes';
 
 interface IPessoaJuridicaComTotalCount {
@@ -10,7 +10,7 @@ interface IPessoaJuridicaComTotalCount {
 const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS): Promise<IPessoaJuridicaComTotalCount| Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_PESSOA_JURIDICA}?page=${Number(page)}&limit=${limit}&filter=${filter}`;
-    const { data, headers} = await Api.get(urlRelativa);
+    const { data, headers} = await ApiTS.get(urlRelativa);
 
     if (data) {
       return {

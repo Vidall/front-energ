@@ -1,17 +1,32 @@
-import { Box, Button, FormControl, FormControlLabel, Paper, Radio, RadioGroup, TextField } from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, TextField } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react';
-import { TPessoaFisicaOuJuridica } from '../Service/api/models/Clientes';
+import { useState, useEffect } from 'react';
+import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../Service/api/models/Clientes';
+import { PessoaFisicaService } from '../Service/api/clientes/PessoaFisicaService';
+import { useNavigate } from 'react-router';
+import { Environment } from '../Enviroment';
 
 export const VFormCliente: React.FC = () => {
   const [step, setStep] = useState(1);
-  const [finalStep] = useState(3);
+  const [finalStep] = useState(4);
+  const [data, setData] = useState<IPessoaFisica | IPessoaJuridica>();
+  const navigate = useNavigate();
 
-  const { control, handleSubmit, formState: { errors }, trigger, watch } = useForm<TPessoaFisicaOuJuridica>({
-    defaultValues: {tipo: 'juridico' }  // Defina o valor padrão aqui
+  const { control, handleSubmit, formState: { errors }, trigger, watch, reset } = useForm<TPessoaFisicaOuJuridica>({
+    defaultValues: { tipo: 'juridico' }  // Definindo o valor padrão
   });
 
-  const selectedValueTipo = watch('tipo'); // Obtenha o valor selecionado do tipo
+  const selectedValueTipo = watch('tipo'); // Obtendo o valor selecionado do tipo
+
+  useEffect(() => {
+    if (selectedValueTipo === 'fisico') {
+      // Resetar os campos de CNPJ e nome quando mudar para 'fisico'
+      reset(prev => ({ ...prev, cnpj: '', nome: '' }));
+    } else if (selectedValueTipo === 'juridico') {
+      // Resetar os campos de CPF e nome quando mudar para 'juridico'
+      reset(prev => ({ ...prev, cpf: '', nome: '' }));
+    }
+  }, [selectedValueTipo, reset]);
 
   const handleClickProximo = async () => {
     let valid = true;
@@ -30,12 +45,28 @@ export const VFormCliente: React.FC = () => {
     if (step !== 1) setStep(step => step - 1);
   };
 
-  const handleSubmitForm = async (data: TPessoaFisicaOuJuridica) => {
+  const handleSubmitForm = async (data: IPessoaFisica | IPessoaJuridica) => {
     const isValid = await trigger();
     if (isValid) {
-      alert('Formulário enviado com sucesso!');
-      console.log(data);
-      // Aqui você pode enviar os dados do formulário para um servidor, etc.
+      const numeroParser = Number(data.endereco.numero); 
+      const possuiContratoParserNumber = Number(data.possuiContrato);
+      const possuiContratoParser = possuiContratoParserNumber === 1 ? true : false;
+
+      setData(data);
+      PessoaFisicaService.create({ ...data as IPessoaFisica, possuiContrato: possuiContratoParser, endereco: { ...data.endereco, numero: numeroParser } })
+        .then((res) => {
+          if (res instanceof Error) {
+            console.log(data);
+            return alert(res.message);
+          }
+
+          alert('Criado com sucesso');
+          const urlRelativaPessoaFisica = `${Environment.URL_BASE_FRONT}/clientes?tipo=Fisico`;
+          const urlRelativaPessoaJuridica = `${Environment.URL_BASE_FRONT}/clientes?tipo=Juridica`;
+          navigate(data.tipo === 'fisico' ? urlRelativaPessoaFisica : urlRelativaPessoaJuridica);
+          console.log(urlRelativaPessoaFisica);
+        })
+        .catch(error => console.log(error));
     }
   };
 
@@ -69,6 +100,7 @@ export const VFormCliente: React.FC = () => {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  type='number'
                   label="Número"
                   fullWidth
                   margin="normal"
@@ -202,16 +234,16 @@ export const VFormCliente: React.FC = () => {
               />
               {errors.tipo && <p>{errors.tipo.message}</p>}
             </FormControl>
-            
-            {/* Campo dinamico da pf ou pj */}
+
+            {/* Campo dinâmico da pf ou pj */}
             {
               selectedValueTipo === 'fisico' && (
                 <Box>
                   <Controller
                     name='nome'
                     control={control}
-                    rules={{required: 'Este campo é obrigatório'}}
-                    render={({field}) => (
+                    rules={{ required: 'Este campo é obrigatório' }}
+                    render={({ field }) => (
                       <TextField
                         {...field}
                         label='Nome Cliente'
@@ -222,22 +254,21 @@ export const VFormCliente: React.FC = () => {
                         helperText={errors.nome?.message}
                       />
                     )}
-                  />  
+                  />
                   <Controller
                     name='cpf'
                     control={control}
                     rules={{
-                      required: 'cpf é obrigatório',
+                      required: 'CPF é obrigatório',
                       pattern: {
                         value: /^[0-9]+$/,
                         message: 'CPF deve conter apenas números'
                       }
                     }}
-
-                    render={({field}) => (
+                    render={({ field }) => (
                       <TextField
                         {...field}
-                        label='cpf'
+                        label='CPF'
                         fullWidth
                         margin='normal'
                         size='small'
@@ -246,22 +277,21 @@ export const VFormCliente: React.FC = () => {
                       />
                     )}
                   />
-                </Box>                              
+                </Box>
               )
             }
 
             {
               selectedValueTipo === 'juridico' && (
-
                 <Box>
                   <Controller
                     name='nome'
                     control={control}
-                    rules={{required: 'Este campo é obrigatório'}}
-                    render={({field}) => (
+                    rules={{ required: 'Este campo é obrigatório' }}
+                    render={({ field }) => (
                       <TextField
                         {...field}
-                        label='Razão social'
+                        label='Razão Social'
                         fullWidth
                         margin='normal'
                         size='small'
@@ -269,8 +299,7 @@ export const VFormCliente: React.FC = () => {
                         helperText={errors.nome?.message}
                       />
                     )}
-                  />  
-
+                  />
                   <Controller
                     name='cnpj'
                     control={control}
@@ -281,10 +310,10 @@ export const VFormCliente: React.FC = () => {
                         message: 'CNPJ deve conter apenas números'
                       }
                     }}
-                    render={({field}) => (
+                    render={({ field }) => (
                       <TextField
                         {...field}
-                        label='cnpj'
+                        label='CNPJ'
                         fullWidth
                         margin='normal'
                         size='small'
@@ -292,7 +321,7 @@ export const VFormCliente: React.FC = () => {
                         helperText={errors.cnpj?.message}
                       />
                     )}
-                  />  
+                  />
                 </Box>
               )
             }
@@ -300,10 +329,61 @@ export const VFormCliente: React.FC = () => {
           </Box>
         )}
 
-        <Box display={'flex'} justifyContent={'space-between'} paddingTop={1}>
-          <Button type="button" variant="outlined" color="primary" onClick={handleClickAnterior}>
-            Voltar
-          </Button>
+        {step === 4 && (
+          <FormControl component="fieldset">
+            <Controller
+              name="possuiContrato"
+              control={control}
+              rules={{ required: 'Tipo de contrato é obrigatório' }}
+              render={({ field }) => (
+                <>
+                  <FormLabel id="demo-row-radio-buttons-group-label">Possui contrato?</FormLabel>
+                  <RadioGroup
+                    {...field}
+                    row
+                    aria-label="possuiContrato"
+                  >
+                    <Box display={'flex'} justifyContent={'space-between'}>
+                      <FormControlLabel value={1} control={<Radio />} label="Sim" />
+                      <FormControlLabel value={0} control={<Radio />} label="Não" />
+                    </Box>
+                  </RadioGroup>
+                </>
+              )}
+            />
+            {errors.tipo && <p>{errors.tipo.message}</p>}
+
+            <Controller
+              name="tipoContrato"
+              control={control}
+              rules={{ required: 'Tipo de contrato é obrigatório' }}
+              render={({ field }) => (
+                <>
+                  <FormLabel id="demo-row-radio-buttons-group-label">Tipo de contrato</FormLabel>
+                  <RadioGroup
+                    {...field}
+                    row
+                    aria-label="tipo de contrato"
+                  >
+                    <Box display={'flex'} justifyContent={'space-between'}>
+                      <FormControlLabel value="padrão" control={<Radio />} label="Padrão" />
+                      <FormControlLabel value="completo" control={<Radio />} label="Completo" />
+                    </Box>
+                  </RadioGroup>
+                </>
+              )}
+            />
+            {errors.tipo && <p>{errors.tipo.message}</p>}
+          </FormControl>
+        )}
+
+        <Box display={'flex'} justifyContent={step === 1 ? 'end' : 'space-between'} paddingTop={1}>
+          {step !== 1 && (
+            <Button type="button" variant="outlined" color="primary" onClick={handleClickAnterior}>
+              Voltar
+            </Button>
+          )}
+
           {step !== finalStep && (
             <Button type="button" variant="contained" color="primary" onClick={handleClickProximo}>
               Próximo

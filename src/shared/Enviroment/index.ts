@@ -15,6 +15,7 @@ export const Environment = {
    * URL base de onde está a API do backend
    */
   URL_BASE_API_TS: 'http://localhost:3001',
+  URL_BASE_FRONT: 'http://localhost:3000',
 
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',
   CAMINHO_PESSOA_JURIDICA: '/clientes/pessoaJuridica'
