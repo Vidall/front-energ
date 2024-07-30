@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { useNavigate } from 'react-router';
 
 interface ILayoutTabela {
   cabecalho: string[],
@@ -11,6 +12,7 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
   cabecalho,
   dados
 }) => {
+  const navigate = useNavigate();
 
   return (
     <TableContainer 
@@ -37,10 +39,11 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
           {
             dados.map((linha, rowIndex) => (
               <TableRow key={rowIndex}>
-                <TableCell><Icon>search</Icon></TableCell>
+                <TableCell onClick={() => navigate(`detalhe/${linha.id}`)}><Icon>search</Icon></TableCell>
                 {
                   cabecalho.map((coluna, colIndex) => (
-                    <TableCell key={colIndex}>
+                    <TableCell
+                      key={colIndex}>
                       {linha[coluna]}
                     </TableCell>
                   ))
