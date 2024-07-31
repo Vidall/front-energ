@@ -18,7 +18,8 @@ export const Environment = {
   URL_BASE_FRONT: 'http://localhost:3000',
 
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',
-  CAMINHO_PESSOA_JURIDICA: '/clientes/pessoaJuridica'
+  CAMINHO_PESSOA_JURIDICA: '/clientes/pessoaJuridica',
+  CAMINHO_TECNICOS: '/tecnicos'
 
   // /**
   //  * Caminhos da url para realizar operações com pessoas fisicas
