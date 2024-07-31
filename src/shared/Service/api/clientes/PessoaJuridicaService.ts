@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiTS } from '../axios-config';
 import { IPessoaJuridica } from '../models/Clientes';
@@ -6,6 +7,32 @@ interface IPessoaJuridicaComTotalCount {
   data: IPessoaJuridica[],
   totalCount: number 
 }
+
+const create = async (pessoa: IPessoaJuridica): Promise<{id: number} | Error > => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_PESSOA_JURIDICA}`;
+    const response = await ApiTS.post(urlRelativa, pessoa);
+
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      return new Error('Erro ao cadastrar o registro');
+    }
+
+  } catch (error) {
+    console.log(error);
+
+    // Se o erro for uma instância de AxiosError
+    if (axios.isAxiosError(error)) {
+      // Verifica se o erro tem uma resposta com dados de erro
+      if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+        return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
+      }
+    }
+
+    return new Error('Erro ao cadastrar o registro');
+  }
+};
 
 const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS): Promise<IPessoaJuridicaComTotalCount| Error> => {
   try {
@@ -28,6 +55,60 @@ const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS
   }
 };
 
+const getByID = async (id: number): Promise<IPessoaJuridica | Error > => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_PESSOA_JURIDICA}/${id}`;
+    const response = await ApiTS.get(urlRelativa);
+
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      return new Error('Erro ao cadastrar o registro');
+    }
+
+  } catch (error) {
+    console.log(error);
+
+    // Se o erro for uma instância de AxiosError
+    if (axios.isAxiosError(error)) {
+      // Verifica se o erro tem uma resposta com dados de erro
+      if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+        return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
+      }
+    }
+
+    return new Error('Erro ao cadastrar o registro');
+  }
+};
+
+const updateById = async(id: number, dados: IPessoaJuridica): Promise<IPessoaJuridica | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_PESSOA_JURIDICA}/${id}`;
+    const { data } = await ApiTS.put(urlRelativa, dados);
+
+    if (data) {
+      return data;
+    }
+
+    return new Error('Erro ao atualizar o registro');
+
+  } catch (error) {
+    console.log(error);
+
+    if (axios.isAxiosError(error)) {
+      // Verifica se o erro tem uma resposta com dados de erro
+      if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+        return new Error((error.response.data).errors.default || 'Erro ao atualizar o registro');
+      }
+    }
+
+    return new Error('Erro ao cadastrar o registro');
+  }
+};
+
 export const PessoaJuridicaService = {
-  getAll
+  getAll,
+  getByID,
+  updateById,
+  create
 };
