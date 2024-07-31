@@ -27,7 +27,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
                   </Icon>
                   <ListItemText primary={'Inicio'}/>
                 </ListItemIcon>                
-              </ListItemButton>
+              </ListItemButton>              
             </ListItem>
           </List>
         </Box>
