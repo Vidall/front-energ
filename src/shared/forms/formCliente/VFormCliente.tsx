@@ -1,19 +1,23 @@
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, TextField, Theme, Typography, useMediaQuery } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import { Box, Button, FormControl, FormControlLabel, Paper, Radio, Theme, useMediaQuery } from '@mui/material';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../Service/api/models/Clientes';
+import { PessoaJuridicaService } from '../../Service/api/clientes/PessoaJuridicaService';
 import { PessoaFisicaService } from '../../Service/api/clientes/PessoaFisicaService';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { VTextField, VRadioField } from '../fields';
+import {  } from '../fields/VRadioField';
 
+/*eslint-disable react/prop-types*/
 export const VFormCliente: React.FC = () => {
   const [data, setData] = useState<IPessoaFisica | IPessoaJuridica>();
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const [searchParams, setSearchParams] = useSearchParams();
-  const { id } = useParams();
   const [step, setStep] = useState(1);
   const [finalStep] = useState(4);
   const formRef = useRef(null);
+  const { id } = useParams();
 
   const { control, handleSubmit, formState: { errors }, trigger, watch, reset } = useForm<TPessoaFisicaOuJuridica>({
     defaultValues: {}  // Definindo o valor padrão
@@ -26,7 +30,7 @@ export const VFormCliente: React.FC = () => {
       setStep(1);
     }
     
-    if (Number(id)) {
+    if (Number(id) && searchParams.get('tipoPessoa') === 'fisico') {
       PessoaFisicaService.getByID(Number(id))
         .then(res => {
           if (res instanceof Error) {
@@ -35,8 +39,16 @@ export const VFormCliente: React.FC = () => {
 
           setData(res);
           reset(res);
-          console.log(res.cpf);
-          console.log(typeof res.cpf);
+        });
+    }else if(Number(id) && searchParams.get('tipoPessoa') === 'juridico') {
+      PessoaJuridicaService.getByID(Number(id))
+        .then(res => {
+          if (res instanceof Error) {
+            return alert(res.message);
+          }
+
+          setData(res);
+          reset(res);
         });
     }
   }, [reset, smDown, id]);
@@ -70,7 +82,7 @@ export const VFormCliente: React.FC = () => {
     if (step !== 1) setStep(step => step - 1);
   };
 
-  const handleSubmitForm = async (formData: TPessoaFisicaOuJuridica) => {
+  const handleSubmitFormPessoaFisica = async (formData: TPessoaFisicaOuJuridica) => {
     const isValid = await trigger();
     if (isValid) {
       const numeroParser = formData.endereco?.numero ? Number(formData.endereco.numero) : 0; 
@@ -78,6 +90,7 @@ export const VFormCliente: React.FC = () => {
       const possuiContratoParser = possuiContratoParserNumber === 1 ? true : false;
       
       if (Number(id)) {
+        /*eslint-disable-next-line*/
         const { id: _id, ...restData } = formData; // Remover o campo id
         PessoaFisicaService.updateById(Number(id), { ...restData as IPessoaFisica, possuiContrato: possuiContratoParser, endereco: { ...restData.endereco, numero: numeroParser } })
           .then((res) => {
@@ -113,83 +126,90 @@ export const VFormCliente: React.FC = () => {
       alert('Campo sem validar');
     }
   };
+
+  const handleSubmitFormPessoaJuridica = async (formData: TPessoaFisicaOuJuridica) => {
+    const isValid = await trigger();
+    if (isValid) {
+      const numeroParser = formData.endereco?.numero ? Number(formData.endereco.numero) : 0; 
+      const possuiContratoParserNumber = Number(formData.possuiContrato);
+      const possuiContratoParser = possuiContratoParserNumber === 1 ? true : false;
+      
+      if (Number(id)) {
+        /*eslint-disable-next-line*/
+        const { id: _id, ...restData } = formData; // Remover o campo id
+        PessoaJuridicaService.updateById(Number(id), { ...restData as IPessoaJuridica, possuiContrato: possuiContratoParser, endereco: { ...restData.endereco, numero: numeroParser } })
+          .then((res) => {
+            if (res instanceof Error) {
+              return alert(res.message);
+            }
   
+            setData(formData);
+            alert('Atualizado com sucesso');
+            formData.tipo === 'fisico' ? 
+              setSearchParams({ ...Object.fromEntries(searchParams.entries()), tipo: 'Fisico' }, { replace: true }) 
+              : 
+              setSearchParams({ ...Object.fromEntries(searchParams.entries()), tipo: 'Juridico' }, { replace: true });
+          })
+          .catch(error => console.log(error));
+      } else {
+        PessoaJuridicaService.create({ ...formData as IPessoaJuridica, possuiContrato: possuiContratoParser, endereco: { ...formData.endereco, numero: numeroParser } })
+          .then((res) => {
+            if (res instanceof Error) {
+              return alert(res.message);
+            }
+  
+            setData(formData);
+            alert('Criado com sucesso');
+            formData.tipo === 'fisico' ? 
+              setSearchParams({ ...Object.fromEntries(searchParams.entries()), tipo: 'Fisico' }, { replace: true }) 
+              : 
+              setSearchParams({ ...Object.fromEntries(searchParams.entries()), tipo: 'Juridico' }, { replace: true });
+          })
+          .catch(error => console.log(error));
+      }
+    } else {
+      alert('Campo sem validar');
+    }
+  };
 
   return (
     <Paper component={Box} padding={2}>
-      <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
+      <form onSubmit={handleSubmit(selectedValueTipo === 'fisico' ? handleSubmitFormPessoaFisica : handleSubmitFormPessoaJuridica)} ref={formRef}>
 
         {/* Form de endereço */}
         {step === 1 && (
           <Box>
-            <Controller
-              name="endereco.rua"
+
+            <VTextField
+              name='endereco.rua'
               control={control}
-              rules={{ required: 'Rua é obrigatória' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Rua"
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  error={!!errors.endereco?.rua}
-                  helperText={errors.endereco?.rua?.message}
-                  InputLabelProps={{ shrink: !!field.value }}
-                />
-              )}
+              label='Rua'
+              rules={{ required: 'Rua é obrigatória'}}
+              errors={errors}
             />
-            <Controller
-              name="endereco.numero"
+
+            <VTextField
+              name={'endereco.numero'}
               control={control}
-              rules={{ required: 'Número é obrigatório' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  type='number'
-                  label="Número"
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  error={!!errors.endereco?.numero}
-                  helperText={errors.endereco?.numero?.message}
-                  InputLabelProps={{ shrink: !!field.value }}
-                />
-              )}
+              label={'Número'}
+              rules={{ required: 'Número é obrigatório'}}
+              errors={errors}
             />
-            <Controller
-              name="endereco.bairro"
+
+            <VTextField
+              name={'endereco.bairro'}
               control={control}
-              rules={{ required: 'Bairro é obrigatório' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Bairro"
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  error={!!errors.endereco?.bairro}
-                  helperText={errors.endereco?.bairro?.message}
-                  InputLabelProps={{ shrink: !!field.value }}
-                />
-              )}
+              label={'Bairro'}
+              rules={{ required: 'Bairro é obrigatório'}}
+              errors={errors}
             />
-            <Controller
-              name="endereco.cidade"
+
+            <VTextField
+              name={'endereco.cidade'}
               control={control}
-              rules={{ required: 'Cidade é obrigatória' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Cidade"
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  error={!!errors.endereco?.cidade}
-                  helperText={errors.endereco?.cidade?.message}
-                  InputLabelProps={{ shrink: !!field.value }}
-                />
-              )}
+              label={'Cidade'}
+              rules={{ required: 'Cidade é obrigatório'}}
+              errors={errors}
             />
           </Box>
         )}
@@ -197,185 +217,91 @@ export const VFormCliente: React.FC = () => {
         {/* Form de contato */}
         {(step === 2 || !smDown) && (
           <Box>
-            <Controller
-              name="telefone"
+
+            <VTextField
+              name={'telefone'}
               control={control}
-              rules={{
-                required: 'Telefone é obrigatório',
-                pattern: {
-                  value: /^[0-9]+$/,
-                  message: 'Telefone deve conter apenas números'
-                }
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Telefone"
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  error={!!errors.telefone}
-                  helperText={errors.telefone?.message}
-                  InputLabelProps={{ shrink: !!field.value }}
-                />
-              )}
+              label={'Telefone'}
+              rules={{ required: 'Telefone é obrigatório', pattern: {
+                value: /^[0-9]+$/,
+                message: 'Telefone deve conter apenas números'
+              }}}
+              errors={errors}
             />
-            <Controller
-              name="email"
+
+            <VTextField
+              name={'email'}
               control={control}
-              rules={{
-                required: 'E-mail é obrigatório',
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                  message: 'E-mail inválido'
-                }
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="E-mail"
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                  InputLabelProps={{ shrink: !!field.value }}
-                />
-              )}
+              label={'Email'}
+              rules={{ required: 'Email é obrigatório', pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                message: 'E-mail inválido'
+              }}}
+              errors={errors}
             />
-            <Controller
-              name="nomeContato"
+
+            <VTextField
+              name={'nomeContato'}
               control={control}
-              rules={{ required: 'Nome para Contato é obrigatório' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Nome para Contato"
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  error={!!errors.nomeContato}
-                  helperText={errors.nomeContato?.message}
-                  InputLabelProps={{ shrink: !!field.value }}
-                />
-              )}
-            />
+              label={'Nome para contato'}
+              rules={{ required: 'Nome para contato é obrigatório'}}
+              errors={errors}
+            />            
           </Box>
         )}
 
         {/* Form de dados PF ou PJ */}
         {(step === 3 || !smDown) && (
           <Box>
-            <FormControl component="fieldset">
-              <Controller
-                name="tipo"
-                control={control}
-                defaultValue={'juridico'}
-                rules={{ required: 'Tipo de Pessoa é obrigatório' }}
-                render={({ field }) => (
-                  <RadioGroup
-                    {...field}
-                    row
-                    aria-label="tipo"
-                  >
-                    <Box display={'flex'} justifyContent={'space-between'}>
-                      <FormControlLabel value="fisico" control={<Radio />} label="Pessoa Física" disabled={!!data}/>
-                      <FormControlLabel value="juridico" control={<Radio />} label="Pessoa Jurídica" disabled={!!data}/>
-                    </Box>
-                  </RadioGroup>
-                )}
-              />
-              {errors.tipo && <p>{errors.tipo.message}</p>}
-            </FormControl>
+            <VRadioField 
+              control={control}
+              errors={errors}
+              label='tipo'
+              name='tipo'
+              rules={{ required: 'Este campo é obrigatório' }}
+              data={data!}
+              defaultValue={'juridico'}
+            >
+              <FormControlLabel value="fisico" control={<Radio />} label="Pessoa Física" disabled={!!data}/>
+              <FormControlLabel value="juridico" control={<Radio />} label="Pessoa Jurídica" disabled={!!data}/>
+
+            </VRadioField>
 
             {/* Campos específicos para PF ou PJ */}
             {selectedValueTipo === 'fisico' && (
               <Box>
-                <Controller
-                  name="nome"
+                <VTextField
+                  name='nome'
                   control={control}
-                  defaultValue={data && 'nome' in data ? data.nome : ''}
-                  rules={{ required: 'Este campo é obrigatório' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="Nome Cliente"
-                      fullWidth
-                      margin="normal"
-                      size="small"
-                      error={!!errors.nome}
-                      helperText={errors.nome?.message}
-                      InputLabelProps={{ shrink: !!field.value }}
-                    />
-                  )}
+                  errors={errors}
+                  label='Nome'
+                  rules={{required: 'Nome é obrigatório'}}
                 />
-                <Controller
-                  name="cpf"
+                <VTextField
+                  name='cpf'
                   control={control}
-                  rules={{
-                    required: 'CPF é obrigatório',
-                    pattern: {
-                      value: /^[0-9]+$/,
-                      message: 'CPF deve conter apenas números'
-                    }
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="CPF"
-                      fullWidth
-                      margin="normal"
-                      size="small"
-                      error={!!errors.cpf}
-                      helperText={errors.cpf?.message}
-                      InputLabelProps={{ shrink: !!field.value }}
-                    />
-                  )}
+                  errors={errors}
+                  label='CPF'
+                  rules={{required: 'CPF é obrigatório', pattern: {value: /^[0-9]+$/, message: 'CPF deve conter apenas números'}}}
                 />
               </Box>
             )}
 
             {selectedValueTipo === 'juridico' && (
               <Box>
-                <Controller
-                  name="nome"
+                <VTextField
+                  name='nome'
                   control={control}
-                  rules={{ required: 'Este campo é obrigatório' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="Razão Social"
-                      fullWidth
-                      margin="normal"
-                      size="small"
-                      error={!!errors.nome}
-                      helperText={errors.nome?.message}
-                      InputLabelProps={{ shrink: !!field.value }}
-                    />
-                  )}
+                  errors={errors}
+                  label='Razão Social'
+                  rules={{required: 'Razão Social é obrigatório'}}
                 />
-                <Controller
-                  name="cnpj"
+                <VTextField
+                  name='cnpj'
                   control={control}
-                  rules={{
-                    required: 'CNPJ é obrigatório',
-                    pattern: {
-                      value: /^[0-9]+$/,
-                      message: 'CNPJ deve conter apenas números'
-                    }
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="CNPJ"
-                      fullWidth
-                      margin="normal"
-                      size="small"
-                      error={!!errors.cnpj}
-                      helperText={errors.cnpj?.message}
-                      InputLabelProps={{ shrink: !!field.value }}
-                    />
-                  )}
+                  errors={errors}
+                  label='CNPJ'
+                  rules={{required: 'CNPJ é obrigatório', pattern: {value: /^[0-9]+$/, message: 'CNPJ deve conter apenas números'}}}
                 />
               </Box>
             )}
@@ -385,51 +311,31 @@ export const VFormCliente: React.FC = () => {
         {/* Form de contrato */}
         {(step === 4 || !smDown) && (
           <FormControl component="fieldset">
-            <Controller
-              name="possuiContrato"
-              defaultValue={data ? data.possuiContrato : false}
-              control={control}
-              rules={{ required: 'Tipo de contrato é obrigatório' }}
-              render={({ field }) => (
-                <>
-                  <FormLabel id="possui-contrato-label">Possui contrato?</FormLabel>
-                  <RadioGroup
-                    {...field}
-                    row
-                    aria-label="possuiContrato"
-                  >
-                    <Box display={'flex'} justifyContent={'space-between'}>
-                      <FormControlLabel value={1} control={<Radio />} label="Sim"/>
-                      <FormControlLabel value={0} control={<Radio />} label="Não" />
-                    </Box>
-                  </RadioGroup>
-                </>
-              )}
-            />
-            {errors.possuiContrato && <Typography component={'span'} color={'#d32f2f'}>{errors.possuiContrato.message}</Typography>}
 
-            <Controller
-              name="tipoContrato"
-              defaultValue={'padrão'}
+            <VRadioField
               control={control}
+              errors={errors}
+              label='Possui contrato ?'
+              name='possuiContrato'     
+              defaultValue={data ? data.possuiContrato : 0}        
+            >
+              <FormControlLabel value={1} control={<Radio />} label="Sim"/>
+              <FormControlLabel value={0} control={<Radio />} label="Não" />
+
+            </VRadioField>
+
+            <VRadioField
+              control={control}
+              errors={errors}
+              label='Tipo de contrato?'
+              name='tipoContrato'         
+              defaultValue={data ? data.tipoContrato : 'padrão'}
               rules={{ required: 'Tipo de contrato é obrigatório' }}
-              render={({ field }) => (
-                <>
-                  <FormLabel id="tipo-contrato-label">Tipo de contrato</FormLabel>
-                  <RadioGroup
-                    {...field}
-                    row
-                    aria-label="tipoContrato"
-                  >
-                    <Box display={'flex'} justifyContent={'space-between'}>
-                      <FormControlLabel value="padrão" control={<Radio />} label="Padrão" />
-                      <FormControlLabel value="completo" control={<Radio />} label="Completo" />
-                    </Box>
-                  </RadioGroup>
-                </>
-              )}
-            />
-            {errors.tipoContrato && <Typography component={'span'} color={'#d32f2f'}>{errors.tipoContrato.message}</Typography>}
+            >
+              <FormControlLabel value="padrão" control={<Radio />} label="Padrão" />
+              <FormControlLabel value="completo" control={<Radio />} label="Completo" />
+            </VRadioField>
+
           </FormControl>
         )}
 

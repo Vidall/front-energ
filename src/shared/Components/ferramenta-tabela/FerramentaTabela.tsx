@@ -39,7 +39,7 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
           {
             dados.map((linha, rowIndex) => (
               <TableRow key={rowIndex}>
-                <TableCell onClick={() => navigate(`detalhe/${linha.id}`)}><Icon>search</Icon></TableCell>
+                <TableCell onClick={() => navigate(`detalhe/${linha.id}?tipoPessoa=${linha.tipo}`)}><Icon>search</Icon></TableCell>
                 {
                   cabecalho.map((coluna, colIndex) => (
                     <TableCell

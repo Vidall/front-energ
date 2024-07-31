@@ -1,2 +1,2 @@
-export * from './DetalheCliente';
+export * from './DetalheClienteFisico';
 export * from './PaginaCliente';
