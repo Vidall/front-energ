@@ -70,12 +70,12 @@ export const PaginaCliente: React.FC = () => {
       }
       <FerramentaNavegacao listaNavegacao={['Fisico', 'Juridico', 'Cadastrar']}/>
       { (tipo === 'Fisico') && (
-        <FerramentaTabela cabecalho={['nome', 'cpf', 'email', 'telefone']} dados={rows}/>
+        <FerramentaTabela pagina='clientes' cabecalho={['nome', 'cpf', 'email', 'telefone']} dados={rows}/>
       )
       }
 
       { (tipo === 'Juridico') && (
-        <FerramentaTabela cabecalho={['nome', 'cnpj', 'email', 'telefone']} dados={rows}/>
+        <FerramentaTabela pagina='clientes' cabecalho={['nome', 'cnpj', 'email', 'telefone']} dados={rows}/>
       )
       }
       {

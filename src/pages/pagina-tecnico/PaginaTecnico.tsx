@@ -1,13 +1,14 @@
-import { FerramentaTabela } from '../../shared/Components';
+import { FerramentaNavegacao, FerramentaTabela } from '../../shared/Components';
 import { FerramentaPesquisar } from '../../shared/Components/ferramentas-pesquisar/FerramentaPesquisar';
 import { ITecnico } from '../../shared/Service/api/models/Tecnico';
 import { LayoutPaginas } from '../../shared/Layout';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
-import { TecnicoService } from '../../shared/Service/api/tecnicos/Tecnico';
+import { TecnicoService } from '../../shared/Service/api/tecnicos/TecnicoService';
 import { LinearProgress, Pagination } from '@mui/material';
 import { Environment } from '../../shared/Enviroment';
+import { VFormTecnico } from '../../shared/forms';
 
 export const PaginaTecnico: React.FC = () => {
   const [searchParms, setSearchParams] = useSearchParams();
@@ -18,6 +19,8 @@ export const PaginaTecnico: React.FC = () => {
   const busca = useMemo(() => searchParms.get('busca') || '', [searchParms]);
   const [debouncedBusca] = useDebounce(busca, 1000);
 
+  const tipo = searchParms.get('tipo');
+ 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
     // Atualizar os parâmetros de pesquisa ou fazer outra ação necessária
@@ -42,22 +45,36 @@ export const PaginaTecnico: React.FC = () => {
 
   return (
     <LayoutPaginas titulo="Área do técnico">
-      <FerramentaPesquisar
-        textoDaBusca={busca}
-        aoMudarTextoDaBusca={texto => setSearchParams({ ...Object.fromEntries(searchParms.entries()), busca: texto }, { replace: true })}  
-      />
-      { isLoad && (
-        <LinearProgress/>
+      { tipo === 'Todos' && (
+        <>
+          <FerramentaPesquisar
+            textoDaBusca={busca}
+            aoMudarTextoDaBusca={texto => setSearchParams({ ...Object.fromEntries(searchParms.entries()), busca: texto }, { replace: true })}  
+          />
+
+          <FerramentaNavegacao listaNavegacao={['Todos', 'Cadastrar']}/>
+          { isLoad && (
+            <LinearProgress/>
+          )
+
+          }
+
+          <FerramentaTabela pagina='tecnicos' cabecalho={['nome','telefone', 'email']} dados={rows}/>
+          <Pagination
+            count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHAS)}
+            page={currentPage}
+            onChange={handlePageChange}
+          />
+        </>
       )
 
       }
 
-      <FerramentaTabela cabecalho={['nome','telefone', 'email']} dados={rows}/>
-      <Pagination
-        count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHAS)}
-        page={currentPage}
-        onChange={handlePageChange}
-      />
+      { tipo === 'Cadastrar' && (
+        <VFormTecnico/>
+      )
+
+      }
 
     </LayoutPaginas>
   );

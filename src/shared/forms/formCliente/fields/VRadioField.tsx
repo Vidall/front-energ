@@ -1,6 +1,6 @@
 import { Box, FormControl, FormControlLabelProps, FormLabel, RadioGroup, Typography } from '@mui/material';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../Service/api/models/Clientes';
+import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../../Service/api/models/Clientes';
 
 interface VTextFieldProps {
   name: 'id' | 'nome' | 'endereco' | 'email' | 'cnpj' | 'tipo' | 'nomeContato' | 'possuiContrato' | 'tipoContrato' | 'cpf' | 'telefone' | 'endereco.rua' | 'endereco.numero' | 'endereco.bairro' | 'endereco.cidade';

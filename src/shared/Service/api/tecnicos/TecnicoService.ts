@@ -1,23 +1,52 @@
 import { Environment } from '../../../Enviroment';
 import { ApiTS } from '../axios-config';
-import { IPessoaFisica } from '../models/Clientes';
 import axios from 'axios';
-import { ITecnico } from '../models/Tecnico';
+import { IUpdateTecnico } from '../models/Tecnico';
 
 interface ITecnicoComTotalCount {
   data: ITecnico[],
   totalCount: number 
 }
 
-const create = async (pessoa: IPessoaFisica): Promise<{id: number} | Error > => {
+export interface ITecnico {
+  nome: string;
+  cpf: string;
+  email: string;
+  senha: string;
+  telefone: string;
+  admin: boolean;
+  pathAssinatura?: string;
+  file?: File; // Adicione esta linha para incluir o campo do arquivo
+
+}
+
+/*eslint-disable @typescript-eslint/no-unused-expressions*/
+
+const create = async (tecnico: ITecnico): Promise<{ id: number } | Error> => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_PESSOA_FISICA}`;
-    const response = await ApiTS.post(urlRelativa, pessoa);
+    const urlRelativa = `${Environment.CAMINHO_TECNICOS}`;
+
+    const formData = new FormData();
+    formData.append('nome', tecnico.nome);
+    formData.append('cpf', tecnico.cpf);
+    formData.append('email', tecnico.email);
+    formData.append('senha', tecnico.senha);
+    formData.append('telefone', tecnico.telefone);
+    formData.append('admin', tecnico.admin.toString());
+    if (tecnico.file) {
+      formData.append('file', tecnico.file);
+    }
+
+    const response = await ApiTS.post(urlRelativa, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
     if (response.status >= 200 && response.status < 300) {
       return response.data;
     } else {
-      return new Error('Erro ao cadastrar o registro');
+      return new Error('Erro ao cadastrar o registro intancia');
     }
 
   } catch (error) {
@@ -31,7 +60,7 @@ const create = async (pessoa: IPessoaFisica): Promise<{id: number} | Error > => 
       }
     }
 
-    return new Error('Erro ao cadastrar o registro');
+    return new Error('Erro ao cadastrar o registro error');
   }
 };
 
@@ -63,9 +92,9 @@ const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS
   }
 };
 
-const getByID = async (id: number): Promise<IPessoaFisica | Error > => {
+const getByID = async (id: number): Promise<ITecnico | Error > => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_PESSOA_FISICA}/${id}`;
+    const urlRelativa = `${Environment.CAMINHO_TECNICOS}/${id}`;
     const response = await ApiTS.get(urlRelativa);
 
     if (response.status >= 200 && response.status < 300) {
@@ -89,28 +118,51 @@ const getByID = async (id: number): Promise<IPessoaFisica | Error > => {
   }
 };
 
-const updateById = async(id: number, dados: IPessoaFisica): Promise<IPessoaFisica | Error> => {
+const updateById = async(id: number, tecnico: IUpdateTecnico): Promise<IUpdateTecnico | Error> => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_PESSOA_FISICA}/${id}`;
-    const { data } = await ApiTS.put(urlRelativa, dados);
+    const urlRelativa = `${Environment.CAMINHO_TECNICOS}/${id}`;
 
-    if (data) {
-      return data;
+    const formData = new FormData();
+    formData.append('nome', tecnico.nome!);
+    formData.append('cpf', tecnico.cpf!);
+    formData.append('email', tecnico.email!);
+    tecnico.senha ? formData.append('senha', tecnico.senha): null;
+    tecnico.updateSenha ? formData.append('updateSenha', tecnico.updateSenha): null;
+    formData.append('telefone', tecnico.telefone!);
+    formData.append('admin', tecnico.admin!.toString());
+    if (tecnico.file) {
+      formData.append('file', tecnico.file);
     }
 
-    return new Error('Erro ao atualizar o registro');
+    const response = await ApiTS.put(urlRelativa, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      return new Error('Erro ao cadastrar o registro');
+    }
 
   } catch (error) {
     console.log(error);
 
     if (axios.isAxiosError(error)) {
       // Verifica se o erro tem uma resposta com dados de erro
-      if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
-        return new Error((error.response.data).errors.default || 'Erro ao atualizar o registro');
+
+      if (error.response?.data && typeof error.response.data === 'object') {
+
+        const errors = error.response.data;
+
+        console.log(errors);
+
+        return new Error(JSON.stringify(errors) || 'Erro ao atualizar o registro bbb');
       }
     }
 
-    return new Error('Erro ao cadastrar o registro');
+    return new Error('Erro ao cadastrar o registro aaa');
   }
 };
 

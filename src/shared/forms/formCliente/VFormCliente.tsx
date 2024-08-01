@@ -6,8 +6,7 @@ import { useForm } from 'react-hook-form';
 import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../Service/api/models/Clientes';
 import { PessoaJuridicaService } from '../../Service/api/clientes/PessoaJuridicaService';
 import { PessoaFisicaService } from '../../Service/api/clientes/PessoaFisicaService';
-import { VTextField, VRadioField } from '../fields';
-import {  } from '../fields/VRadioField';
+import { VTextFieldCliente, VRadioField } from './fields';
 
 /*eslint-disable react/prop-types*/
 export const VFormCliente: React.FC = () => {
@@ -92,7 +91,7 @@ export const VFormCliente: React.FC = () => {
       if (Number(id)) {
         /*eslint-disable-next-line*/
         const { id: _id, ...restData } = formData; // Remover o campo id
-        PessoaFisicaService.updateById(Number(id), { ...restData as IPessoaFisica, possuiContrato: possuiContratoParser, endereco: { ...restData.endereco, numero: numeroParser } })
+        PessoaFisicaService.updateById(Number(id), { ...restData as IPessoaFisica, possuiContrato: possuiContratoParser, endereco: { ...restData.endereco, numero: numeroParser } })  
           .then((res) => {
             if (res instanceof Error) {
               return alert(res.message);
@@ -180,7 +179,7 @@ export const VFormCliente: React.FC = () => {
         {step === 1 && (
           <Box>
 
-            <VTextField
+            <VTextFieldCliente
               name='endereco.rua'
               control={control}
               label='Rua'
@@ -188,7 +187,7 @@ export const VFormCliente: React.FC = () => {
               errors={errors}
             />
 
-            <VTextField
+            <VTextFieldCliente
               name={'endereco.numero'}
               control={control}
               label={'Número'}
@@ -196,7 +195,7 @@ export const VFormCliente: React.FC = () => {
               errors={errors}
             />
 
-            <VTextField
+            <VTextFieldCliente
               name={'endereco.bairro'}
               control={control}
               label={'Bairro'}
@@ -204,7 +203,7 @@ export const VFormCliente: React.FC = () => {
               errors={errors}
             />
 
-            <VTextField
+            <VTextFieldCliente
               name={'endereco.cidade'}
               control={control}
               label={'Cidade'}
@@ -218,7 +217,7 @@ export const VFormCliente: React.FC = () => {
         {(step === 2 || !smDown) && (
           <Box>
 
-            <VTextField
+            <VTextFieldCliente
               name={'telefone'}
               control={control}
               label={'Telefone'}
@@ -229,7 +228,7 @@ export const VFormCliente: React.FC = () => {
               errors={errors}
             />
 
-            <VTextField
+            <VTextFieldCliente
               name={'email'}
               control={control}
               label={'Email'}
@@ -240,7 +239,7 @@ export const VFormCliente: React.FC = () => {
               errors={errors}
             />
 
-            <VTextField
+            <VTextFieldCliente
               name={'nomeContato'}
               control={control}
               label={'Nome para contato'}
@@ -270,14 +269,14 @@ export const VFormCliente: React.FC = () => {
             {/* Campos específicos para PF ou PJ */}
             {selectedValueTipo === 'fisico' && (
               <Box>
-                <VTextField
+                <VTextFieldCliente
                   name='nome'
                   control={control}
                   errors={errors}
                   label='Nome'
                   rules={{required: 'Nome é obrigatório'}}
                 />
-                <VTextField
+                <VTextFieldCliente
                   name='cpf'
                   control={control}
                   errors={errors}
@@ -289,14 +288,14 @@ export const VFormCliente: React.FC = () => {
 
             {selectedValueTipo === 'juridico' && (
               <Box>
-                <VTextField
+                <VTextFieldCliente
                   name='nome'
                   control={control}
                   errors={errors}
                   label='Razão Social'
                   rules={{required: 'Razão Social é obrigatório'}}
                 />
-                <VTextField
+                <VTextFieldCliente
                   name='cnpj'
                   control={control}
                   errors={errors}
