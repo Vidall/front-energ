@@ -6,13 +6,23 @@ interface ILayoutTabela {
   cabecalho: string[],
   /*eslint-disable @typescript-eslint/no-explicit-any*/
   dados: Array<{ [key: string]: any }>
+  pagina: 'tecnicos' | 'clientes'
 }
 
 export const FerramentaTabela: React.FC<ILayoutTabela> = ({
   cabecalho,
-  dados
+  dados,
+  pagina
 }) => {
   const navigate = useNavigate();
+  const currentPage = (linha: {[key: string]: any}) => {
+    if (pagina === 'clientes') {
+      return navigate(`detalhe/${linha.id}?tipoPessoa=${linha.tipo}`);
+    }
+
+    return navigate(`detalhe/${linha.id}`);
+
+  };
 
   return (
     <TableContainer 
@@ -39,7 +49,7 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
           {
             dados.map((linha, rowIndex) => (
               <TableRow key={rowIndex}>
-                <TableCell onClick={() => navigate(`detalhe/${linha.id}?tipoPessoa=${linha.tipo}`)}><Icon>search</Icon></TableCell>
+                <TableCell onClick={() => currentPage(linha)}><Icon>search</Icon></TableCell>
                 {
                   cabecalho.map((coluna, colIndex) => (
                     <TableCell

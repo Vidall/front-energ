@@ -1,2 +1,2 @@
-export * from './fields';
-export * from './formCliente';
+export * from './formTecnico/fields';
+export * from './formTecnico';

@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
-import { TPessoaFisicaOuJuridica } from '../../Service/api/models/Clientes';
+import { TPessoaFisicaOuJuridica } from '../../../Service/api/models/Clientes';
 
 interface VTextFieldProps {
   name: 'id' | 'nome' | 'endereco' | 'email' | 'cnpj' | 'tipo' | 'nomeContato' | 'possuiContrato' | 'tipoContrato' | 'cpf' | 'telefone' | 'endereco.rua' | 'endereco.numero' | 'endereco.bairro' | 'endereco.cidade';
@@ -9,11 +9,12 @@ interface VTextFieldProps {
   label: string;
   /*eslint-disable @typescript-eslint/no-explicit-any*/
   rules?: any;
+  editing?: boolean 
 }
 
 /*eslint-disable react/prop-types*/
 
-export const VTextField: React.FC<VTextFieldProps> = ({ name, control, errors, label, rules }) => {
+export const VTextFieldCliente: React.FC<VTextFieldProps> = ({ name, control, errors, label, rules, editing=false }) => {
   const error = name !== undefined ? name.split('.').reduce((acc, key) => acc?.[key] ?? null, errors as any) : 'Erro ao validar o campo';
   
   return (
@@ -21,6 +22,7 @@ export const VTextField: React.FC<VTextFieldProps> = ({ name, control, errors, l
       name={name}
       control={control}
       rules={rules}
+      disabled={editing}
       render={({ field }) => (
         <TextField
           {...field}
