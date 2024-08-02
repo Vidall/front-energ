@@ -3,9 +3,9 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../Service/api/models/Clientes';
-import { PessoaJuridicaService } from '../../Service/api/clientes/PessoaJuridicaService';
-import { PessoaFisicaService } from '../../Service/api/clientes/PessoaFisicaService';
+import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../Service/api-TS/models/Clientes';
+import { PessoaJuridicaService } from '../../Service/api-TS/clientes/PessoaJuridicaService';
+import { PessoaFisicaService } from '../../Service/api-TS/clientes/PessoaFisicaService';
 import { VTextFieldCliente, VRadioField } from './fields';
 
 /*eslint-disable react/prop-types*/

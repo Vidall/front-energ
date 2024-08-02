@@ -6,7 +6,7 @@ interface ILayoutTabela {
   cabecalho: string[],
   /*eslint-disable @typescript-eslint/no-explicit-any*/
   dados: Array<{ [key: string]: any }>
-  pagina: 'tecnicos' | 'clientes'
+  pagina: 'tecnicos' | 'clientes' | 'grupos_servicos'
 }
 
 export const FerramentaTabela: React.FC<ILayoutTabela> = ({

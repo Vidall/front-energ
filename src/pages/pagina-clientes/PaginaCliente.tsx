@@ -3,9 +3,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import { FerramentaPesquisar } from '../../shared/Components/ferramentas-pesquisar/FerramentaPesquisar';
-import { PessoaJuridicaService } from '../../shared/Service/api/clientes/PessoaJuridicaService';
-import { PessoaFisicaService } from '../../shared/Service/api/clientes/PessoaFisicaService';
-import { IPessoaFisica, IPessoaJuridica } from '../../shared/Service/api/models/Clientes';
+import { PessoaJuridicaService } from '../../shared/Service/api-TS/clientes/PessoaJuridicaService';
+import { PessoaFisicaService } from '../../shared/Service/api-TS/clientes/PessoaFisicaService';
+import { IPessoaFisica, IPessoaJuridica } from '../../shared/Service/api-TS/models/Clientes';
 import { FerramentaNavegacao, FerramentaTabela } from '../../shared/Components';
 import { VFormCliente } from '../../shared/forms/formCliente/VFormCliente';
 import { Environment } from '../../shared/Enviroment';

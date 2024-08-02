@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
-import { TPessoaFisicaOuJuridica } from '../../../Service/api/models/Clientes';
+import { TPessoaFisicaOuJuridica } from '../../../Service/api-TS/models/Clientes';
 
 interface VTextFieldProps {
   name: 'id' | 'nome' | 'endereco' | 'email' | 'cnpj' | 'tipo' | 'nomeContato' | 'possuiContrato' | 'tipoContrato' | 'cpf' | 'telefone' | 'endereco.rua' | 'endereco.numero' | 'endereco.bairro' | 'endereco.cidade';

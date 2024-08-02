@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, InputAdornment, IconButton, Icon } from '@mui/material';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
-import { IUpdateTecnico } from '../../../Service/api/models/Tecnico';
+import { IUpdateTecnico } from '../../../Service/api-TS/models/Tecnico';
 
 interface VTextFieldProps {
   name: keyof IUpdateTecnico;
