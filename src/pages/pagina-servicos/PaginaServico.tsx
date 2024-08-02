@@ -9,7 +9,7 @@ import { IServiceDTOOutputList } from '../../shared/Service/api-JAVA/models/Grup
 export const PaginaServico: React.FC = () => {
   const [grupoServicoData, setGrupoServicoData] = useState<{id: number, name: string}[]>();
   const [searchParams, setSearchParms] = useSearchParams('1');
-  const [rows, setRows] = useState<[]>();
+  const [rows, setRows] = useState<IServiceDTOOutputList>();
 
   const grupo = searchParams.get('grupo');
 
@@ -18,13 +18,8 @@ export const PaginaServico: React.FC = () => {
       .then(res => {
         if (res instanceof Error) {
           alert('passou na instancia');
-          console.log(res);
           return res.message;
         }
-        
-        console.log('renderizou os grupos');
-        
-        console.log(res.data._embedded.groupAllDTOOutputList);
         setGrupoServicoData(res.data._embedded.groupAllDTOOutputList);
       });
   }, []);
@@ -37,7 +32,10 @@ export const PaginaServico: React.FC = () => {
           return res.message;
         }
 
-        console.log(res.data);
+        console.log('renderizou os serviços');
+        console.log(res._embedded.serviceDTOOutputList);
+        setRows(res._embedded.serviceDTOOutputList);
+        console.log(rows);
       });
   }, [grupo]);
 
@@ -58,7 +56,7 @@ export const PaginaServico: React.FC = () => {
 
       <FerramentaTabela 
         cabecalho={['name']}
-        dados={[{name: 'luan'}]}
+        dados={rows}
         pagina='grupos_servicos'
       />
       

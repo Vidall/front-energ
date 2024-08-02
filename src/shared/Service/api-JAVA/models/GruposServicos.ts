@@ -32,17 +32,20 @@ export interface IdataService {
   serviceDTOOutputList: IServiceDTOOutputList
 }
 export interface IServiceDTOOutputList {  
-    id: number,
-    name: string,
-    description: string,
-    groupServices: {
+    serviceDTOOutputList: 
+    {
+      id: number,
+      name: string,
+      description: string,
+      groupServices: {
       id: number,
       name: string    
-  }
-}
+      }
+    }[]
+} 
 
 export interface IServiceComTotalCount {
-  data : IdataService[],
+  _embedded : IdataService,
   totalCount: number
 }
 
