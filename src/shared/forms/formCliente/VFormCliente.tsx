@@ -3,14 +3,15 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { IPessoaFisica, IPessoaJuridica, TPessoaFisicaOuJuridica } from '../../Service/api-TS/models/Clientes';
 import { PessoaJuridicaService } from '../../Service/api-TS/clientes/PessoaJuridicaService';
 import { PessoaFisicaService } from '../../Service/api-TS/clientes/PessoaFisicaService';
+import { parserDataCliente } from '../../utils/parserDataCliente';
+import { TPessoa } from '../../Service/api-TS/models/Clientes';
 import { VTextFieldCliente, VRadioField } from './fields';
 
 /*eslint-disable react/prop-types*/
 export const VFormCliente: React.FC = () => {
-  const [data, setData] = useState<IPessoaFisica | IPessoaJuridica>();
+  const [data, setData] = useState<TPessoa>();
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const [searchParams, setSearchParams] = useSearchParams();
   const [step, setStep] = useState(1);
@@ -18,7 +19,7 @@ export const VFormCliente: React.FC = () => {
   const formRef = useRef(null);
   const { id } = useParams();
 
-  const { control, handleSubmit, formState: { errors }, trigger, watch, reset } = useForm<TPessoaFisicaOuJuridica>({
+  const { control, handleSubmit, formState: { errors }, trigger, watch, reset } = useForm<TPessoa>({
     defaultValues: {}  // Definindo o valor padrão
   });
 
@@ -52,16 +53,6 @@ export const VFormCliente: React.FC = () => {
     }
   }, [reset, smDown, id]);
 
-  useEffect(() => {
-    if (selectedValueTipo === 'fisico') {
-      // Resetar os campos de CNPJ e nome quando mudar para 'fisico'
-      reset(prev => ({ ...prev, cnpj: undefined }));
-    } else if (selectedValueTipo === 'juridico') {
-      // Resetar os campos de CPF e nome quando mudar para 'juridico'
-      reset(prev => ({ ...prev, cpf: undefined }));
-    }
-  }, [selectedValueTipo, reset]);
-
   const handleClickProximo = async () => {
     let valid = true;
     if (step === 1 || !smDown) {
@@ -81,19 +72,16 @@ export const VFormCliente: React.FC = () => {
     if (step !== 1) setStep(step => step - 1);
   };
 
-  const handleSubmitFormPessoaFisica = async (formData: TPessoaFisicaOuJuridica) => {
+  const handleSubmitFormPessoaFisica = async (formData: TPessoa) => {
     const isValid = await trigger();
     if (isValid) {
-      const numeroParser = formData.endereco?.numero ? Number(formData.endereco.numero) : 0; 
-      const possuiContratoParserNumber = Number(formData.possuiContrato);
-      const possuiContratoParser = possuiContratoParserNumber === 1 ? true : false;
-      
-      if (Number(id)) {
-        /*eslint-disable-next-line*/
-        const { id: _id, ...restData } = formData; // Remover o campo id
-        PessoaFisicaService.updateById(Number(id), { ...restData as IPessoaFisica, possuiContrato: possuiContratoParser, endereco: { ...restData.endereco, numero: numeroParser } })  
+      /*eslint-disable-next-line*/ 
+      const { id: _id, ...restData } = formData; // Remover o campo id
+      if (Number(id)) {               
+        PessoaFisicaService.updateById(Number(id), parserDataCliente(restData))
           .then((res) => {
             if (res instanceof Error) {
+              console.log(parserDataCliente(restData));
               return alert(res.message);
             }
   
@@ -106,7 +94,7 @@ export const VFormCliente: React.FC = () => {
           })
           .catch(error => console.log(error));
       } else {
-        PessoaFisicaService.create({ ...formData as IPessoaFisica, possuiContrato: possuiContratoParser, endereco: { ...formData.endereco, numero: numeroParser } })
+        PessoaFisicaService.create(parserDataCliente(restData))
           .then((res) => {
             if (res instanceof Error) {
               return alert(res.message);
@@ -126,17 +114,14 @@ export const VFormCliente: React.FC = () => {
     }
   };
 
-  const handleSubmitFormPessoaJuridica = async (formData: TPessoaFisicaOuJuridica) => {
+  const handleSubmitFormPessoaJuridica = async (formData: TPessoa) => {
     const isValid = await trigger();
     if (isValid) {
-      const numeroParser = formData.endereco?.numero ? Number(formData.endereco.numero) : 0; 
-      const possuiContratoParserNumber = Number(formData.possuiContrato);
-      const possuiContratoParser = possuiContratoParserNumber === 1 ? true : false;
       
       if (Number(id)) {
         /*eslint-disable-next-line*/
         const { id: _id, ...restData } = formData; // Remover o campo id
-        PessoaJuridicaService.updateById(Number(id), { ...restData as IPessoaJuridica, possuiContrato: possuiContratoParser, endereco: { ...restData.endereco, numero: numeroParser } })
+        PessoaJuridicaService.updateById(Number(id), parserDataCliente(formData))
           .then((res) => {
             if (res instanceof Error) {
               return alert(res.message);
@@ -151,7 +136,7 @@ export const VFormCliente: React.FC = () => {
           })
           .catch(error => console.log(error));
       } else {
-        PessoaJuridicaService.create({ ...formData as IPessoaJuridica, possuiContrato: possuiContratoParser, endereco: { ...formData.endereco, numero: numeroParser } })
+        PessoaJuridicaService.create(parserDataCliente(formData))
           .then((res) => {
             if (res instanceof Error) {
               return alert(res.message);
@@ -259,7 +244,7 @@ export const VFormCliente: React.FC = () => {
               name='tipo'
               rules={{ required: 'Este campo é obrigatório' }}
               data={data!}
-              defaultValue={'juridico'}
+              defaultValue={data ? data.tipo : 'juridico'}
             >
               <FormControlLabel value="fisico" control={<Radio />} label="Pessoa Física" disabled={!!data}/>
               <FormControlLabel value="juridico" control={<Radio />} label="Pessoa Jurídica" disabled={!!data}/>
@@ -368,6 +353,7 @@ export const VFormCliente: React.FC = () => {
           )}
         </Box>
       </form>
+      
     </Paper>
   );
 };

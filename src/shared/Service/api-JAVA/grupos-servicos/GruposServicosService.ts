@@ -1,14 +1,9 @@
+import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
-import axios from 'axios';
-import { IUpdateTecnico } from '../models/Tecnico';
-import { IGrupo } from '../models/GruposServicos';
+import { IGrupoServicosCreated, IGruposServicos, IGruposServicosComTotal, IServiceComTotalCount } from '../models/GruposServicos';
 
-interface IGrupoProps {
-  name: string
-}
-
-const create = async (grupo: IGrupoProps): Promise<IGrupo | Error> => {
+const create = async (grupo: IGruposServicos): Promise<IGrupoServicosCreated | Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}`;
 
@@ -35,7 +30,7 @@ const create = async (grupo: IGrupoProps): Promise<IGrupo | Error> => {
   }
 };
 
-const getAll = async (): Promise<{} | Error> => {
+const getAll = async (): Promise<IGruposServicosComTotal | Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}`;
     const { data, headers } = await ApiOS.get(urlRelativa);
@@ -63,31 +58,31 @@ const getAll = async (): Promise<{} | Error> => {
   }
 };
 
-// const getByID = async (id: number): Promise<ITecnico | Error > => {
-//   try {
-//     const urlRelativa = `${Environment.CAMINHO_TECNICOS}/${id}`;
-//     const response = await ApiOS.get(urlRelativa);
+const getByID = async (id: number): Promise<IServiceComTotalCount | Error > => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}`;
+    const response = await ApiOS.get(urlRelativa);
 
-//     if (response.status >= 200 && response.status < 300) {
-//       return response.data;
-//     } else {
-//       return new Error('Erro ao cadastrar o registro');
-//     }
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      return new Error('Erro ao cadastrar o registro');
+    }
 
-//   } catch (error) {
-//     console.log(error);
+  } catch (error) {
+    console.log(error);
 
-//     // Se o erro for uma instância de AxiosError
-//     if (axios.isAxiosError(error)) {
-//       // Verifica se o erro tem uma resposta com dados de erro
-//       if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
-//         return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
-//       }
-//     }
+    // Se o erro for uma instância de AxiosError
+    if (axios.isAxiosError(error)) {
+      // Verifica se o erro tem uma resposta com dados de erro
+      if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+        return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
+      }
+    }
 
-//     return new Error('Erro ao cadastrar o registro');
-//   }
-// };
+    return new Error('Erro ao cadastrar o registro');
+  }
+};
 
 // const updateById = async(id: number, tecnico: IUpdateTecnico): Promise<IUpdateTecnico | Error> => {
 //   try {
@@ -140,6 +135,6 @@ const getAll = async (): Promise<{} | Error> => {
 export const GruposServicosService = {
   getAll,
   create,
-  // getByID,
+  getByID,
   // updateById
 };

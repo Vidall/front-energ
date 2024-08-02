@@ -1,46 +1,41 @@
 export interface IEndereco {
-  rua: string,
-  numero: number,
-  bairro: string,
-  cidade: string,
+  rua?: string,
+  numero?: number,
+  bairro?: string,
+  cidade?: string,
 }
 
-export interface IPessoaFisica {
-  id?: number
-  nome: string,
-  endereco: IEndereco,
-  email: string,
-  cpf: string | undefined,
-  tipo: 'fisico',
-  nomeContato: string,
-  possuiContrato: boolean,
-  tipoContrato: 'padrão' | 'completo',
-  telefone: string
+interface IBasePessoa {
+  id?: number;
+  nome: string;
+  endereco: IEndereco;
+  email: string;
+  nomeContato: string;
+  possuiContrato: boolean;
+  tipoContrato: 'padrão' | 'completo';
+  telefone: string;
 }
 
-export interface IPessoaJuridica {
-  id?: number
-  nome: string,
-  endereco: IEndereco,
-  email: string,
-  cnpj: string | undefined,
-  tipo: 'juridico',
-  nomeContato: string,
-  possuiContrato: boolean,
-  tipoContrato: 'padrão' | 'completo',
-  telefone: string
+export interface IPessoaFisica extends IBasePessoa {
+  cpf: string;
+  tipo: 'fisico';
 }
 
-export type TPessoaFisicaOuJuridica = {
-  id?: number
-  nome: string,
-  endereco: IEndereco,
-  email: string,
-  cnpj: string | undefined,
-  tipo: 'juridico' | 'fisico',
-  nomeContato: string,
-  possuiContrato: boolean,
-  tipoContrato: 'padrão' | 'completo',
-  cpf: string | undefined,
-  telefone: string
+export interface IUpdatePessoaFisica extends Partial<IBasePessoa> {
+  cpf?: string;
+  tipo?: 'fisico';
 }
+
+export interface IPessoaJuridica extends IBasePessoa {
+  cnpj: string;
+  tipo: 'juridico';
+}
+
+export interface IUpdatePessoaJuridica extends Partial<IBasePessoa> {
+  cnpj?: string;
+  tipo?: 'juridico';
+}
+
+export type TPessoa = IPessoaFisica | IPessoaJuridica;
+
+export type TPessoaFisicaOuJuridica = TPessoa;

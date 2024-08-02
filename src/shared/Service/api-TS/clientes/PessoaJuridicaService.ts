@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiTS } from '../axios-config';
-import { IPessoaJuridica } from '../models/Clientes';
+import { IPessoaJuridica, TPessoa } from '../models/Clientes';
 
 interface IPessoaJuridicaComTotalCount {
   data: IPessoaJuridica[],
   totalCount: number 
 }
 
-const create = async (pessoa: IPessoaJuridica): Promise<{id: number} | Error > => {
+const create = async (pessoa: TPessoa): Promise<{id: number} | Error > => {
   try {
     const urlRelativa = `${Environment.CAMINHO_PESSOA_JURIDICA}`;
     const response = await ApiTS.post(urlRelativa, pessoa);
@@ -55,7 +55,7 @@ const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS
   }
 };
 
-const getByID = async (id: number): Promise<IPessoaJuridica | Error > => {
+const getByID = async (id: number): Promise<TPessoa | Error > => {
   try {
     const urlRelativa = `${Environment.CAMINHO_PESSOA_JURIDICA}/${id}`;
     const response = await ApiTS.get(urlRelativa);
@@ -81,7 +81,7 @@ const getByID = async (id: number): Promise<IPessoaJuridica | Error > => {
   }
 };
 
-const updateById = async(id: number, dados: IPessoaJuridica): Promise<IPessoaJuridica | Error> => {
+const updateById = async(id: number, dados: TPessoa): Promise<TPessoa | Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_PESSOA_JURIDICA}/${id}`;
     const { data } = await ApiTS.put(urlRelativa, dados);
