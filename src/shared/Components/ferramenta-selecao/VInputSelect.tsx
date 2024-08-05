@@ -33,6 +33,8 @@ export const VInputSelect: React.FC<IInputSelectProps> = ({ grupoServicoData }) 
         value={grupo}
         label="Grupos"
         onChange={handleChange}
+        size='small'
+        defaultValue='1'
       >
         {grupoServicoData.map((valor: IGrupo) => (
           <MenuItem value={valor.id} key={valor.id}>{valor.name}</MenuItem>

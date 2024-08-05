@@ -1,3 +1,4 @@
-export * from './pagina-inicial/PaginaInicial';
-export * from './pagina-tecnico/PaginaTecnico';
-export * from './pagina-tecnico/DetalheTecnico';
+export * from './pagina-inicial';
+export * from './pagina-tecnico';
+export * from './pagina-clientes';
+export * from './pagina-servicos';

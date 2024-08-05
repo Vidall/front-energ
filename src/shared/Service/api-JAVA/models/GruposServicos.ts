@@ -28,24 +28,25 @@ export interface IGruposServicos {
 
 // ------------------------------
 
+export interface IServices {
+  id: number,
+  name: string,
+  description: string,
+  groupServices: {
+    id: number,
+    name: string    
+  }
+}
+
 export interface IdataService {
-  serviceDTOOutputList: IServiceDTOOutputList
+  _embedded: IServiceDTOOutputList
 }
 export interface IServiceDTOOutputList {  
-    serviceDTOOutputList: 
-    {
-      id: number,
-      name: string,
-      description: string,
-      groupServices: {
-      id: number,
-      name: string    
-      }
-    }[]
+  serviceDTOOutputList: IServices[]
 } 
 
 export interface IServiceComTotalCount {
-  _embedded : IdataService,
+  _embedded : IServiceDTOOutputList,
   totalCount: number
 }
 

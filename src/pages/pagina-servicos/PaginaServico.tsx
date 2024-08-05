@@ -1,17 +1,28 @@
-import { Box, Paper } from '@mui/material';
+import { Box, Pagination, Paper } from '@mui/material';
 import { FerramentaNavegacao, FerramentaTabela, VInputSelect } from '../../shared/Components';
 import { LayoutPaginas } from '../../shared/Layout';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { GruposServicosService } from '../../shared/Service/api-JAVA/grupos-servicos/GruposServicosService';
 import { useSearchParams } from 'react-router-dom';
-import { IServiceDTOOutputList } from '../../shared/Service/api-JAVA/models/GruposServicos';
+import { IServices } from '../../shared/Service/api-JAVA/models/GruposServicos';
+import { VFormServicos } from '../../shared/forms/formServicos';
 
 export const PaginaServico: React.FC = () => {
   const [grupoServicoData, setGrupoServicoData] = useState<{id: number, name: string}[]>();
   const [searchParams, setSearchParms] = useSearchParams('1');
-  const [rows, setRows] = useState<IServiceDTOOutputList>();
-
+  const [rows, setRows] = useState<IServices[]>([]);
+  const [totalCount, SetTotalCount] = useState<number>();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  
+  const tipo = searchParams.get('tipo');
   const grupo = searchParams.get('grupo');
+  
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+
+    setSearchParms({...Object.fromEntries(searchParams.entries()), page: value.toString() }, {replace: true});
+    // setIsload(false)
+  };
 
   useEffect(() => {
     GruposServicosService.getAll()
@@ -20,23 +31,33 @@ export const PaginaServico: React.FC = () => {
           alert('passou na instancia');
           return res.message;
         }
+        
         setGrupoServicoData(res.data._embedded.groupAllDTOOutputList);
+
       });
   }, []);
 
   useEffect(() => {
-    GruposServicosService.getByID(Number(grupo))
-      .then(res => {
-        if (res instanceof Error) {
-          alert(res.message);
-          return res.message;
-        }
+    if (grupo) {
+      GruposServicosService.getByID(Number(grupo), currentPage - 1)
+        .then(res => {
+          if (res instanceof Error) {
+            alert(res.message);
+            return res.message;
+          }
 
-        console.log('renderizou os serviços');
-        console.log(res._embedded.serviceDTOOutputList);
-        setRows(res._embedded.serviceDTOOutputList);
-        console.log(rows);
-      });
+          if (res._embedded) {
+            setRows(res._embedded.serviceDTOOutputList);
+            SetTotalCount(res.totalCount);
+            
+          }
+
+        });
+    }
+  }, [grupo, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
   }, [grupo]);
 
   return (
@@ -44,21 +65,38 @@ export const PaginaServico: React.FC = () => {
       titulo='Área serviços'
     >
 
-      <FerramentaNavegacao
-        listaNavegacao={['Todos', 'Cadastrar']}
-      />
+      { tipo === 'Todos' && (
+        <>
+          <FerramentaNavegacao
+            listaNavegacao={['Todos', 'Cadastrar']}
+          />
 
-      <Paper component={Box} padding={1}>
-        <VInputSelect
-          grupoServicoData={grupoServicoData ? grupoServicoData : [{id: 0, name: 'teste'}]}
-        />
-      </Paper>
+          <Paper component={Box} padding={1}>
+            <VInputSelect
+              grupoServicoData={grupoServicoData ? grupoServicoData : [{id: 0, name: 'não foi possível consultar'}]}
+            />
+          </Paper>
 
-      <FerramentaTabela 
-        cabecalho={['name']}
-        dados={rows}
-        pagina='grupos_servicos'
-      />
+          <FerramentaTabela 
+            cabecalho={['name']}
+            dados={rows}
+            pagina='grupos_servicos'
+          />
+
+          <Pagination count={totalCount || 20}
+            page={currentPage}
+            onChange={handlePageChange}
+          />
+        </>
+      )
+      }
+
+      { tipo === 'Cadastrar' && (
+        <VFormServicos/>
+
+      )
+
+      }
       
     </LayoutPaginas>
     

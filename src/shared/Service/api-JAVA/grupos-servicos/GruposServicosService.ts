@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
-import { IGrupoServicosCreated, IGruposServicos, IGruposServicosComTotal, IServiceComTotalCount } from '../models/GruposServicos';
+import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
 
-const create = async (grupo: IGruposServicos): Promise<IGrupoServicosCreated | Error> => {
+const create = async (id: number, servico: Omit<IServices, 'id' | 'groupServices'>): Promise<IGrupoServicosCreated | Error> => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}`;
+    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}/service`;
 
-    const response = await ApiOS.post(urlRelativa, grupo);
+    const response = await ApiOS.post(urlRelativa, servico);
 
     if (response.status >= 200 && response.status < 300) {
       return response.data;
@@ -58,15 +58,18 @@ const getAll = async (): Promise<IGruposServicosComTotal | Error> => {
   }
 };
 
-const getByID = async (id: number): Promise<IServiceComTotalCount | Error > => {
+const getByID = async (id: number, currentPage: number): Promise<IServiceComTotalCount | Error > => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}`;
-    const response = await ApiOS.get(urlRelativa);
+    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}?page=${currentPage}`;
+    const {data, headers} = await ApiOS.get(urlRelativa);
 
-    if (response.status >= 200 && response.status < 300) {
-      return response.data;
+    if (data) {
+      return {
+        _embedded: data._embedded,
+        totalCount: Number(headers['x-total-pages'] || Environment.LIMITE_DE_LINHAS)
+      };
     } else {
-      return new Error('Erro ao cadastrar o registro');
+      return new Error('Erro ao cadastrar o registro aa');
     }
 
   } catch (error) {
@@ -76,7 +79,7 @@ const getByID = async (id: number): Promise<IServiceComTotalCount | Error > => {
     if (axios.isAxiosError(error)) {
       // Verifica se o erro tem uma resposta com dados de erro
       if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
-        return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
+        return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro bb');
       }
     }
 

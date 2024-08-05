@@ -25,7 +25,7 @@ export const PaginaInicial = () => {
           </Grid>
 
           <Grid item xs={6} md={4} lg={2} display={'flex'} justifyContent={'center'}>
-            <BotaoMenu to={'/servicos'} texto='Serviços' nomeIcone='build'/>
+            <BotaoMenu to={'/servicos?tipo=Todos&grupo=1'} texto='Serviços' nomeIcone='build'/>
           </Grid>
 
         </Grid>      

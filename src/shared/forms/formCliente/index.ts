@@ -1,1 +1,1 @@
-export * from './VFormCliente';
+export * from './fields';

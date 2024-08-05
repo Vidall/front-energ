@@ -39,6 +39,12 @@ const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS
     const urlRelativa = `${Environment.CAMINHO_PESSOA_FISICA}?page=${Number(page)}&limit=${limit}&filter=${filter}`;
     const { data, headers } = await ApiTS.get(urlRelativa);
 
+    if(headers) {
+      alert('pegou o header');
+    }else {
+      alert('não pegou o header');
+    }
+
     if (data) {
       return {
         data,
