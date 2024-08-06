@@ -20,6 +20,7 @@ export const Environment = {
   URL_BASE_API_EMAIL: 'http://localhost:8081',
   URL_BASE_FRONT: 'http://localhost:3000',
 
+  CAMINHO_INICIO: '/incio',
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',
   CAMINHO_PESSOA_JURIDICA: '/clientes/pessoaJuridica',
   CAMINHO_TECNICOS: '/tecnicos',
