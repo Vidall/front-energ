@@ -1,11 +1,15 @@
 import { TextField } from '@mui/material';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
-import { TPessoaFisicaOuJuridica } from '../../../Service/api-TS/models/Clientes';
+
+interface IVFormProps {
+  name: string,
+  description: string
+}
 
 interface VTextFieldProps {
-  name: 'id' | 'nome' | 'endereco' | 'email' | 'cnpj' | 'tipo' | 'nomeContato' | 'possuiContrato' | 'tipoContrato' | 'cpf' | 'telefone' | 'endereco.rua' | 'endereco.numero' | 'endereco.bairro' | 'endereco.cidade';
-  control: Control<TPessoaFisicaOuJuridica>;
-  errors: FieldErrors<TPessoaFisicaOuJuridica>;
+  name: keyof IVFormProps;
+  control: Control<IVFormProps>;
+  errors: FieldErrors<IVFormProps>;
   label: string;
   /*eslint-disable @typescript-eslint/no-explicit-any*/
   rules?: any;
@@ -14,8 +18,8 @@ interface VTextFieldProps {
 
 /*eslint-disable react/prop-types*/
 
-export const VTextFieldCliente: React.FC<VTextFieldProps> = ({ name, control, errors, label, rules, editing=false }) => {
-  const error = name !== undefined ? name.split('.').reduce((acc, key) => acc?.[key] ?? null, errors as any) : 'Erro ao validar o campo';
+export const VTextFieldServicos: React.FC<VTextFieldProps> = ({ name, control, errors, label, rules, editing=false }) => {
+  const error = errors[name];
   
   return (
     <Controller

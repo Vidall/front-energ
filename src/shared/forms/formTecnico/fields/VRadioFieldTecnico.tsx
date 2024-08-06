@@ -1,7 +1,7 @@
 import { Box, FormControl, FormControlLabelProps, FormLabel, RadioGroup, Typography } from '@mui/material';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 
-import { IUpdateTecnico } from '../../../Service/api/models/Tecnico';
+import { IUpdateTecnico } from '../../../Service/api-TS/models/Tecnico';
 
 interface VTextFieldProps {
   children: React.ReactElement<FormControlLabelProps> | React.ReactElement<FormControlLabelProps>[]

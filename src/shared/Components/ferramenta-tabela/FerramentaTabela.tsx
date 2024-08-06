@@ -6,7 +6,7 @@ interface ILayoutTabela {
   cabecalho: string[],
   /*eslint-disable @typescript-eslint/no-explicit-any*/
   dados: Array<{ [key: string]: any }>
-  pagina: 'tecnicos' | 'clientes'
+  pagina: 'tecnicos' | 'clientes' | 'grupos_servicos'
 }
 
 export const FerramentaTabela: React.FC<ILayoutTabela> = ({
@@ -18,6 +18,9 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
   const currentPage = (linha: {[key: string]: any}) => {
     if (pagina === 'clientes') {
       return navigate(`detalhe/${linha.id}?tipoPessoa=${linha.tipo}`);
+    }
+    if (pagina === 'grupos_servicos') {
+      return navigate(`detalhe/${linha.id}`);
     }
 
     return navigate(`detalhe/${linha.id}`);

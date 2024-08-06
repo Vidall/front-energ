@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { VAssinaturaField, VRadioFieldTecnico, VTextFieldTecnico } from './fields';
-import {  ITecnico, IUpdateTecnico } from '../../Service/api/models/Tecnico';
-import { TecnicoService } from '../../Service/api/tecnicos/TecnicoService';
+import {  ITecnico, IUpdateTecnico } from '../../Service/api-TS/models/Tecnico';
+import { TecnicoService } from '../../Service/api-TS/tecnicos/TecnicoService';
 import { Environment } from '../../Enviroment';
 
 /*eslint-disable react/prop-types*/

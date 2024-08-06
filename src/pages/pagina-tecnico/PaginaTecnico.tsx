@@ -1,11 +1,11 @@
 import { FerramentaNavegacao, FerramentaTabela } from '../../shared/Components';
 import { FerramentaPesquisar } from '../../shared/Components/ferramentas-pesquisar/FerramentaPesquisar';
-import { ITecnico } from '../../shared/Service/api/models/Tecnico';
+import { ITecnico } from '../../shared/Service/api-TS/models/Tecnico';
 import { LayoutPaginas } from '../../shared/Layout';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
-import { TecnicoService } from '../../shared/Service/api/tecnicos/TecnicoService';
+import { TecnicoService } from '../../shared/Service/api-TS/tecnicos/TecnicoService';
 import { LinearProgress, Pagination } from '@mui/material';
 import { Environment } from '../../shared/Enviroment';
 import { VFormTecnico } from '../../shared/forms';

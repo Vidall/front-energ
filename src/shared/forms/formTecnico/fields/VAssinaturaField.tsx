@@ -2,7 +2,7 @@ import SignatureCanvas from 'react-signature-canvas';
 import { Box, Typography, useTheme } from '@mui/material';
 import { useRef } from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { IUpdateTecnico } from '../../../Service/api/models/Tecnico';
+import { IUpdateTecnico } from '../../../Service/api-TS/models/Tecnico';
 
 /*eslint-disable @typescript-eslint/no-explicit-any*/
 
