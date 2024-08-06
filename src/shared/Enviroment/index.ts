@@ -23,8 +23,10 @@ export const Environment = {
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',
   CAMINHO_PESSOA_JURIDICA: '/clientes/pessoaJuridica',
   CAMINHO_TECNICOS: '/tecnicos',
+  CAMINHO_EQUIPAMENTOS: '/equipamentos',
 
-  CAMINHO_GRUPOS_SERVICOS: '/api/grupos_servicos'
+  CAMINHO_GRUPOS_SERVICOS: '/api/grupos_servicos',
+  CAMINHO_SERVICOS: '/api/servicos'
 
   // /**
   //  * Caminhos da url para realizar operações com pessoas fisicas

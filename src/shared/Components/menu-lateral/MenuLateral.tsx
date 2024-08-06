@@ -1,5 +1,5 @@
 import { Box, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
-import { useDrawerContext } from '../../Contexts';
+import { useAppThemeContext, useDrawerContext } from '../../Contexts';
 import { useNavigate } from 'react-router';
 
 interface IMenuLateralProps {
@@ -12,6 +12,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const {isDrawerOpen, toggleDrawerOpen} = useDrawerContext();
   const navigate = useNavigate();
+  const {toggleTheme} = useAppThemeContext();
 
   return (
 
@@ -24,6 +25,17 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
                 <ListItemIcon onClick={() => navigate('/inicio')}>
                   <Icon>
                     house
+                  </Icon>
+                  <ListItemText primary={'Inicio'}/>
+                </ListItemIcon>                
+              </ListItemButton>              
+            </ListItem>
+
+            <ListItem >               
+              <ListItemButton>
+                <ListItemIcon onClick={toggleTheme}>
+                  <Icon>
+                    tema
                   </Icon>
                   <ListItemText primary={'Inicio'}/>
                 </ListItemIcon>                

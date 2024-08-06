@@ -1,5 +1,5 @@
-import { Box, Button, FormControl, FormControlLabel, Paper, Radio, Theme, useMediaQuery } from '@mui/material';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Box, Button, FormControl, FormControlLabel, Icon, Paper, Radio, Theme, useMediaQuery } from '@mui/material';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -8,6 +8,7 @@ import { PessoaFisicaService } from '../../Service/api-TS/clientes/PessoaFisicaS
 import { parserDataCliente } from '../../utils/parserDataCliente';
 import { TPessoa } from '../../Service/api-TS/models/Clientes';
 import { VTextFieldCliente, VRadioField } from './fields';
+import { Environment } from '../../Enviroment';
 
 /*eslint-disable react/prop-types*/
 export const VFormCliente: React.FC = () => {
@@ -16,6 +17,7 @@ export const VFormCliente: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [step, setStep] = useState(1);
   const [finalStep] = useState(4);
+  const navigate = useNavigate();
   const formRef = useRef(null);
   const { id } = useParams();
 
@@ -156,14 +158,27 @@ export const VFormCliente: React.FC = () => {
     }
   };
 
+  const handleClickEquipamentos = () => {
+    navigate(`${Environment.CAMINHO_EQUIPAMENTOS}/${id}?tipo=${selectedValueTipo}`);
+  };
+
   return (
     <Paper component={Box} padding={2}>
       <form onSubmit={handleSubmit(selectedValueTipo === 'fisico' ? handleSubmitFormPessoaFisica : handleSubmitFormPessoaJuridica)} ref={formRef}>
+        <Box display={'flex'} justifyContent={'space-between'} alignContent={'center'}>
+          <Button variant='contained' disabled={data ? false : true} onClick={handleClickEquipamentos}>
+          Equipamentos
+          </Button>
+          <Button variant='outlined'>
+            <Icon>
+            delete
+            </Icon>
+          </Button>
+        </Box>
 
         {/* Form de endereço */}
         {step === 1 && (
           <Box>
-
             <VTextFieldCliente
               name='endereco.rua'
               control={control}

@@ -1,11 +1,12 @@
-import { Box, Button, Paper } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { VTextFieldServicos } from './fields';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Box, Button, Paper, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import { VInputSelect } from '../../Components';
+import { useForm } from 'react-hook-form';
 import { GruposServicosService } from '../../Service/api-JAVA/grupos-servicos/GruposServicosService';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ServicosService } from '../../Service/api-JAVA/servicos/ServicosService';
 import { IServices } from '../../Service/api-JAVA/models/GruposServicos';
+import { VInputSelect } from '../../Components';
+import { VTextFieldServicos } from './fields';
 
 interface IVFormProps {
   name: string,
@@ -14,73 +15,110 @@ interface IVFormProps {
 
 export const VFormServicos: React.FC = () => {
   const [grupoServicoData, setGrupoServicoData] = useState<{id: number, name: string}[]>();
-  const {control, handleSubmit, formState: { errors }, reset} = useForm<IVFormProps>();
+  const { control, handleSubmit, formState: { errors }, reset, trigger } = useForm<IVFormProps>();
   const [searchParms, setSearchParms] = useSearchParams();
   const [rows, setRows] = useState();
+  const { id } = useParams();
   const navigate = useNavigate();
   const formRef = useRef(null);
+  const [nomeGrupo, setNomeGrupo] = useState('');
 
   const grupo = searchParms.get('grupo');
 
   useEffect(() => {
-    GruposServicosService.getAll()
-      .then(res => {
-        if (res instanceof Error) {
-          return res.message;
-        }
-        setGrupoServicoData(res.data._embedded.groupAllDTOOutputList);
-      });
-  }, []);
+    if (!id) {
+      GruposServicosService.getAll()
+        .then(res => {
+          if (res instanceof Error) {
+            return res.message;
+          }
+          setGrupoServicoData(res.data._embedded.groupAllDTOOutputList);
+        });
+    }
 
-  const handleSubmitForm = (formData: Omit<IServices, 'id' | 'groupServices'>) => {
-    GruposServicosService.create(Number(grupo), formData)
-      .then(res => {
-        if (res instanceof Error) {
-          return  res.message;
-        }
+    if (id) {
+      ServicosService.getByID(Number(id))
+        .then(res => {
+          if (res instanceof Error) {
+            return res.message;
+          }
 
-        alert('Registro criado com sucesso');
-        navigate(`/servicos?tipo=Todos&grupo=${grupo}`);
+          reset(res);
+          setGrupoServicoData([{id: 1, name: res.groupServices.name}]);
+          setNomeGrupo(res.groupServices.name);
+        });
+    }
+  }, [id, reset]);
 
-      });
+  const handleSubmitForm = async (formData: Omit<IServices, 'id' | 'groupServices'>) => {
+    const isValid = await trigger(['name', 'description']);
+    if (isValid) {
+      if (!Number(id)) {
+        ServicosService.create(Number(grupo), formData)
+          .then(res => {
+            if (res instanceof Error) {
+              alert(res.message);
+              return;
+            }
+            alert('Registro criado com sucesso');
+            navigate(`/servicos?tipo=Todos&grupo=${grupo}`);
+          });
+      } else {
+        ServicosService.updateById(Number(id), formData)
+          .then(res => {
+            if (res instanceof Error) {
+              alert(res.message);
+              return;
+            }
+            alert('Registro atualizado com sucesso');
+            navigate(`/servicos?tipo=Todos&grupo=${grupo}`);
+          })
+          .catch(error => console.error(error));
+      }
+    }
   };
 
   return (
     <Paper component={Box} padding={1}>
-
       <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
-        
-        <VInputSelect
-          grupoServicoData={grupoServicoData ? grupoServicoData : [{id: 0, name: 'não foi possível consultar'}]}
-        />
+        {!id && (
+          <VInputSelect
+            grupoServicoData={grupoServicoData ? grupoServicoData : [{ id: 0, name: 'não foi possível consultar' }]}
+          />
+        )}
+        {id && (
+          <TextField
+            fullWidth
+            size='small'
+            value={nomeGrupo}
+            disabled={true}
+          />
+        )}
         <VTextFieldServicos
           control={control}
           errors={errors}
           name='name'
           label='Nome do Serviço'
-          rules={{require: 'Este campo é obrigatório'}}
+          rules={{ required: 'Este campo é obrigatório' }}
         />
-
         <VTextFieldServicos
           control={control}
           errors={errors}
           name='description'
           label='Descrição'
-          rules={{require: 'Este campo é obrigatório'}}
+          rules={{ required: 'Este campo é obrigatório' }}
         />
-
         <Box
           display={'flex'}
           alignContent={'center'}
           justifyContent={'end'}
-          paddingTop={1}>
+          paddingTop={1}
+        >
           <Button type='submit' variant='contained'>
-          Cadastrar
-
+            {id ? 'Editar' : 'Cadastrar'}
           </Button>
         </Box>
       </form>
-
     </Paper>
   );
 };

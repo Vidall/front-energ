@@ -1,7 +1,7 @@
 import { Box, Pagination, Paper } from '@mui/material';
 import { FerramentaNavegacao, FerramentaTabela, VInputSelect } from '../../shared/Components';
 import { LayoutPaginas } from '../../shared/Layout';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GruposServicosService } from '../../shared/Service/api-JAVA/grupos-servicos/GruposServicosService';
 import { useSearchParams } from 'react-router-dom';
 import { IServices } from '../../shared/Service/api-JAVA/models/GruposServicos';

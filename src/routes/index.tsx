@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router';
 import { DetalheTecnico, PaginaInicial, PaginaTecnico } from '../pages';
 import { PaginaCliente, DetalhePessoa } from '../pages/pagina-clientes';
 import { DetalheServicos, PaginaServico } from '../pages/pagina-servicos';
+import { PaginaEquipamento } from '../pages/pagina-equipamento';
 
 export const AppRoutes = () => {
 
@@ -21,7 +22,9 @@ export const AppRoutes = () => {
       <Route path='/tecnicos/detalhe/:id' element={<DetalheTecnico/>}/>
 
       <Route path='/servicos' element={<PaginaServico/>}/>
-      <Route path='/servicos/detalhe' element={<DetalheServicos/>}/>
+      <Route path='/servicos/detalhe/:id' element={<DetalheServicos/>}/>
+
+      <Route path='/equipamentos/:id' element={<PaginaEquipamento/>}/>
 
       <Route path='*' element={<Navigate to={'/inicio'}/>}/>
 

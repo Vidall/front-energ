@@ -19,6 +19,9 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
     if (pagina === 'clientes') {
       return navigate(`detalhe/${linha.id}?tipoPessoa=${linha.tipo}`);
     }
+    if (pagina === 'grupos_servicos') {
+      return navigate(`detalhe/${linha.id}`);
+    }
 
     return navigate(`detalhe/${linha.id}`);
 
