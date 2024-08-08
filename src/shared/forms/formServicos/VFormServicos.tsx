@@ -71,7 +71,7 @@ export const VFormServicos: React.FC = () => {
               return;
             }
             alert('Registro atualizado com sucesso');
-            navigate(`/servicos?tipo=Todos&grupo=${grupo}`);
+            navigate(`/servicos?tipo=Todos&grupo=${1}`);
           })
           .catch(error => console.error(error));
       }
@@ -83,7 +83,7 @@ export const VFormServicos: React.FC = () => {
       <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
         {!id && (
           <VInputSelect
-            grupoServicoData={grupoServicoData ? grupoServicoData : [{ id: 0, name: 'não foi possível consultar' }]}
+            dataSelect={grupoServicoData ? grupoServicoData : [{ id: 0, name: 'não foi possível consultar' }]}
           />
         )}
         {id && (

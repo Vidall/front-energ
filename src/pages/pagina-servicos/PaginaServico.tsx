@@ -73,7 +73,7 @@ export const PaginaServico: React.FC = () => {
 
           <Paper component={Box} padding={1}>
             <VInputSelect
-              grupoServicoData={grupoServicoData ? grupoServicoData : [{id: 0, name: 'não foi possível consultar'}]}
+              dataSelect={grupoServicoData ? grupoServicoData : [{id: 0, name: 'não foi possível consultar'}]}
             />
           </Paper>
 
