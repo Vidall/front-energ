@@ -1,7 +1,6 @@
 export interface IGrupo {
   id: number,
-  name: string,
-  services: []
+  name: string
 }
 
 export interface IGrupoServicosCreated {

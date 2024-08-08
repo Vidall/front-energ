@@ -8,12 +8,12 @@ interface IGrupo {
 }
 
 interface IInputSelectProps {
-  grupoServicoData: IGrupo[];
+  dataSelect: IGrupo[];
 }
 
 /*eslint-disable react/prop-types*/
 
-export const VInputSelect: React.FC<IInputSelectProps> = ({ grupoServicoData }) => {
+export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect}) => {
   const [grupo, setGrupo] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -26,16 +26,16 @@ export const VInputSelect: React.FC<IInputSelectProps> = ({ grupoServicoData }) 
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Grupos</InputLabel>
+      <InputLabel id="demo-simple-select-label">Cadastrados</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={grupo}
-        label="Grupos"
+        label={'Cadastrados'}
         onChange={handleChange}
         size='small'
       >
-        {grupoServicoData.map((valor: IGrupo) => (
+        {dataSelect.map((valor: IGrupo) => (
           <MenuItem value={valor.id} key={valor.id}>{valor.name}</MenuItem>
         ))}
       </Select>
