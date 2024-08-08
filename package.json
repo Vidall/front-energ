@@ -11,12 +11,12 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.104",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "axios": "^1.7.2",
     "eslint-config-react-app": "^7.0.1",
     "frontend": "file:",
-    "gh-pages": "^6.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
@@ -32,7 +32,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -56,12 +55,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.7.0",
-    "@types/node": "^22.1.0",
     "@types/react-signature-canvas": "^1.0.5",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.35.0",
     "globals": "^15.8.0",
     "typescript-eslint": "^7.16.0"
-  },
-  "homepage": "https://github.com/Vidall/front-energ"
+  }
 }
