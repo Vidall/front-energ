@@ -28,7 +28,7 @@ export const LayoutPaginas: React.FC<IDetalheProps> = ({ titulo, children }) => 
                 height: 30      
               }}
               component="img"
-              image="/logo192.png"
+              image="/logoEnerg.png"
               alt="Logo"
             />
           </Card>
