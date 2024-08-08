@@ -135,7 +135,7 @@ const getByIdEquipamento = async (id: number): Promise<IEquipamento | Error > =>
   }
 };
 
-const updateById = async(id: number, equipamento: IEquipamento): Promise<void | Error> => {
+const updateById = async(id: number, equipamento: Omit<IEquipamento, 'id'>): Promise<void | Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_EQUIPAMENTOS}/${id}`;
 

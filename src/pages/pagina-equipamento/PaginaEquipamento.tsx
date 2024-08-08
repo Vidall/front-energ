@@ -52,10 +52,11 @@ export const PaginaEquipamento: React.FC = () => {
 
   const handleSubmitForm = (formData: IEquipamentoDetalhe) => {
     if (editing) {
-      const EquipamentoComId: IEquipamento = { equipamento: { ...formData }, id: grupo, idCliente: Number(id), tipo: tipo };
-      EquipamentosService.updateById(Number(id), EquipamentoComId)
+      const EquipamentoComId: Omit<IEquipamento, 'id'> = { equipamento: { ...formData }, idCliente: Number(id), tipo: tipo };
+      EquipamentosService.updateById(Number(grupo), EquipamentoComId)
         .then(res => {
           if (res instanceof Error) {
+            console.log(tipo);
             return res.message;
           }
 
