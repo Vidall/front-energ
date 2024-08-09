@@ -13,7 +13,7 @@ export const PaginaInicial = () => {
         <Grid container item justifyContent={'center'}>
 
           <Grid item xs={6} md={4} lg={2} display={'flex'} justifyContent={'center'} marginBottom={2}>
-            <BotaoMenu to={'/ordens-de-servicos'} texto='Os' nomeIcone='miscellaneous_services'/>
+            <BotaoMenu to={'/ordens-de-servicos?tipo=Todos'} texto='Os' nomeIcone='miscellaneous_services'/>
           </Grid>
 
           <Grid item xs={6} md={4} lg={2} display={'flex'} justifyContent={'center'}>

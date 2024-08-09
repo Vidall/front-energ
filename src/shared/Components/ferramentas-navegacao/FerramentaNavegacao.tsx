@@ -3,8 +3,10 @@ import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 
 interface INavegacao {
+  /**
+   * Lista de navegação entre as paginas por exemplo ['Todos', 'Cadastrar']
+   */
   listaNavegacao: string[],
-  
 }
 
 export const FerramentaNavegacao: React.FC<INavegacao> = ({ listaNavegacao }) => {

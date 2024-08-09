@@ -4,6 +4,7 @@ import { DetalheTecnico, PaginaInicial, PaginaTecnico } from '../pages';
 import { PaginaCliente, DetalhePessoa } from '../pages/pagina-clientes';
 import { DetalheServicos, PaginaServico } from '../pages/pagina-servicos';
 import { PaginaEquipamento } from '../pages/pagina-equipamento';
+import { PaginaOS } from '../pages/pagina-os/PaginaOS';
 
 export const AppRoutes = () => {
 
@@ -11,7 +12,7 @@ export const AppRoutes = () => {
     <Routes>
       <Route path='/inicio' element={<PaginaInicial/>}/>
 
-      <Route path='/ordens-de-servicos' element={<>ola</>}/>
+      <Route path='/ordens-de-servicos' element={<PaginaOS/>}/>
 
       <Route path='/clientes' element={<PaginaCliente/>}/>
 

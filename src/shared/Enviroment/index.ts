@@ -28,7 +28,8 @@ export const Environment = {
   CAMINHO_EQUIPAMENTOS_DETALHE: '/equipamentos/detalhe',
 
   CAMINHO_GRUPOS_SERVICOS: '/api/grupos_servicos',
-  CAMINHO_SERVICOS: '/api/servicos'
+  CAMINHO_SERVICOS: '/api/servicos',
+  CAMINHO_ORDEM: '/api/ordem'
 
   // /**
   //  * Caminhos da url para realizar operações com pessoas fisicas

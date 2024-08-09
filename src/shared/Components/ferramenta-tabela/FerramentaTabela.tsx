@@ -5,8 +5,12 @@ import { useNavigate } from 'react-router';
 interface ILayoutTabela {
   cabecalho: string[],
   /*eslint-disable @typescript-eslint/no-explicit-any*/
+
+  /**
+   * Dados que vão ser renderizados na tabela
+   */
   dados: Array<{ [key: string]: any }>
-  pagina: 'tecnicos' | 'clientes' | 'grupos_servicos'
+  pagina: 'tecnicos' | 'clientes' | 'grupos_servicos' | 'ordem_servico'
 }
 
 export const FerramentaTabela: React.FC<ILayoutTabela> = ({
