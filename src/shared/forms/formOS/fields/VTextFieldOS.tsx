@@ -19,6 +19,7 @@ interface VTextFieldOsProps {
   rules?: any;
   editing?: boolean;
   type?: 'text' | 'number'
+  isMultiline?: boolean 
 }
 
 const getNestedValue = <T extends object>(obj: T, path: string): any => {
@@ -26,7 +27,7 @@ const getNestedValue = <T extends object>(obj: T, path: string): any => {
 };
 
 /*eslint-disable react/prop-types*/
-export const VTextFieldOS: React.FC<VTextFieldOsProps> = ({ name, control, errors, label, rules, editing = false, type }) => {
+export const VTextFieldOS: React.FC<VTextFieldOsProps> = ({ name, control, errors, label, rules, editing = false, type, isMultiline=false }) => {
   const error = getNestedValue(errors, name as string);
 
   return (
@@ -46,6 +47,8 @@ export const VTextFieldOS: React.FC<VTextFieldOsProps> = ({ name, control, error
           InputLabelProps={{ shrink: !!field.value }}
           disabled={editing}
           type={type}
+          multiline={isMultiline}
+          rows={isMultiline ? 4 : 1}
         />
       )}
     />

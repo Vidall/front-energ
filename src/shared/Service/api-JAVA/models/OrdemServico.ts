@@ -4,12 +4,14 @@ export interface IOs {
   client_id: number,
   technician_id: number,
   scheduledDate: string //ve se da para mudar para Date
+  cliente_type: 'FISICO' | 'JURIDICO'
   endereco: {
     rua: string,
-    numero: number
+    numero: number | null
     bairro: string,
     cidade: string
   }
+  escopoDosServicos: string
 }
 
 export interface IReturnGetAllOs {
