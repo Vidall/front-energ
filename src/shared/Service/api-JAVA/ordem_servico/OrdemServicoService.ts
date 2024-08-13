@@ -2,11 +2,11 @@ import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
-import { IOrdemComTotalCount, IReturnGetAllOs } from '../models/OrdemServico';
+import { IOrdemComTotalCount, IOs, IReturnGetAllOs } from '../models/OrdemServico';
 
-const create = async (id: number, servico: Omit<IServices, 'id' | 'groupServices'>): Promise<IGrupoServicosCreated | Error> => {
+const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}/service`;
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}`;
 
     const response = await ApiOS.post(urlRelativa, servico);
 

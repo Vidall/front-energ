@@ -1,6 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
 
 interface IGrupo {
   id: number;
@@ -9,19 +8,20 @@ interface IGrupo {
 
 interface IInputSelectProps {
   dataSelect: IGrupo[];
+  value?: string;
+  onChange?: (event: SelectChangeEvent<string>) => void;
+  isValueType?: boolean
 }
 
-/*eslint-disable react/prop-types*/
+export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect, value, onChange, isValueType=false }) => {
 
-export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect}) => {
-  const [grupo, setGrupo] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const handleChange = (event: SelectChangeEvent) => {
-    const selectedGrupoId = event.target.value as string;
-    setGrupo(selectedGrupoId);
-    searchParams.set('grupo', selectedGrupoId);
-    setSearchParams(searchParams);
+  const handleValueType = (valor: IGrupo) => {
+    if (isValueType && valor.id.toString() === '1') {
+      return 'PREVENTIVA';
+    } else if (isValueType && valor.id.toString() === '2') {
+      return 'CORRETIVA';
+    }
+    valor.id.toString();
   };
 
   return (
@@ -30,13 +30,15 @@ export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect}) => {
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={grupo}
+        value={value}
         label={'Cadastrados'}
-        onChange={handleChange}
+        onChange={onChange}
         size='small'
       >
         {dataSelect.map((valor: IGrupo) => (
-          <MenuItem value={valor.id} key={valor.id}>{valor.name}</MenuItem>
+          <MenuItem value={handleValueType(valor)} key={valor.id}>
+            {valor.name}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

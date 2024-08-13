@@ -1,10 +1,10 @@
 export interface IOs {
   id: number,
-  status: 'ABERTO' | 'ANDAMENTO' | 'FINALIZADO' | 'CANCELADO',
+  type: 'ABERTO' | 'ANDAMENTO' | 'FINALIZADO' | 'CANCELADO',
   client_id: number,
   technician_id: number,
   scheduledDate: string //ve se da para mudar para Date
-  cliente_type: 'FISICO' | 'JURIDICO'
+  client_type: 'FISICO' | 'JURIDICO'
   endereco: {
     rua: string,
     numero: number | null
