@@ -10,7 +10,7 @@ interface ILayoutTabela {
    * Dados que vão ser renderizados na tabela
    */
   dados: Array<{ [key: string]: any }>
-  pagina: 'tecnicos' | 'clientes' | 'grupos_servicos' | 'ordem_servico'
+  pagina: 'tecnicos' | 'clientes' | 'grupos_servicos' | 'ordens-de-servicos' 
 }
 
 export const FerramentaTabela: React.FC<ILayoutTabela> = ({
@@ -25,6 +25,9 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
     }
     if (pagina === 'grupos_servicos') {
       return navigate(`detalhe/${linha.id}`);
+    }
+    if (pagina === 'ordens-de-servicos') {
+      return navigate(`start/${linha.id}`);
     }
 
     return navigate(`detalhe/${linha.id}`);

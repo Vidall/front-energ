@@ -1,5 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 interface IGrupo {
   id: number;
@@ -14,6 +15,19 @@ interface IInputSelectProps {
 }
 
 export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect, value, onChange, isValueType=false }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [grupo, setGrupo] = useState('');
+
+  const handleChange = (event: SelectChangeEvent) => {
+    const selectedGrupoId = event.target.value as string;
+    setGrupo(selectedGrupoId);
+    searchParams.set('grupo', selectedGrupoId);
+    setSearchParams(searchParams);
+
+    if (onChange) {
+      onChange(event); // Chama o onChange passado via props
+    }
+  };
 
   const handleValueType = (valor: IGrupo) => {
     if (isValueType && valor.id.toString() === '1') {
@@ -21,7 +35,7 @@ export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect, value, o
     } else if (isValueType && valor.id.toString() === '2') {
       return 'CORRETIVA';
     }
-    valor.id.toString();
+    return valor.id.toString();
   };
 
   return (
@@ -32,7 +46,7 @@ export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect, value, o
         id="demo-simple-select"
         value={value}
         label={'Cadastrados'}
-        onChange={onChange}
+        onChange={handleChange}
         size='small'
       >
         {dataSelect.map((valor: IGrupo) => (

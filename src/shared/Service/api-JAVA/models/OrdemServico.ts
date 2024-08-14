@@ -26,3 +26,24 @@ export interface IOrdemComTotalCount {
   data: IReturnGetAllOs
   totalCount: number
 }
+
+
+// -----------------------
+
+export interface IGetByIdOrdemStart {
+  id: number,
+	status: string,
+	type: string,
+	scheduledDate: string,
+	client_id: number,
+	client_type: string,
+	technician_id: number,
+	endereco: {
+		rua: string,
+		numero: number,
+		bairro: string,
+		cidade: string
+	},
+	escopoDosServicos: string,
+	servicesInOrder: []
+}

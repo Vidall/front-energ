@@ -109,7 +109,7 @@ export const PaginaOS: React.FC = () => {
           <FerramentaTabela
             cabecalho={['id', 'status', 'scheduledDate']}
             dados={ordensServicos}
-            pagina='ordem_servico'
+            pagina='ordens-de-servicos'
           />
           { isLoading && (
             <LinearProgress/>

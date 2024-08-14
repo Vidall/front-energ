@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
-import { IOrdemComTotalCount, IOs, IReturnGetAllOs } from '../models/OrdemServico';
+import { IGetByIdOrdemStart, IOrdemComTotalCount, IOs, IReturnGetAllOs } from '../models/OrdemServico';
 
 const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
@@ -116,58 +116,68 @@ const getByID = async (id: number, currentPage: number): Promise<IServiceComTota
   }
 };
 
-// const updateById = async(id: number, tecnico: IUpdateTecnico): Promise<IUpdateTecnico | Error> => {
-//   try {
-//     const urlRelativa = `${Environment.CAMINHO_TECNICOS}/${id}`;
+const getByIdOrdemStart = async (id: number): Promise<IGetByIdOrdemStart | Error > => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}/${id}`;
+    const {data} = await ApiOS.get(urlRelativa);
 
-//     const formData = new FormData();
-//     formData.append('nome', tecnico.nome!);
-//     formData.append('cpf', tecnico.cpf!);
-//     formData.append('email', tecnico.email!);
-//     tecnico.senha ? formData.append('senha', tecnico.senha): null;
-//     tecnico.updateSenha ? formData.append('updateSenha', tecnico.updateSenha): null;
-//     formData.append('telefone', tecnico.telefone!);
-//     formData.append('admin', tecnico.admin!.toString());
-//     if (tecnico.file) {
-//       formData.append('file', tecnico.file);
-//     }
+    if (data) {
+      return data;
+    } else {
+      return new Error('Erro ao consultar o registro');
+    }
 
-//     const response = await ApiOS.put(urlRelativa, formData, {
-//       headers: {
-//         'Content-Type': 'multipart/form-data'
-//       }
-//     });
+  } catch (error) {
+    console.log(error);
 
-//     if (response.status >= 200 && response.status < 300) {
-//       return response.data;
-//     } else {
-//       return new Error('Erro ao cadastrar o registro');
-//     }
+    // Se o erro for uma instância de AxiosError
+    if (axios.isAxiosError(error)) {
+      // Verifica se o erro tem uma resposta com dados de erro
+      if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+        return new Error((error.response.data).errors.default || 'Erro ao consultar o registro');
+      }
+    }
 
-//   } catch (error) {
-//     console.log(error);
+    return new Error('Erro ao consultar o registro');
+  }
+};
 
-//     if (axios.isAxiosError(error)) {
-//       // Verifica se o erro tem uma resposta com dados de erro
+const StartOrCancelOrFinish = async(id: number, acao: 'iniciar' | 'cancelar' | 'finalizar'): Promise<void | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}/${id}/${acao}`;
 
-//       if (error.response?.data && typeof error.response.data === 'object') {
+    const data = await ApiOS.put(urlRelativa);
 
-//         const errors = error.response.data;
+    if (data) {
+      return;
+    } else {
+      return new Error('Erro ao executar o serviço');
+    }
 
-//         console.log(errors);
+  } catch (error) {
+    console.log(error);
+    // if (axios.isAxiosError(error)) {
+    //   // Verifica se o erro tem uma resposta com dados de erro
 
-//         return new Error(JSON.stringify(errors) || 'Erro ao atualizar o registro bbb');
-//       }
-//     }
+    //   if (error.response?.data && typeof error.response.data === 'object') {
 
-//     return new Error('Erro ao cadastrar o registro aaa');
-//   }
-// };
+    //     const errors = error.response.data;
+
+    //     console.log(errors);
+
+    //     return new Error(JSON.stringify(errors) || 'Erro ao executar o serviço');
+    //   }
+    // }
+
+    return new Error('Erro ao cadastrar o registro');
+  }
+};
 
 export const OrdemServicoService = {
   getAll,
   create,
   getByID,
-  // updateById,
-  getAllFilter
+  StartOrCancelOrFinish,
+  getAllFilter,
+  getByIdOrdemStart
 };
