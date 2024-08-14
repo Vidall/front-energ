@@ -15,6 +15,7 @@ export const StartOS: React.FC = () => {
   const[tecnicoId, setTecnicoId] = useState<number>();
   const[tecnico, setTecnico] = useState<ITecnico>();
   const[cliente, setCliente] = useState<IPessoaFisica | IPessoaJuridica>();
+  const [status, setStatus] = useState<string>();
   const [dataAgendado, setDataAgendado] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
@@ -62,6 +63,7 @@ export const StartOS: React.FC = () => {
   },[]);
 
   useEffect(() => {
+
     OrdemServicoService.getByIdOrdemStart(Number(id))
       .then(res => {
         if(res instanceof Error) {
@@ -75,8 +77,13 @@ export const StartOS: React.FC = () => {
         
         clienteData(res, res.client_type as 'FISICO' | 'JURIDICO');
         tecnicoData(res);
+        setStatus(res.status);
+        if (res.status === 'ANDAMENTO') {
+          navigate(`/ordens-de-servicos/andamento/${id}`);
+        }
       })
       .catch(error => console.log(error));
+
 
   }, []);
 
@@ -143,10 +150,10 @@ export const StartOS: React.FC = () => {
         </Box>
 
         <Box display={'flex'} justifyContent={'center'} flexDirection={'column'} gap={1}>
-          <Button variant='contained' onClick={handleClickStart}>
-          Iniciar
+          <Button variant='contained' onClick={handleClickStart} disabled={status !== 'ABERTO' ? true : false}>
+            Iniciar
           </Button>
-          <Button variant='outlined' onClick={handleClickCancel}>
+          <Button variant='outlined' onClick={handleClickCancel} disabled={status === 'CANCELADO' ? true : false}>
           Cancelar
           </Button>
         </Box>

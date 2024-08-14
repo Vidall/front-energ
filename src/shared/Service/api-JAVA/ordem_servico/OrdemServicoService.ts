@@ -31,9 +31,9 @@ const create = async (servico: IOs): Promise<IOs | Error> => {
   }
 };
 
-const getAll = async (): Promise<IOrdemComTotalCount | Error> => {
+const getAll = async (page: number): Promise<IOrdemComTotalCount | Error> => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_ORDEM}`;
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}?page=${page - 1}`;
     const { data, headers } = await ApiOS.get(urlRelativa);
 
     if (data) {

@@ -24,7 +24,7 @@ export const PaginaOS: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    OrdemServicoService.getAll()
+    OrdemServicoService.getAll(currentPage)
       .then(res => {
         if (res instanceof Error) {
           alert(res.message);
@@ -36,7 +36,7 @@ export const PaginaOS: React.FC = () => {
         setIsLoading(false);
       });
 
-  },[]);
+  },[currentPage]);
 
   const handleClickFilter = () => {
     setIsLoading(true);
