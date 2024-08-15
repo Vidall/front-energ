@@ -1,19 +1,36 @@
 import { Controller, useForm } from 'react-hook-form';
-import { VFormOS } from '../../shared/forms/formOS';
+import { VAutoCompleteServicos, VFormOS, VTabelaServiceInOrder } from '../../shared/forms/formOS';
 import { LayoutPaginas } from '../../shared/Layout';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Divider, FormControlLabel, Icon, Radio, RadioGroup, Theme, useMediaQuery,  } from '@mui/material';
 import { VInputSelect } from '../../shared/Components';
-import { IOs } from '../../shared/Service/api-JAVA/models/OrdemServico';
+import { IOs, IServiceInOrder, IServiceInOrderOutput } from '../../shared/Service/api-JAVA/models/OrdemServico';
 import { Idata, IGroupAllDTOOutputList, IGrupo } from '../../shared/Service/api-JAVA/models/GruposServicos';
 import { useEffect, useState } from 'react';
 import { GruposServicosService } from '../../shared/Service/api-JAVA/grupos-servicos/GruposServicosService';
+import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadioVerificacao';
+import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
+import { useParams } from 'react-router';
+import { error } from 'console';
 
 export const AndamentoOS:React.FC = () => {
-  const formMethods = useForm<Idata>();
+  const formMethods = useForm<IServiceInOrder>();
+  const smDown = useMediaQuery((theme:  Theme)=> theme.breakpoints.down('sm'));
   const [grupoServico, setGrupoServico] = useState<IGrupo[]>();
+  const [listServiceInOrder, setListServiceInOrder] = useState<IServiceInOrderOutput[]>();
+  const { id } = useParams();
 
-  const handleSubmitForm = (form: any) => {
-    console.log(grupoServico);
+  const handleSubmitForm = (form: IServiceInOrder) => {
+    OrdemServicoService.createServiceInOrder(Number(id), form)
+      .then( res => {
+        if (res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+
+        alert('Cadastrado com sucesso');
+        formMethods.reset({});
+      })
+      .catch(error => console.log(error));
   };
 
   useEffect(() => {
@@ -25,11 +42,33 @@ export const AndamentoOS:React.FC = () => {
         }
         if (res.data._embedded) {
           setGrupoServico(res.data._embedded.groupAllDTOOutputList);
-
         }
       })
       .catch(error => console.log(error));
-  });
+    OrdemServicoService.getByIdOrdemStart(Number(id))
+      .then(res => {
+        if (res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+
+        setListServiceInOrder(res.servicesInOrder);
+      })
+      .catch(error => console.log(error));
+  },[]);
+
+  const handleClickRefresh = () => {
+    OrdemServicoService.getByIdOrdemStart(Number(id))
+      .then(res => {
+        if (res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+
+        setListServiceInOrder(res.servicesInOrder);
+      })
+      .catch(error => console.log(error));
+  };
 
   return (
     <LayoutPaginas
@@ -40,14 +79,59 @@ export const AndamentoOS:React.FC = () => {
         submitForm={formMethods.handleSubmit(handleSubmitForm)}
       >
        
-        <VInputSelect
-          dataSelect={grupoServico ? grupoServico : [{id: 0, name: 'não foi possível consultar'}]}
-        />
+        <Box display={'flex'} flexDirection={'column'} gap={1}>
+          <VInputSelect
+            dataSelect={grupoServico ? grupoServico : [{id: 0, name: 'não foi possível consultar'}]}
+          />
 
-        <Box display={'flex'} justifyContent={'center'} marginTop={1}>
-          <Button type='submit'>
-          inserir serviço
-          </Button>
+          <VAutoCompleteServicos
+            control={formMethods.control}
+            errors={formMethods.formState.errors}
+            label='Serviços'
+            name='service.id'    
+            rules={{ require: 'Este campo é obrigatório' }}      
+          />
+
+          <Box display={'flex'} justifyContent={'center'} gap={smDown ? 5 : 30}>
+            <VRadioVerificacaoServico
+              control={formMethods.control}
+              errors={formMethods.formState.errors}
+              rules={{ require: 'Este campo é obrigatório' }}
+              name="verificationBefore"
+              label="Antes"
+            />
+
+            <VRadioVerificacaoServico
+              control={formMethods.control}
+              errors={formMethods.formState.errors}
+              rules={{ require: 'Este campo é obrigatório' }}
+              name="verificationAfter"
+              label="Depois"
+            />
+          </Box>
+
+          <Box display={'flex'} justifyContent={'center'} marginTop={1}>
+            <Button type='submit'>
+            inserir serviço
+            </Button>
+          </Box>
+
+          <Box>
+            <Button
+              onClick={handleClickRefresh}
+              size='small'
+            >
+              <Icon>
+                refresh
+              </Icon>
+            </Button>
+          </Box>
+
+          <VTabelaServiceInOrder
+            cabecalho={{Nome: 'service.name', Antes: 'verificationBefore', Depois : 'verificationAfter'}}
+            pagina='ordens-de-servicos'
+            dados={listServiceInOrder ? listServiceInOrder : [{id: 0, name: 'sem serviço'}]}
+          />
         </Box>
 
       </VFormOS>

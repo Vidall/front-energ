@@ -1,3 +1,4 @@
+export * from './VTabelaServiceInOrder';
 export * from './VAutoCompleteTecnicos'; 
 export * from './VAutoCompleteServicos'; 
 export * from './VAutoCompletePessoa'; 

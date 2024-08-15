@@ -39,7 +39,7 @@ export const PaginaServico: React.FC = () => {
 
   useEffect(() => {
     if (grupo) {
-      GruposServicosService.getByID(Number(grupo), currentPage - 1)
+      GruposServicosService.getByID(Number(grupo), currentPage - 1, 5)
         .then(res => {
           if (res instanceof Error) {
             alert(res.message);

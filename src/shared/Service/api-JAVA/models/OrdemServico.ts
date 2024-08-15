@@ -47,3 +47,21 @@ export interface IGetByIdOrdemStart {
 	escopoDosServicos: string,
 	servicesInOrder: []
 }
+
+
+//------------------------------
+
+export interface IServiceInOrder {
+  service: {
+    id: number
+  } 
+  verificationBefore: string //'OK' | 'NOK'
+  verificationAfter: string //'OK' | 'NOK'
+  urlPhotoAfter: string
+  urlPhotoBefore: string
+}
+
+export interface IServiceInOrderOutput {
+  id: number
+  name: string
+}

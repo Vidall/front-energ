@@ -79,21 +79,23 @@ export const DetalheOs: React.FC = () => {
       formMethods={formMethods}
       submitForm={formMethods.handleSubmit(handleSubmitForm)}
     >
-      <Controller
-        name='type'
-        control={formMethods.control}
-        rules={{ required: 'Este campo é obrigatório' }}
-        render={({ field }) => (
-          <VInputSelect
-            isValueType={true}
-            dataSelect={[{ id: 1, name: 'PREVENTIVA' }, { id: 2, name: 'CORRETIVA' }]}
-            value={field.value} // valor controlado pelo React Hook Form
-            onChange={(event) => {
-              field.onChange(event.target.value); // propaga o valor para o React Hook Form
-            }}
-          />
-        )}
-      />
+      <Box marginBottom={1}>
+        <Controller
+          name='type'
+          control={formMethods.control}
+          rules={{ required: 'Este campo é obrigatório' }}
+          render={({ field }) => (
+            <VInputSelect
+              isValueType={true}
+              dataSelect={[{ id: 1, name: 'PREVENTIVA' }, { id: 2, name: 'CORRETIVA' }]}
+              value={field.value} // valor controlado pelo React Hook Form
+              onChange={(event) => {
+                field.onChange(event.target.value); // propaga o valor para o React Hook Form
+              }}
+            />
+          )}
+        />
+      </Box>
 
       <VAutoCompleteTecnicos
         control={formMethods.control}

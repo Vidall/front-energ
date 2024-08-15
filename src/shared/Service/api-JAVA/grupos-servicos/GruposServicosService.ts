@@ -58,9 +58,9 @@ const getAll = async (): Promise<IGruposServicosComTotal | Error> => {
   }
 };
 
-const getByID = async (id: number, currentPage: number): Promise<IServiceComTotalCount | Error > => {
+const getByID = async (id: number, currentPage: number, size: number): Promise<IServiceComTotalCount | Error > => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}?page=${currentPage}`;
+    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}?page=${currentPage}&size=${size}`;
     const {data, headers} = await ApiOS.get(urlRelativa);
 
     if (data) {

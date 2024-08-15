@@ -79,11 +79,10 @@ export const StartOS: React.FC = () => {
         tecnicoData(res);
         setStatus(res.status);
         if (res.status === 'ANDAMENTO') {
-          navigate(`/ordens-de-servicos/andamento/${id}`);
+          navigate(`/ordens-de-servicos/andamento/${id}?grupo=1`);
         }
       })
       .catch(error => console.log(error));
-
 
   }, []);
 

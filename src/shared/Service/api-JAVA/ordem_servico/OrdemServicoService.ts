@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
-import { IGetByIdOrdemStart, IOrdemComTotalCount, IOs, IReturnGetAllOs } from '../models/OrdemServico';
+import { IGetByIdOrdemStart, IOrdemComTotalCount, IOs, IReturnGetAllOs, IServiceInOrder } from '../models/OrdemServico';
 
 const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
@@ -12,6 +12,33 @@ const create = async (servico: IOs): Promise<IOs | Error> => {
 
     if (response.status >= 200 && response.status < 300) {
       return response.data;
+    } else {
+      return new Error('Erro ao cadastrar o registro');
+    }
+
+  } catch (error) {
+    console.log(error);
+
+    // // Se o erro for uma instância de AxiosError
+    // if (axios.isAxiosError(error)) {
+    //   // Verifica se o erro tem uma resposta com dados de erro
+    //   if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+    //     return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
+    //   }
+    // }
+
+    return new Error('Erro ao cadastrar o registro error');
+  }
+};
+
+const createServiceInOrder = async (id: number, serviceInOrder: IServiceInOrder): Promise<void | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}/${id}/servico`;
+
+    const response = await ApiOS.post(urlRelativa, serviceInOrder);
+
+    if (response.status >= 200 && response.status < 300) {
+      return;
     } else {
       return new Error('Erro ao cadastrar o registro');
     }
@@ -87,9 +114,9 @@ const getAllFilter = async (dataInicio: string, dataFim: string): Promise<IOrdem
   }
 };
 
-const getByID = async (id: number, currentPage: number): Promise<IServiceComTotalCount | Error > => {
+const getByID = async (id: number, currentPage: number, size: number): Promise<IServiceComTotalCount | Error > => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}?page=${currentPage}`;
+    const urlRelativa = `${Environment.CAMINHO_GRUPOS_SERVICOS}/${id}?page=${currentPage}&size=${size}`;
     const {data, headers} = await ApiOS.get(urlRelativa);
 
     if (data) {
@@ -179,5 +206,6 @@ export const OrdemServicoService = {
   getByID,
   StartOrCancelOrFinish,
   getAllFilter,
-  getByIdOrdemStart
+  getByIdOrdemStart,
+  createServiceInOrder
 };
