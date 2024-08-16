@@ -11,6 +11,7 @@ import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadi
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { useParams } from 'react-router';
 import { error } from 'console';
+import { DetalheOsAndamento } from './DetalheOsAndamento';
 
 export const AndamentoOS:React.FC = () => {
   const formMethods = useForm<IServiceInOrder>();
@@ -74,67 +75,71 @@ export const AndamentoOS:React.FC = () => {
     <LayoutPaginas
       titulo="Área ordens serviços"
     >
-      <VFormOS
-        formMethods={formMethods}
-        submitForm={formMethods.handleSubmit(handleSubmitForm)}
-      >
-       
-        <Box display={'flex'} flexDirection={'column'} gap={1}>
-          <VInputSelect
-            dataSelect={grupoServico ? grupoServico : [{id: 0, name: 'não foi possível consultar'}]}
-          />
 
-          <VAutoCompleteServicos
-            control={formMethods.control}
-            errors={formMethods.formState.errors}
-            label='Serviços'
-            name='service.id'    
-            rules={{ require: 'Este campo é obrigatório' }}      
-          />
-
-          <Box display={'flex'} justifyContent={'center'} gap={smDown ? 5 : 30}>
-            <VRadioVerificacaoServico
+      <Box>
+        <VFormOS
+          formMethods={formMethods}
+          submitForm={formMethods.handleSubmit(handleSubmitForm)}
+        >
+             
+          <Box display={'flex'} flexDirection={'column'} gap={1}>
+            <VInputSelect
+              dataSelect={grupoServico ? grupoServico : [{id: 0, name: 'não foi possível consultar'}]}
+            />
+      
+            <VAutoCompleteServicos
               control={formMethods.control}
               errors={formMethods.formState.errors}
-              rules={{ require: 'Este campo é obrigatório' }}
-              name="verificationBefore"
-              label="Antes"
+              label='Serviços'
+              name='service.id'    
+              rules={{ require: 'Este campo é obrigatório' }}      
             />
-
-            <VRadioVerificacaoServico
-              control={formMethods.control}
-              errors={formMethods.formState.errors}
-              rules={{ require: 'Este campo é obrigatório' }}
-              name="verificationAfter"
-              label="Depois"
+      
+            <Box display={'flex'} justifyContent={'center'} gap={smDown ? 5 : 30}>
+              <VRadioVerificacaoServico
+                control={formMethods.control}
+                errors={formMethods.formState.errors}
+                rules={{ require: 'Este campo é obrigatório' }}
+                name="verificationBefore"
+                label="Antes"
+              />
+      
+              <VRadioVerificacaoServico
+                control={formMethods.control}
+                errors={formMethods.formState.errors}
+                rules={{ require: 'Este campo é obrigatório' }}
+                name="verificationAfter"
+                label="Depois"
+              />
+            </Box>
+      
+            <Box display={'flex'} justifyContent={'center'} marginTop={1}>
+              <Button type='submit'>
+                  inserir serviço
+              </Button>
+            </Box>
+      
+            <Box>
+              <Button
+                onClick={handleClickRefresh}
+                size='small'
+              >
+                <Icon>
+                      refresh
+                </Icon>
+              </Button>
+            </Box>
+      
+            <VTabelaServiceInOrder
+              cabecalho={{Nome: 'service.name', Antes: 'verificationBefore', Depois : 'verificationAfter'}}
+              pagina='ordens-de-servicos'
+              dados={listServiceInOrder ? listServiceInOrder : [{id: 0, name: 'sem serviço'}]}
             />
           </Box>
+      
+        </VFormOS>
+      </Box>
 
-          <Box display={'flex'} justifyContent={'center'} marginTop={1}>
-            <Button type='submit'>
-            inserir serviço
-            </Button>
-          </Box>
-
-          <Box>
-            <Button
-              onClick={handleClickRefresh}
-              size='small'
-            >
-              <Icon>
-                refresh
-              </Icon>
-            </Button>
-          </Box>
-
-          <VTabelaServiceInOrder
-            cabecalho={{Nome: 'service.name', Antes: 'verificationBefore', Depois : 'verificationAfter'}}
-            pagina='ordens-de-servicos'
-            dados={listServiceInOrder ? listServiceInOrder : [{id: 0, name: 'sem serviço'}]}
-          />
-        </Box>
-
-      </VFormOS>
     </LayoutPaginas>
   );
 };

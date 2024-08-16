@@ -44,7 +44,7 @@ export const PaginaOS: React.FC = () => {
       return alert('Selecionar as datas');
     }
     if (dataFim < dataInicio) {
-      return alert('Data fim menor que a data incio');
+      return alert('Data fim menor que a data inicio');
     }
 
     OrdemServicoService.getAllFilter(dataInicio!, dataFim!)

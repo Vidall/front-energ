@@ -65,3 +65,8 @@ export interface IServiceInOrderOutput {
   id: number
   name: string
 }
+
+//------------------------------
+export interface ISendImage {
+  file: string
+}

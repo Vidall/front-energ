@@ -7,6 +7,7 @@ import { PaginaEquipamento } from '../pages/pagina-equipamento';
 import { PaginaOS } from '../pages/pagina-os/PaginaOS';
 import { StartOS } from '../pages/pagina-os/StartOS';
 import { AndamentoOS } from '../pages/pagina-os/AndamentoOS';
+import { DetalheOsAndamento } from '../pages/pagina-os/DetalheOsAndamento';
 
 export const AppRoutes = () => {
 
@@ -17,6 +18,7 @@ export const AppRoutes = () => {
       <Route path='/ordens-de-servicos' element={<PaginaOS/>}/>
       <Route path='/ordens-de-servicos/start/:id' element={<StartOS/>}/>
       <Route path='/ordens-de-servicos/andamento/:id' element={<AndamentoOS/>}/>
+      <Route path='/ordens-de-servicos/detalhe/andamento/:id' element={<DetalheOsAndamento/>}/>
 
       <Route path='/clientes' element={<PaginaCliente/>}/>
 
@@ -31,7 +33,7 @@ export const AppRoutes = () => {
 
       <Route path='/equipamentos/:id' element={<PaginaEquipamento/>}/>
 
-      <Route path='*' element={<Navigate to={'/inicio'}/>}/>
+      {/* <Route path='*' element={<Navigate to={'/inicio'}/>}/> */}
 
     </Routes>
   );

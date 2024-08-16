@@ -28,7 +28,7 @@ export const VTabelaServiceInOrder: React.FC<ILayoutTabela> = ({
       return navigate(`detalhe/${linha.id}`);
     }
     if (pagina === 'ordens-de-servicos') {
-      return navigate(`start/${linha.id}`);
+      return navigate(`/ordens-de-servicos/detalhe/andamento/${linha.id}`);
     }
 
     return navigate(`detalhe/${linha.id}`);
