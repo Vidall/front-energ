@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -9,12 +9,12 @@ interface IGrupo {
 
 interface IInputSelectProps {
   dataSelect: IGrupo[];
-  value?: string;
+  value?: number;
   onChange?: (event: SelectChangeEvent<string>) => void;
   isValueType?: boolean
 }
 
-export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect, value, onChange, isValueType=false }) => {
+export const VInputSelectVerificacao: React.FC<IInputSelectProps> = ({ dataSelect, value, onChange, isValueType=false }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [grupo, setGrupo] = useState('');
 
@@ -39,22 +39,24 @@ export const VInputSelect: React.FC<IInputSelectProps> = ({ dataSelect, value, o
   };
 
   return (
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Cadastrados</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={value}
-        label={'Cadastrados'}
-        onChange={handleChange}
-        size='small'
-      >
-        {dataSelect.map((valor: IGrupo) => (
-          <MenuItem value={handleValueType(valor)} key={valor.id}>
-            {valor.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Box paddingTop={1}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Cadastrados</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={value?.toString()}
+          label={'Cadastrados'}
+          onChange={handleChange}
+          size='small'
+        >
+          {dataSelect.map((valor: IGrupo) => (
+            <MenuItem value={handleValueType(valor)} key={valor.id}>
+              {valor.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 };

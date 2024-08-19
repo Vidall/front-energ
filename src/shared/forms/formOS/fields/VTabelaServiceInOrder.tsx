@@ -3,7 +3,7 @@ import { Icon, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Ta
 import { useNavigate } from 'react-router';
 
 interface ILayoutTabela {
-  cabecalho: string[],
+  cabecalho: { [key: string]: string },
   /*eslint-disable @typescript-eslint/no-explicit-any*/
 
   /**
@@ -13,12 +13,13 @@ interface ILayoutTabela {
   pagina: 'tecnicos' | 'clientes' | 'grupos_servicos' | 'ordens-de-servicos' 
 }
 
-export const FerramentaTabela: React.FC<ILayoutTabela> = ({
+export const VTabelaServiceInOrder: React.FC<ILayoutTabela> = ({
   cabecalho,
   dados,
   pagina
 }) => {
   const navigate = useNavigate();
+
   const currentPage = (linha: {[key: string]: any}) => {
     if (pagina === 'clientes') {
       return navigate(`detalhe/${linha.id}?tipoPessoa=${linha.tipo}`);
@@ -27,11 +28,15 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
       return navigate(`detalhe/${linha.id}`);
     }
     if (pagina === 'ordens-de-servicos') {
-      return navigate(`start/${linha.id}`);
+      return navigate(`/ordens-de-servicos/detalhe/andamento/${linha.id}`);
     }
 
     return navigate(`detalhe/${linha.id}`);
+  };
 
+  // Função para acessar valores aninhados
+  const getNestedValue = (obj: {[key: string]: any}, path: string) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };
 
   return (
@@ -48,8 +53,9 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
           <TableRow>
             <TableCell>ações</TableCell>
             {
-              cabecalho.map((cabecalhoItem, index) => (
-                <TableCell key={index}>{cabecalhoItem}</TableCell>
+              // Use Object.keys para iterar sobre as chaves personalizadas
+              Object.keys(cabecalho).map((key, index) => (
+                <TableCell key={index}>{key}</TableCell>
               ))
             }
           </TableRow>
@@ -61,10 +67,10 @@ export const FerramentaTabela: React.FC<ILayoutTabela> = ({
               <TableRow key={rowIndex}>
                 <TableCell onClick={() => currentPage(linha)}><Icon>search</Icon></TableCell>
                 {
-                  cabecalho.map((coluna, colIndex) => (
-                    <TableCell
-                      key={colIndex}>
-                      {linha[coluna]}
+                  // Use o valor do mapeamento para acessar a propriedade correta
+                  Object.values(cabecalho).map((path, colIndex) => (
+                    <TableCell key={colIndex}>
+                      {String(getNestedValue(linha, path)) || 'N/A'}
                     </TableCell>
                   ))
                 }

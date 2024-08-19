@@ -83,6 +83,7 @@ const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS
   }
 };
 
+// id do cliente
 const getByID = async (id: number, tipo: 'fisico' | 'juridico'): Promise<IEquipamento[] | Error > => {
   try {
     const urlRelativa = `${Environment.CAMINHO_EQUIPAMENTOS}/${id}?tipo=${tipo}`;

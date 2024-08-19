@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { GruposServicosService } from '../../Service/api-JAVA/grupos-servicos/GruposServicosService';
 import { ServicosService } from '../../Service/api-JAVA/servicos/ServicosService';
-import { IServices } from '../../Service/api-JAVA/models/GruposServicos';
+import { IGrupo, IServices } from '../../Service/api-JAVA/models/GruposServicos';
 import { VInputSelect } from '../../Components';
 import { VTextFieldServicos } from './fields';
 
@@ -14,7 +14,7 @@ interface IVFormProps {
 }
 
 export const VFormServicos: React.FC = () => {
-  const [grupoServicoData, setGrupoServicoData] = useState<{id: number, name: string}[]>();
+  const [grupoServicoData, setGrupoServicoData] = useState<IGrupo[]>();
   const { control, handleSubmit, formState: { errors }, reset, trigger } = useForm<IVFormProps>();
   const [searchParms, setSearchParms] = useSearchParams();
   const [rows, setRows] = useState();
@@ -83,7 +83,7 @@ export const VFormServicos: React.FC = () => {
       <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
         {!id && (
           <VInputSelect
-            dataSelect={grupoServicoData ? grupoServicoData : [{ id: 0, name: 'não foi possível consultar' }]}
+            dataSelect={grupoServicoData ? grupoServicoData : [{id: 0, name: 'não localizado'}] as IGrupo[]}
           />
         )}
         {id && (

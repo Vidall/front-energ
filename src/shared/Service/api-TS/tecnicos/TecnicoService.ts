@@ -9,6 +9,7 @@ interface ITecnicoComTotalCount {
 }
 
 export interface ITecnico {
+  id?: number,
   nome: string;
   cpf: string;
   email: string;
