@@ -28,16 +28,22 @@ export const PaginaServico: React.FC = () => {
     GruposServicosService.getAll()
       .then(res => {
         if (res instanceof Error) {
-          alert('passou na instancia');
+          alert(res.message);
           return res.message;
         }
         
-        setGrupoServicoData(res.data._embedded.groupAllDTOOutputList);
+        if(res.data._embedded){
+          setGrupoServicoData(res.data._embedded.groupAllDTOOutputList);
+        };
 
       });
   }, []);
 
   useEffect(() => {
+    if(grupoServicoData?.length === 0) {
+      return alert('Crie um grupo de serviço');
+    }
+
     if (grupo) {
       GruposServicosService.getByID(Number(grupo), currentPage - 1, 5)
         .then(res => {

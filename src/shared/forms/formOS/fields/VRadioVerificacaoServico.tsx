@@ -1,6 +1,6 @@
 import { Box, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { IServiceInOrder } from '../../../Service/api-JAVA/models/OrdemServico';
+import { Control, Controller, FieldError, FieldErrors } from 'react-hook-form';
+import { IServiceInOrder, IStatusGerador } from '../../../Service/api-JAVA/models/OrdemServico';
 
 type NestedKeyOf<ObjectType extends object> = {
   [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object

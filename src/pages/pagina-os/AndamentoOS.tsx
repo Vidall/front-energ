@@ -7,9 +7,9 @@ import { IOs, IServiceInOrder, IServiceInOrderOutput } from '../../shared/Servic
 import { Idata, IGroupAllDTOOutputList, IGrupo } from '../../shared/Service/api-JAVA/models/GruposServicos';
 import { useEffect, useState } from 'react';
 import { GruposServicosService } from '../../shared/Service/api-JAVA/grupos-servicos/GruposServicosService';
-import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadioVerificacao';
+import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadioVerificacaoServico';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { error } from 'console';
 import { DetalheOsAndamento } from './DetalheOsAndamento';
 
@@ -19,6 +19,7 @@ export const AndamentoOS:React.FC = () => {
   const [grupoServico, setGrupoServico] = useState<IGrupo[]>();
   const [listServiceInOrder, setListServiceInOrder] = useState<IServiceInOrderOutput[]>();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const handleSubmitForm = (form: IServiceInOrder) => {
     OrdemServicoService.createServiceInOrder(Number(id), form)
@@ -71,12 +72,32 @@ export const AndamentoOS:React.FC = () => {
       .catch(error => console.log(error));
   };
 
+  const handleClickStatusGerador = () => {
+    navigate(`/ordens-de-servicos/detalhe/andamento/status-gerador/${id}`);
+  };
+
+  const handleClickTesteGerador = () => {
+    navigate(`/ordens-de-servicos/detalhe/andamento/teste-gerador/${id}`);
+  };
+
+  const handleClickPDF = ()  => {
+    navigate(`/ordens-de-servicos/pdf/${id}`);
+  };
+
   return (
     <LayoutPaginas
       titulo="Área ordens serviços"
     >
 
       <Box>
+        <Box display={'flex'} justifyContent={'space-between'} paddingBottom={1}>
+          <Button variant='contained' size='small' onClick={handleClickTesteGerador}>
+            Teste gerador
+          </Button>
+          <Button variant='contained' size='small' onClick={handleClickStatusGerador}>
+            Status gerador
+          </Button>
+        </Box>
         <VFormOS
           formMethods={formMethods}
           submitForm={formMethods.handleSubmit(handleSubmitForm)}
@@ -138,6 +159,14 @@ export const AndamentoOS:React.FC = () => {
           </Box>
       
         </VFormOS>
+        <Box display={'flex'} justifyContent={'space-between'} paddingTop={1}>
+          <Button variant='text' onClick={handleClickPDF}>
+            PDF Prévia
+          </Button>
+          <Button variant='contained'>
+            Finalizar
+          </Button>
+        </Box>
       </Box>
 
     </LayoutPaginas>

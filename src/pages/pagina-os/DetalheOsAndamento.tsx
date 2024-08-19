@@ -1,15 +1,17 @@
 import { Box, Button, Grid, Icon, ImageList, ImageListItem } from '@mui/material';
 import { VFormOS, VUpload } from '../../shared/forms/formOS';
 import { useForm, Controller } from 'react-hook-form';
-import { ISendImage } from '../../shared/Service/api-JAVA/models/OrdemServico';
-import { useState } from 'react';
+import { ISendImage, IService, IServiceInOrder } from '../../shared/Service/api-JAVA/models/OrdemServico';
+import { useEffect, useState } from 'react';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { LayoutPaginas } from '../../shared/Layout';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { error } from 'console';
 
 export const DetalheOsAndamento: React.FC = () => {
   const formMethod = useForm<ISendImage>();
+  const [servicesInOrder, setServicesInOrder] = useState<IServiceInOrder>();
+  const navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -17,18 +19,52 @@ export const DetalheOsAndamento: React.FC = () => {
   const [imagemAntes, setImagemAntes] = useState<File>();
   const [imagemDepois, setImagemDepois] = useState<File>();
 
-  const fotoAntes = [
-    {
-      img: '/not_image.png',
-      title: 'Breakfast',
+  const serviceFoto = (antesOudepois: 'antes' | 'depois') => {
+    if (antesOudepois === 'antes') {
+      if (servicesInOrder?.urlPhotoBefore) {
+        return [
+          {
+            img: servicesInOrder.urlPhotoBefore,
+            title: 'foto antes',
+          }
+        ];
+      }
+      return [
+        {
+          img: '/not_image.png',
+          title: 'foto antes',
+        }
+      ];
+
+    } else if (antesOudepois === 'depois') {
+      if (servicesInOrder?.urlPhotoAfter) {
+        return [
+          {
+            img: servicesInOrder.urlPhotoAfter,
+            title: 'foto depois',
+          } 
+        ];
+      }
+      return [
+        {
+          img: '/not_image.png',
+          title: 'foto depois',
+        } 
+      ];
     }
-  ];
-  const fotoDepois = [
-    {
-      img: '/not_image.png',
-      title: 'Breakfast',
-    } 
-  ];
+  };
+
+  useEffect(() => {
+    OrdemServicoService.getByIdServiceInOrder(Number(id))
+      .then(res => {
+        if (res instanceof Error){
+          alert(res.message);
+          return res.message;
+        }
+        setServicesInOrder(res);
+      })
+      .catch(error => console.log(error));
+  }, []);
 
   // Handler para capturar a imagem de antes
   const handleClickImageAntes = () => {
@@ -75,16 +111,41 @@ export const DetalheOsAndamento: React.FC = () => {
     }
   };
 
+  const handleClickRefresh = () => {
+    OrdemServicoService.getByIdServiceInOrder(Number(id))
+      .then(res => {
+        if (res instanceof Error){
+          alert(res.message);
+          return res.message;
+        }
+        setServicesInOrder(res);
+        alert('Atualizado com sucesso!');
+      })
+      .catch(error => console.log(error));
+      
+  };
+
+  const handleClickVoltar = () => {
+    navigate(-1);
+  };
+
   return (
     <LayoutPaginas
       titulo='Área ordens serviços'
     >
       <Box display={'flex'} flexDirection={'column'} gap={5}>
-        <Icon>delete</Icon>
+        <Box display={'flex'} justifyContent={'space-between'}>
+          <Button>
+            <Icon>delete</Icon>
+          </Button>
+          <Button onClick={handleClickRefresh}>
+            <Icon>refresh</Icon>
+          </Button>
+        </Box>
         <Grid container spacing={2} padding={3}>
           <Box>
             <ImageList sx={{ width: 500, height: 400 }} cols={2} rowHeight={164} component={Box} display={'flex'}>
-              {fotoAntes.map((item) => (
+              {serviceFoto('antes')!.map((item) => (
                 <ImageListItem key={item.img} component={Box} display={'flex'} gap={0} flexDirection={'column'}>
                   <img
                     srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
@@ -109,7 +170,7 @@ export const DetalheOsAndamento: React.FC = () => {
                       )}
                     />
                     <Button onClick={handleClickImageAntes} variant='contained'>
-                    Enviar
+                    Enviar imagem antes
                     </Button>
                   </Box>
                 </ImageListItem>
@@ -118,7 +179,7 @@ export const DetalheOsAndamento: React.FC = () => {
           </Box>
           <Box>
             <ImageList sx={{ width: 500, height: 400 }} cols={2} rowHeight={164} component={Box} display={'flex'}>
-              {fotoDepois.map((item) => (
+              {serviceFoto('depois')!.map((item) => (
                 <ImageListItem key={item.img} component={Box} display={'flex'} gap={0} flexDirection={'column'}>
                   <img
                     srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
@@ -143,7 +204,7 @@ export const DetalheOsAndamento: React.FC = () => {
                       )}
                     />
                     <Button onClick={handleClickImageDepois} variant='contained'>
-                    Enviar
+                    Enviar imagem depois
                     </Button>
                   </Box>
                 </ImageListItem>
@@ -151,6 +212,11 @@ export const DetalheOsAndamento: React.FC = () => {
             </ImageList>
           </Box>
         </Grid>
+        <Box >
+          <Button variant='contained' onClick={handleClickVoltar}>
+              Voltar
+          </Button>
+        </Box>
       </Box>
     </LayoutPaginas>
   );

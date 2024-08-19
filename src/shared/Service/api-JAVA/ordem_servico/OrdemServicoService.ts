@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
-import { IGetByIdOrdemStart, IOrdemComTotalCount, IOs, IReturnGetAllOs, ISendImage, IServiceInOrder } from '../models/OrdemServico';
+import { IGetByIdOrdemStart, IOrdemComTotalCount, IOs, IPDF, IReturnGetAllOs, ISendImage, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
 
 const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
@@ -231,6 +231,68 @@ const sendFile = async (id: number, body: FormDataEntryValue, acao: 'foto_antes'
   return new Error('Erro ao enviar a imagem');
 };
 
+const getByIdServiceInOrder = async (id: number): Promise< IService | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_SERVICO_IN_ORDER}/${id}`;
+    const {data} = await ApiOS.get(urlRelativa);
+
+    if (data) {
+      return data;
+    }
+
+    return new Error('Erro ao listar o registro');
+    
+  } catch (error) {
+    console.log(error);
+    return new Error('Erro ao listar o registro');
+  }
+};
+
+const createGeradorStatusOrTeste = async (id: number, form: IStatusGerador | ITesteGerador, opcao: 'gerador_teste' | 'gerador_status'): Promise<void | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}/${id}/${opcao}`;
+
+    const response = await ApiOS.post(urlRelativa, form);
+
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      return new Error('Erro ao cadastrar o registro');
+    }
+
+  } catch (error) {
+    console.log(error);
+
+    // // Se o erro for uma instância de AxiosError
+    // if (axios.isAxiosError(error)) {
+    //   // Verifica se o erro tem uma resposta com dados de erro
+    //   if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+    //     return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
+    //   }
+    // }
+
+    return new Error('Erro ao cadastrar o registro error');
+  }
+};
+
+const getPDF = async (id: number): Promise<IPDF | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}/${id}/pdf`;
+
+    const { data } = await ApiOS.get(urlRelativa);
+
+    if (data) {
+      return data;
+    } 
+
+    return new Error('Erro ao listar o PDF');
+  } catch (error) {
+    console.log(error);
+
+    return new Error('Erro ao listar o PDF');
+  }
+};
+
 export const OrdemServicoService = {
   getAll,
   create,
@@ -239,5 +301,8 @@ export const OrdemServicoService = {
   getAllFilter,
   getByIdOrdemStart,
   createServiceInOrder,
-  sendFile
+  sendFile,
+  getByIdServiceInOrder,
+  createGeradorStatusOrTeste,
+  getPDF
 };

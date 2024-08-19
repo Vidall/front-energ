@@ -5,7 +5,8 @@ import { PessoaJuridicaService } from '../../../Service/api-TS/clientes/PessoaJu
 import { useDebounce } from 'use-debounce';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import { IOs } from '../../../Service/api-JAVA/models/OrdemServico';
-import { IEndereco } from '../../../Service/api-TS/models/Clientes';
+import { IEndereco, IPessoaFisica, IPessoaJuridica } from '../../../Service/api-TS/models/Clientes';
+import { useSearchParams } from 'react-router-dom';
 
 type NestedKeyOf<ObjectType extends object> = {
   [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
@@ -35,6 +36,9 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rows, setRows] = useState<IRowsProps[]>([]);
   const [endereco, setEndereco] = useState<IEndereco>();
+  const [dadoCliente, setDadosCliente] = useState<IPessoaFisica[] | IPessoaJuridica[]>();
+
+  const [searchParms, setSearchParams] = useSearchParams();
 
   const [busca, setBusca] = useState('');
   const [buscaDebounce] = useDebounce(busca, 500);
@@ -48,6 +52,9 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             alert(res.message);
             return res.message;
           }
+          const idCliente = res.data.map(item => item.id)[0]?.toString() || '0'; 
+          setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
+          setDadosCliente(res.data);
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
           setIsLoading(false);
           const enderecoObtido = res.data[0]?.endereco;
@@ -66,7 +73,6 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             return res.message;
           }
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
-          console.log('renderiznaod');
           setIsLoading(false);
           const enderecoObtido = res.data[0]?.endereco;
           if (enderecoObtido) {

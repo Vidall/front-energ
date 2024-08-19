@@ -31,7 +31,9 @@ export const PaginaOS: React.FC = () => {
           setIsLoading(false);
           return res.message;
         }
-        setOrdensServicos(res.data._embedded.orderAllDTOOutputList);
+        if (res.data._embedded){
+          setOrdensServicos(res.data._embedded.orderAllDTOOutputList);
+        }
         setTotalPages(res.totalCount);
         setIsLoading(false);
       });

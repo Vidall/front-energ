@@ -1,21 +1,28 @@
 import { Controller, useForm } from 'react-hook-form';
 import { VFormOS } from '../../shared/forms/formOS/VFormOS';
-import { VAutoCompletePessoa, VAutoCompleteTecnicos, VCalendarAndTime, VTextFieldOS } from '../../shared/forms/formOS';
-import { IEquipamentoDetalhe } from '../../shared/Service/api-TS/models/Equipamentos';
+import { VAutoCompletePessoa, VAutoCompleteTecnicos, VCalendarAndTime, VInputSelectEquipamento, VTextFieldOS } from '../../shared/forms/formOS';
+import { IEquipamento, IEquipamentoDetalhe } from '../../shared/Service/api-TS/models/Equipamentos';
 import { IOs } from '../../shared/Service/api-JAVA/models/OrdemServico';
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { IEndereco } from '../../shared/Service/api-TS/models/Clientes';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { error } from 'console';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { VInputSelect } from '../../shared/Components';
+import { EquipamentosService } from '../../shared/Service/api-TS/equipamentos/EquipamentosService';
+import { useSearchParams } from 'react-router-dom';
+import { IGrupo } from '../../shared/Service/api-JAVA/models/GruposServicos';
 
 export const DetalheOs: React.FC = () => {
   const formMethods = useForm<IOs>();
   const [tipoPessoa, setTipoPessoa] = useState<string>('');
   const [enderecoSelecionado, setEnderecoSelecionado] = useState<IEndereco | undefined>(undefined);
+  const [equipamento, setEquipamentoCliente] = useState<IGrupo[]>();
   const navigate = useNavigate();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const IdCliente = searchParams.get('idCliente') || '1';
 
   const handleSubmitForm = (form: IOs) => {
     console.log(form);
@@ -30,8 +37,23 @@ export const DetalheOs: React.FC = () => {
         navigate('ordens-de-servicos?tipo=Todos');
       })
       .catch(error => console.log(error));
-
   };
+
+  useEffect(() => {
+    if (IdCliente && tipoPessoa) {
+      EquipamentosService.getByID(Number(IdCliente), tipoPessoa.toLowerCase() as 'fisico' | 'juridico')
+        .then(res => {
+          if (res instanceof Error) {
+            alert(res.message);
+            return res.message;
+          }
+          setEquipamentoCliente(res.map(item => ({id: item.id, name: item.equipamento.tipoEquipamento})));
+        })
+        .catch(error => console.log(error));
+    } else {
+      console.log('não tem idCliente');
+    }
+  }, [IdCliente]);
 
   const handleTipoPessoa = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -69,8 +91,8 @@ export const DetalheOs: React.FC = () => {
   };
 
   const handleEnderecoChange = (endereco: IEndereco) => {
-    const ObjectEndereco = Array(endereco)[0];
-    console.log(ObjectEndereco);
+    // const ObjectEndereco = Array(endereco)[0];
+    // console.log(ObjectEndereco);
     setEnderecoSelecionado(endereco);
   };
 
@@ -131,12 +153,18 @@ export const DetalheOs: React.FC = () => {
         tipo={tipoPessoa}
       />
 
-      {/* <VTextFieldOS
+      <Controller
+        name='client_equipment_id'
         control={formMethods.control}
-        errors={formMethods.formState.errors}
-        name='client_id'
-        label='Cliente'
-      /> */}
+        rules={{required: 'Este campo é obrigatório'}}
+        render={({field}) => (
+          <VInputSelectEquipamento
+            {...field}
+            dataSelect={equipamento ? equipamento : [{id: 80, name: 'teste'}]}
+          />
+        )}
+        
+      />
 
       <FormControl>
         <FormLabel>Escolha o endereço</FormLabel>
