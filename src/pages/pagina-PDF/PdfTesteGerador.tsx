@@ -60,7 +60,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>Outros</td>
             <td>+ ou - 5%</td>
             <td>
-              {dadosPDF?.generatorTest.gmg.gmg_tFaseR}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.gmg.gmg_tFaseR : ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -69,7 +69,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>Outros</td>
             <td>+ ou - 5%</td>
             <td>
-            {dadosPDF?.generatorTest.gmg.gmg_tFaseS}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.gmg.gmg_tFaseS : ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -78,7 +78,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>Outros</td>
             <td>+ ou - 5%</td>
             <td>
-            {dadosPDF?.generatorTest.gmg.gmg_tFaseT}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.gmg.gmg_tFaseT : ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -90,7 +90,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td></td>
             <td>+ ou - 5%</td>
             <td>
-            {dadosPDF?.generatorTest.rede.rede_tFaseR}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.rede.rede_tFaseR : ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -99,7 +99,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td></td>
             <td>+ ou - 5%</td>
             <td>
-            {dadosPDF?.generatorTest.rede.rede_tFaseS}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.rede.rede_tFaseS : ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -108,7 +108,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td></td>
             <td>+ ou - 5%</td>
             <td>
-            {dadosPDF?.generatorTest.rede.rede_tFaseT}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.rede.rede_tFaseT : ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -120,7 +120,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td></td>
             <td>+ ou 30 a 100%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_tFaseR}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_tFaseR: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -129,7 +129,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td></td>
             <td>+ ou 30 a 100%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_tFaseS}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_tFaseS: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -138,7 +138,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td></td>
             <td>+ ou 30 a 100%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_tFaseT}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_tFaseT: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -147,7 +147,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>12Vcc ou 24Vcc</td>
             <td>+110% a 115%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_tBateriaCL}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_tBateriaCL: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -156,7 +156,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>12Vcc ou 24Vcc</td>
             <td>Acima de 103%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_tBateriaCD}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_tBateriaCD: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -165,7 +165,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>12Vcc ou 24Vcc</td>
             <td>Acima de 75%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_tBateriaIP}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_tBateriaIP: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -174,7 +174,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>12Vcc ou 24Vcc</td>
             <td>+110% a 119%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_tBateriaEC}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_tBateriaEC: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -183,7 +183,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>60</td>
             <td>+ ou - 5%</td>
             <td>
-              {dadosPDF?.generatorTest.corrente.corrente_frequencia}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_frequencia: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -192,7 +192,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>330</td>
             <td>0% a 100%</td>
             <td>
-              {dadosPDF?.generatorTest.corrente.corrente_potencia}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_potencia: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -201,7 +201,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>198</td>
             <td>Maximo 60% Carga (Indutivo)</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_potenciaR}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_potenciaR: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -210,7 +210,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>264</td>
             <td>30 a 100%</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_potenciaE}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_potenciaE: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -219,7 +219,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>0,8</td>
             <td>0,8 a 1,0</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_fatorPotencia}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_fatorPotencia: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -228,7 +228,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>70 a 90</td>
             <td>70°C a 85°C</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_temperatura}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_temperatura: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -237,7 +237,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>2 a 8</td>
             <td>2 bar a 8 bar</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_pressaOleo}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_pressaOleo: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -246,7 +246,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>66</td>
             <td></td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_consumoCombustivel}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_consumoCombustivel : ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -255,7 +255,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td>25</td>
             <td></td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_temperaturaAd}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_temperaturaAd: ''}
             </td>
           </tr>
           <tr style={{fontSize: '10px', fontFamily: 'sans-serif'}}>
@@ -264,7 +264,7 @@ export const PdfTesteGerador: React.FC = () => {
             <td></td>
             <td>40C° a 55C°</td>
             <td>
-            {dadosPDF?.generatorTest.corrente.corrente_preAquecimento}
+              {dadosPDF?.generatorTest ? dadosPDF?.generatorTest.corrente.corrente_preAquecimento: ''}
             </td>
           </tr>
         </tbody>

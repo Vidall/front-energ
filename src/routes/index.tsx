@@ -25,6 +25,8 @@ export const AppRoutes = () => {
       <Route path='/ordens-de-servicos/detalhe/andamento/status-gerador/:id' element={<PaginaStatusGerador/>}/>
       <Route path='/ordens-de-servicos/detalhe/andamento/teste-gerador/:id' element={<PaginaTesteGerador/>}/>
       
+      <Route path='/ordens-de-servicos/detalhe/andamento/assinatura-cliente/:id' element={<PaginaTesteGerador/>}/>
+      
       <Route path='/ordens-de-servicos/pdf/:id' element={<PaginaPDF/>}/>
 
       <Route path='/clientes' element={<PaginaCliente/>}/>

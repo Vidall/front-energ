@@ -231,6 +231,37 @@ const sendFile = async (id: number, body: FormDataEntryValue, acao: 'foto_antes'
   return new Error('Erro ao enviar a imagem');
 };
 
+const sendAssinaturaCliente = async (id: number, body: FormDataEntryValue) => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_SERVICO_IN_ORDER}/${id}/assinatura_cliente`;
+
+    const formData = new FormData();
+    formData.append('file', body);
+  
+    const response = await ApiOS.post(urlRelativa, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    } else {
+      return new Error('Erro ao enviar a imagem');
+    }
+  } catch (error) {
+    console.log(error);
+    // Se o erro for uma instância de AxiosError
+    // if (axios.isAxiosError(error)) {
+    //   // Verifica se o erro tem uma resposta com dados de erro
+    //   if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+    //     return new Error((error.response.data).errors.default || 'Erro ao cadastrar o registro');
+    //   }
+  }
+    
+  return new Error('Erro ao enviar a imagem');
+};
+
 const getByIdServiceInOrder = async (id: number): Promise< IService | Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_SERVICO_IN_ORDER}/${id}`;
@@ -304,5 +335,6 @@ export const OrdemServicoService = {
   sendFile,
   getByIdServiceInOrder,
   createGeradorStatusOrTeste,
-  getPDF
+  getPDF,
+  sendAssinaturaCliente
 };

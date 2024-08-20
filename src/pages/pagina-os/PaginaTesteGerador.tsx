@@ -91,6 +91,27 @@ export const PaginaTesteGerador: React.FC = () => {
           name='rede.rede_tFaseT'        
           label='Tensão Fase T'
         />
+
+        <Divider/>
+        <FormLabel>Corrente</FormLabel>
+        <VTextFieldTesteGerador
+          control={formMethods.control}
+          errors={formMethods.formState.errors}
+          name='corrente.corrente_tFaseR'        
+          label='Fase R'
+        />
+        <VTextFieldTesteGerador
+          control={formMethods.control}
+          errors={formMethods.formState.errors}
+          name='corrente.corrente_tFaseS'        
+          label='Fase S'
+        />
+        <VTextFieldTesteGerador
+          control={formMethods.control}
+          errors={formMethods.formState.errors}
+          name='corrente.corrente_tFaseT'        
+          label='Fase T'
+        />
         {/* ----- */}
         <Divider/>
         <VTextFieldTesteGerador
@@ -147,7 +168,25 @@ export const PaginaTesteGerador: React.FC = () => {
           name='corrente.corrente_fatorPotencia'        
           label='Fator de Potência'
         />
+          <VTextFieldTesteGerador
+          control={formMethods.control}
+          errors={formMethods.formState.errors}
+          name='corrente.corrente_temperatura'
+          label='Temperatura'
+        />
+         <VTextFieldTesteGerador
+          control={formMethods.control}
+          errors={formMethods.formState.errors}
+          name='corrente.corrente_pressaOleo'        
+          label='Pressão Óleo'
+        />
         <VTextFieldTesteGerador
+          control={formMethods.control}
+          errors={formMethods.formState.errors}
+          name='corrente.corrente_consumoCombustivel'        
+          label='Consumo Combustível'
+        />
+          <VTextFieldTesteGerador
           control={formMethods.control}
           errors={formMethods.formState.errors}
           name='corrente.corrente_temperaturaAd'        

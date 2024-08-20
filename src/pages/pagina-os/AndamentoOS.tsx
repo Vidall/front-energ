@@ -5,7 +5,7 @@ import { Box, Button, Divider, FormControlLabel, Icon, Radio, RadioGroup, Theme,
 import { VInputSelect } from '../../shared/Components';
 import { IOs, IServiceInOrder, IServiceInOrderOutput } from '../../shared/Service/api-JAVA/models/OrdemServico';
 import { Idata, IGroupAllDTOOutputList, IGrupo } from '../../shared/Service/api-JAVA/models/GruposServicos';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { GruposServicosService } from '../../shared/Service/api-JAVA/grupos-servicos/GruposServicosService';
 import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadioVerificacaoServico';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
@@ -21,6 +21,10 @@ export const AndamentoOS:React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const refreshPage = useCallback(() => {
+    window.location.reload();
+  }, []);
+
   const handleSubmitForm = (form: IServiceInOrder) => {
     OrdemServicoService.createServiceInOrder(Number(id), form)
       .then( res => {
@@ -30,7 +34,7 @@ export const AndamentoOS:React.FC = () => {
         }
 
         alert('Cadastrado com sucesso');
-        formMethods.reset({});
+        refreshPage();
       })
       .catch(error => console.log(error));
   };
@@ -82,6 +86,9 @@ export const AndamentoOS:React.FC = () => {
 
   const handleClickPDF = ()  => {
     navigate(`/ordens-de-servicos/pdf/${id}`);
+  };
+  const handleClickAssinaturaCliente = ()  => {
+    navigate(`/ordens-de-servicos/detalhe/andamento/assinatura-cliente/${id}`);
   };
 
   return (
@@ -162,6 +169,9 @@ export const AndamentoOS:React.FC = () => {
         <Box display={'flex'} justifyContent={'space-between'} paddingTop={1}>
           <Button variant='text' onClick={handleClickPDF}>
             PDF Prévia
+          </Button>
+          <Button variant='contained' size='small' onClick={handleClickAssinaturaCliente}>
+            Assinatura cliente
           </Button>
           <Button variant='contained'>
             Finalizar

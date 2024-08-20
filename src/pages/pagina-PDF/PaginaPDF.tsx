@@ -15,6 +15,9 @@ import { PdfDemonstrativoMO } from './PdfDemonstrativoMO';
 import { PdfEscopo } from './PdfEscopo';
 import { PdfVerificacoes } from './PdfVerificacoes';
 import { PdfTesteGerador } from './PdfTesteGerador';
+import { PdfStatusGerador } from './PdfStatusGerador';
+import { PdfFinalizacao } from './PdfFinalizacao';
+import { PdfImagens } from './PdfImagens';
 
 /*eslint-disable react/prop-types*/
 
@@ -42,6 +45,10 @@ export const PaginaPDF: React.FC = () => {
       <PdfEscopo/>
       <PdfVerificacoes/>
       <PdfTesteGerador/>
+      <PdfStatusGerador/>
+      <PdfFinalizacao/>
+      
+      <PdfImagens/>
 
       <div 
         style={{display: 'flex', justifyContent:'space-between', padding: 1}}
