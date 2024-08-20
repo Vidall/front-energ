@@ -18,7 +18,10 @@ export default [
         'error',
         2,
         {
-          'SwitchCase': 1
+          'SwitchCase': 1,
+          'ignoredNodes': ['JSXElement *', 'JSXElement'],
+          'flatTernaryExpressions': false,
+          'outerIIFEBody': 0,
         }
       ],
       'linebreak-style': [
@@ -39,6 +42,14 @@ export default [
         { max: 1, maxEOF: 1, maxBOF: 0 }
       ],
       'react/react-in-jsx-scope': 'off',
+      'react/jsx-indent': ['error', 2],
+      'react/jsx-indent-props': ['error', 2],
+      "react/forbid-dom-props": ["error", {
+      "forbid": ["style"]
+    }],
+    "rules": {
+      "react/jsx-no-inline-styles": "warn"
     }
-  },
+  }
+}
 ];

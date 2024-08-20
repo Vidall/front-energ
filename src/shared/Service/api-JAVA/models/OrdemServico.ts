@@ -53,6 +53,11 @@ export interface IGetByIdOrdemStart {
 export interface IServiceInOrder {
   service: {
     id: number
+    name: string,
+    group: {
+      id: number,
+      name: string
+    }
   } 
   verificationBefore: string //'string' | 'Nstring'
   verificationAfter: string //'string' | 'Nstring'

@@ -49,7 +49,7 @@ export const LayoutPaginas: React.FC<IDetalheProps> = ({ titulo, children }) => 
         padding={1}
       >
         <Typography>
-          CopyRight©2024 - Luan vidal & Pedro Ivo
+          CopyRight©2024
         </Typography>
       </Box>
     </Box>
