@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
-import { IGetByIdOrdemStart, IOrdemComTotalCount, IOs, IPDF, IReturnGetAllOs, ISendImage, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
+import { IGetByIdOrdemStart, IOrdemComTotalCount, IOs, IPDF, IReturnGetAllOs, ISendAssinaturaCliente, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
 
 const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
@@ -231,12 +231,16 @@ const sendFile = async (id: number, body: FormDataEntryValue, acao: 'foto_antes'
   return new Error('Erro ao enviar a imagem');
 };
 
-const sendAssinaturaCliente = async (id: number, body: FormDataEntryValue) => {
+const sendAssinaturaCliente = async (id: number, body: ISendAssinaturaCliente) => {
   try {
-    const urlRelativa = `${Environment.CAMINHO_SERVICO_IN_ORDER}/${id}/assinatura_cliente`;
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}/${id}/assinatura_cliente`;
 
     const formData = new FormData();
-    formData.append('file', body);
+    if (body.file) {
+      formData.append('file', body.file);
+    } else {
+      alert('não tem file');
+    }
   
     const response = await ApiOS.post(urlRelativa, formData, {
       headers: {

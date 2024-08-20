@@ -11,6 +11,7 @@ import { DetalheOsAndamento } from '../pages/pagina-os/DetalheOsAndamento';
 import { PaginaStatusGerador } from '../pages/pagina-os/PaginaStatusGerador';
 import { PaginaTesteGerador } from '../pages/pagina-os/PaginaTesteGerador';
 import { PaginaPDF } from '../pages/pagina-PDF/PaginaPDF';
+import { PaginaAssinaturaCliente } from '../pages/pagina-os/PaginaAssinaturaCliente';
 
 export const AppRoutes = () => {
 
@@ -25,7 +26,7 @@ export const AppRoutes = () => {
       <Route path='/ordens-de-servicos/detalhe/andamento/status-gerador/:id' element={<PaginaStatusGerador/>}/>
       <Route path='/ordens-de-servicos/detalhe/andamento/teste-gerador/:id' element={<PaginaTesteGerador/>}/>
       
-      <Route path='/ordens-de-servicos/detalhe/andamento/assinatura-cliente/:id' element={<PaginaTesteGerador/>}/>
+      <Route path='/ordens-de-servicos/detalhe/andamento/assinatura-cliente/:id' element={<PaginaAssinaturaCliente/>}/>
       
       <Route path='/ordens-de-servicos/pdf/:id' element={<PaginaPDF/>}/>
 

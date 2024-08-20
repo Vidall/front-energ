@@ -42,7 +42,7 @@ export const PdfImagens: React.FC = () => {
           return acc;
         }, {});
 
-        setGroupedServices(grouped)
+        setGroupedServices(grouped);
         setDadosPDF(res);
       })
       .catch((error) => console.log(error));
@@ -50,49 +50,48 @@ export const PdfImagens: React.FC = () => {
 
   return (
     <>
-
     
       <table className="table table-bordered">
-       <tbody>
-      {Object.values(groupedServices).map((group, index) => (
-        <React.Fragment key={index}>
-          {group.services.map((service, idx) => (            
-          <tr>
-            <td className="alignCenter">
-              <img 
-                src={service.urlPhotoBefore}
-                style={{ maxHeight: '300px' }}
-              /><br /><br />
-              <div 
-                style={{
-                  fontSize: '11px',
-                  fontFamily: 'sans-serif',
-                  backgroundColor: '#ebebeb'
-                }}
-              >
-                <strong>{`Foto Antes ${service.service.name}`}</strong>
-              </div>
-            </td>
-            <td className="alignCenter">
-              <img 
-                src={service.urlPhotoAfter} 
-                style={{ maxHeight: '300px' }}
-              /><br /><br />
-              <div 
-                style={{
-                  fontSize: '11px',
-                  fontFamily: 'sans-serif',
-                  backgroundColor: '#ebebeb'
-                }}
-              >
-                <strong>{`Foto Depois ${service.service.name}`}</strong>
-              </div>
-            </td>
-          </tr>
+        <tbody>
+          {Object.values(groupedServices).map((group, index) => (
+            <React.Fragment key={index}>
+              {group.services.map((service, idx) => (            
+                <tr>
+                  <td className="alignCenter">
+                    <img 
+                      src={service.urlPhotoBefore}
+                      style={{ maxHeight: '300px' }}
+                    /><br /><br />
+                    <div 
+                      style={{
+                        fontSize: '11px',
+                        fontFamily: 'sans-serif',
+                        backgroundColor: '#ebebeb'
+                      }}
+                    >
+                      <strong>{`Foto Antes ${service.service.name}`}</strong>
+                    </div>
+                  </td>
+                  <td className="alignCenter">
+                    <img 
+                      src={service.urlPhotoAfter} 
+                      style={{ maxHeight: '300px' }}
+                    /><br /><br />
+                    <div 
+                      style={{
+                        fontSize: '11px',
+                        fontFamily: 'sans-serif',
+                        backgroundColor: '#ebebeb'
+                      }}
+                    >
+                      <strong>{`Foto Depois ${service.service.name}`}</strong>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </React.Fragment>
           ))}
-        </React.Fragment>
-      ))}
-      </tbody>        
+        </tbody>        
       </table>
     </>
   );

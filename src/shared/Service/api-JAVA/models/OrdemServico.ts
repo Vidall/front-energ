@@ -157,6 +157,7 @@ export interface IPDF {
   client_type: string,
   client_equipment_id: number,
   technician_id: number,
+  client_signature_url: string
   endereco: {
     rua: string,
     numero: number,
@@ -235,4 +236,8 @@ export interface IPDF {
     }
   },
   generalObservations: string
+}
+
+export interface ISendAssinaturaCliente {
+  file: File
 }

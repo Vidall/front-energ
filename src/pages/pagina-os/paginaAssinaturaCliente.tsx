@@ -1,31 +1,61 @@
 import { useForm } from 'react-hook-form';
-import { VFormOS } from '../../shared/forms/formOS';
+import { VAssinaturClienteOS, VFormOS } from '../../shared/forms/formOS';
 import { VFormTecnico } from '../../shared/forms/formTecnico/VFormTecnico';
 import { LayoutPaginas } from '../../shared/Layout';
-import { Box } from '@mui/material';
-import { VAssinaturaField } from '../../shared/forms';
+import { Box, Button } from '@mui/material';
+import { useNavigate, useParams } from 'react-router';
+import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
+import { ISendAssinaturaCliente } from '../../shared/Service/api-JAVA/models/OrdemServico';
 
-export const paginaAssinaturaCliente: React.FC = () => {
-  const formMethods = useForm();
+export const PaginaAssinaturaCliente: React.FC = () => {
+  const formMethods = useForm<ISendAssinaturaCliente>();
+
+  const navigate = useNavigate();
+
+  const { id } = useParams();
 
   const handleSubmitForm = (form: any) => {
+    OrdemServicoService.sendAssinaturaCliente(Number(id), form)
+      .then(res => {
+        if(res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+
+        alert('Assinatura cadastrada com sucesso');
+        navigate(-1);
+      })
+      .catch(error => console.log(error));
     console.log(form);
   };
 
+  const handleClickVoltar = () => {
+    navigate(-1);
+  };
+
   return (
-    <LayoutPaginas titulo="Área do técnico">
+    <LayoutPaginas titulo="Área assinatura cliente">
       <VFormOS
         formMethods={formMethods}
         submitForm={formMethods.handleSubmit(handleSubmitForm)}
       > 
         <Box>
-          <VAssinaturaField
+          <VAssinaturClienteOS
             control={formMethods.control}
             errors={formMethods.formState.errors}
             label='Assinatura'
             name="file"
             rules={{require: 'Este campo é obrigatório'}}
           />
+          
+          <Box display={'flex'} justifyContent={'space-between'}>
+            <Button variant='outlined' onClick={handleClickVoltar}>
+              Voltar
+            </Button>
+            <Button variant='contained' type='submit'>
+              Cadastrar
+            </Button>
+          </Box>
         </Box>  
       </VFormOS>
     </LayoutPaginas>  

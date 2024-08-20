@@ -16,7 +16,7 @@ import { TecnicoService } from '../../shared/Service/api-TS/tecnicos/TecnicoServ
 
 export const PdfFinalizacao: React.FC = () => {
   const [dadosPDF, setDadosPDF] = useState<IPDF>();
-  const [dadosTecnico, setDadosTecnico] = useState<ITecnico>()
+  const [dadosTecnico, setDadosTecnico] = useState<ITecnico>();
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -26,14 +26,13 @@ export const PdfFinalizacao: React.FC = () => {
       .then(res => {
         if (res instanceof Error) {
           alert(res.message);
-          return res.message
+          return res.message;
         }
 
-        setDadosTecnico(res)
+        setDadosTecnico(res);
       })
-      .catch()
-  }, [])
-
+      .catch();
+  }, []);
 
   useEffect(() => {
     OrdemServicoService.getPDF(Number(id))
@@ -43,7 +42,7 @@ export const PdfFinalizacao: React.FC = () => {
           return res.message;
         }
 
-        pegarTecnico(res.technician_id)
+        pegarTecnico(res.technician_id);
         setDadosPDF(res);
       })
       .catch((error) => console.log(error));
@@ -70,7 +69,7 @@ export const PdfFinalizacao: React.FC = () => {
             >
               <strong>Observações gerais</strong>
               <br />
-                {dadosPDF?.generalObservations}
+              {dadosPDF?.generalObservations}
             </td>
           </tr>
           <tr>
@@ -89,11 +88,11 @@ export const PdfFinalizacao: React.FC = () => {
               )}
               {(dadosTecnico?.pathAssinatura?.includes('https')) && (
 
-              <img
-                src={dadosTecnico.pathAssinatura}
-                style={{ maxHeight: '300px' }}
-                alt="Evandro"
-              />
+                <img
+                  src={dadosTecnico.pathAssinatura}
+                  style={{ maxHeight: '300px' }}
+                  alt="Evandro"
+                />
               )}
               <br />
               <strong>{dadosTecnico?.nome}</strong>
@@ -109,7 +108,7 @@ export const PdfFinalizacao: React.FC = () => {
             >
               <br />
               <img
-                src="https://picviewer.umov.me/Pic/GetImage?id=674243859&token=b6d3f1f6893e5299f2e8972acc9a612f"
+                src={dadosPDF?.client_signature_url}
                 style={{ maxHeight: '300px' }}
                 alt="Franquia Angra"
               />
