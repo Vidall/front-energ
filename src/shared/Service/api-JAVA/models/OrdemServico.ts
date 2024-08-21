@@ -246,3 +246,8 @@ export interface ISendAssinaturaCliente {
 export interface IOrdemFinalizacao {
   generalObservations: string
 }
+
+export interface ICountOS {
+  abertas: number,
+  total: number
+}

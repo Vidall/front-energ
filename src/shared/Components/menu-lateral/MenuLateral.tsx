@@ -12,6 +12,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
   const navigate = useNavigate();
+  const {toggleTheme} = useAppThemeContext();
 
   const handleClick = (caminho: string) => {
     navigate(caminho);
@@ -70,7 +71,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
           </List>
 
           <Box flexGrow={1} /> {/* Este Box irá ocupar o espaço disponível */}
-          {/* <List>
+          <List>
             <ListItem>
               <ListItemButton onClick={toggleTheme}>
                 <ListItemIcon>
@@ -79,7 +80,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
                 <ListItemText primary={'Tema'} />
               </ListItemButton>
             </ListItem>
-          </List> */}
+          </List>
         </Box>
       </Drawer>
 

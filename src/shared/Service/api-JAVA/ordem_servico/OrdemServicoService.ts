@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
-import { IGetByIdOrdemStart, IOrdemComTotalCount, IOrdemFinalizacao, IOs, IPDF, IReturnGetAllOs, ISendAssinaturaCliente, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
+import { ICountOS, IGetByIdOrdemStart, IOrdemComTotalCount, IOrdemFinalizacao, IOs, IPDF, IReturnGetAllOs, ISendAssinaturaCliente, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
 
 const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
@@ -338,6 +338,24 @@ const getPDF = async (id: number): Promise<IPDF | Error> => {
   }
 };
 
+const getCountOrdens = async (): Promise<ICountOS | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_ORDEM}/contagem`;
+
+    const { data } = await ApiOS.get(urlRelativa);
+
+    if (data) {
+      return data;
+    }
+
+    return new Error('Erro ao cosultar os totais agendados e finalizados');
+  } catch (error) {
+    console.log(error);
+
+    return new Error('Erro ao cosultar os totais agendados e finalizados');
+  }
+};
+
 export const OrdemServicoService = {
   getAll,
   create,
@@ -350,5 +368,6 @@ export const OrdemServicoService = {
   getByIdServiceInOrder,
   createGeradorStatusOrTeste,
   getPDF,
-  sendAssinaturaCliente
+  sendAssinaturaCliente,
+  getCountOrdens
 };
