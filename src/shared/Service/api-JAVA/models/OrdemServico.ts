@@ -13,6 +13,7 @@ export interface IOs {
   }
   escopoDosServicos: string
   client_equipment_id: number
+  generalObservations: string
 }
 
 export interface IReturnGetAllOs {
@@ -240,4 +241,8 @@ export interface IPDF {
 
 export interface ISendAssinaturaCliente {
   file: File
+}
+
+export interface IOrdemFinalizacao {
+  generalObservations: string
 }

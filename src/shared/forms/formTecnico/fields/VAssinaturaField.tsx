@@ -12,7 +12,6 @@ interface VTextFieldProps {
   errors: FieldErrors<IUpdateTecnico>;
   label: string;
   rules?: any; 
-  
 }
 
 const dataURLtoFile = (dataurl: any, filename: any) => {
@@ -27,16 +26,33 @@ const dataURLtoFile = (dataurl: any, filename: any) => {
   return new File([u8arr], filename, { type: mime });
 };
 
-/*eslint-disable react/prop-types*/
 export const VAssinaturaField: React.FC<VTextFieldProps> = ({ name, control, rules }) => {
   const theme = useTheme();
   const sigCanvas = useRef<SignatureCanvas>(null);
 
   const handleEnd = (field: any) => {
-    if (sigCanvas.current) {
-      const signatureData = sigCanvas.current.toDataURL();
-      const signatureFile = dataURLtoFile(signatureData, 'signature.png');
-      field.onChange(signatureFile);
+    if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
+      // Criar um canvas temporário para adicionar o fundo branco
+      const canvas = sigCanvas.current.getCanvas();
+      const tempCanvas = document.createElement('canvas');
+      const ctx = tempCanvas.getContext('2d');
+
+      // Definir o tamanho do canvas temporário para o mesmo do original
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+
+      // Adicionar fundo branco ao canvas temporário
+      if (ctx) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        ctx.drawImage(canvas, 0, 0); // Copiar a assinatura para o canvas temporário
+
+        const signatureData = tempCanvas.toDataURL('image/jpeg'); // Converter para JPEG
+        const signatureFile = dataURLtoFile(signatureData, 'signature.jpg'); // Nome do arquivo
+        field.onChange(signatureFile);
+      }
+    } else {
+      alert('Assinatura em branco');
     }
   };
 
@@ -68,7 +84,7 @@ export const VAssinaturaField: React.FC<VTextFieldProps> = ({ name, control, rul
           )}
         />
       </Box>
-      <Box>
+      <Box mt={2}>
         <Typography textAlign={'left'}>Assine aqui</Typography>
       </Box>
     </Box>

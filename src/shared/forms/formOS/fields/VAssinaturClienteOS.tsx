@@ -1,6 +1,6 @@
 import SignatureCanvas from 'react-signature-canvas';
 import { Box, Typography, useTheme } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import { ISendAssinaturaCliente } from '../../../Service/api-JAVA/models/OrdemServico';
 
@@ -26,21 +26,33 @@ const dataURLtoFile = (dataurl: any, filename: any) => {
   return new File([u8arr], filename, { type: mime });
 };
 
-/*eslint-disable react/prop-types*/
 export const VAssinaturClienteOS: React.FC<VTextFieldProps> = ({ name, control, rules }) => {
   const theme = useTheme();
   const sigCanvas = useRef<SignatureCanvas>(null);
-  const [signaturePreview, setSignaturePreview] = useState<string | null>(null);
 
   const handleEnd = (field: any) => {
     if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
-      const signatureData = sigCanvas.current.toDataURL();
-      const signatureFile = dataURLtoFile(signatureData, 'signature.png');
-      field.onChange(signatureFile);
-      setSignaturePreview(signatureData);  // Atualize a pré-visualização
-      console.log(signatureFile);
+      // Criar um canvas temporário para adicionar o fundo branco
+      const canvas = sigCanvas.current.getCanvas();
+      const tempCanvas = document.createElement('canvas');
+      const ctx = tempCanvas.getContext('2d');
+
+      // Definir o tamanho do canvas temporário para o mesmo do original
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+
+      // Adicionar fundo branco ao canvas temporário
+      if (ctx) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        ctx.drawImage(canvas, 0, 0); // Copiar a assinatura para o canvas temporário
+
+        const signatureData = tempCanvas.toDataURL('image/jpeg'); // Converter para JPEG
+        const signatureFile = dataURLtoFile(signatureData, 'signature.jpg'); // Nome do arquivo
+        field.onChange(signatureFile);
+      }
     } else {
-      console.log('O canvas está vazio.');
+      alert('Assinatura em branco');
     }
   };
 
@@ -75,12 +87,6 @@ export const VAssinaturClienteOS: React.FC<VTextFieldProps> = ({ name, control, 
       <Box mt={2}>
         <Typography textAlign={'left'}>Assine aqui</Typography>
       </Box>
-      {signaturePreview && (
-        <Box mt={2}>
-          <Typography textAlign={'left'}>Pré-visualização da assinatura:</Typography>
-          <img src={signaturePreview} alt="Pré-visualização da assinatura" style={{ border: '1px solid black', borderRadius: '4px' }} />
-        </Box>
-      )}
     </Box>
   );
 };

@@ -6,6 +6,7 @@ import { Box, Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { ISendAssinaturaCliente } from '../../shared/Service/api-JAVA/models/OrdemServico';
+import { useState } from 'react';
 
 export const PaginaAssinaturaCliente: React.FC = () => {
   const formMethods = useForm<ISendAssinaturaCliente>();
@@ -14,8 +15,9 @@ export const PaginaAssinaturaCliente: React.FC = () => {
 
   const { id } = useParams();
 
-  const handleSubmitForm = (form: any) => {
-    OrdemServicoService.sendAssinaturaCliente(Number(id), form)
+  const handleSubmitForm = (form: ISendAssinaturaCliente) => {
+
+    OrdemServicoService.sendAssinaturaCliente(Number(id), form.file)
       .then(res => {
         if(res instanceof Error) {
           alert(res.message);
@@ -26,7 +28,6 @@ export const PaginaAssinaturaCliente: React.FC = () => {
         navigate(-1);
       })
       .catch(error => console.log(error));
-    console.log(form);
   };
 
   const handleClickVoltar = () => {
