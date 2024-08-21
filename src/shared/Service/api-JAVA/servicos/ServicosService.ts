@@ -117,9 +117,49 @@ const updateById = async (id: number, servico: Omit<IServices, 'id' | 'groupServ
   }
 };
 
+const deleteById = async (id: number) => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_SERVICOS}/${id}`;
+
+    const response = await ApiOS.delete(urlRelativa);
+
+    if (response.status === 200 || response.status === 204) {
+      return;
+    }
+
+    return new Error('Erro ao deletar o registro');
+
+  } catch (error) {
+    console.log(error);
+
+    return new Error('Erro ao deletar o registro');
+  }
+};
+
+const deleteByIdServiceInOrder = async (id: number) => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_SERVICO_IN_ORDER}/${id}`;
+
+    const response = await ApiOS.delete(urlRelativa);
+
+    if (response.status === 200 || response.status === 204) {
+      return;
+    }
+
+    return new Error('Erro ao deletar o registro');
+
+  } catch (error) {
+    console.log(error);
+
+    return new Error('Erro ao deletar o registro');
+  }
+};
+
 export const ServicosService = {
   getAll,
   create,
   getByID,
-  updateById
+  updateById,
+  deleteById,
+  deleteByIdServiceInOrder
 };

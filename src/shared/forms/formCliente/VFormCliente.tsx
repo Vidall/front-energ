@@ -9,6 +9,8 @@ import { parserDataCliente } from '../../utils/parserDataCliente';
 import { TPessoa } from '../../Service/api-TS/models/Clientes';
 import { VTextFieldCliente, VRadioField } from './fields';
 import { Environment } from '../../Enviroment';
+import { EquipamentosService } from '../../Service/api-TS/equipamentos/EquipamentosService';
+import { ClienteService } from '../../Service/api-TS/clientes/ClienteService';
 
 /*eslint-disable react/prop-types*/
 export const VFormCliente: React.FC = () => {
@@ -19,7 +21,10 @@ export const VFormCliente: React.FC = () => {
   const [finalStep] = useState(4);
   const navigate = useNavigate();
   const formRef = useRef(null);
+
   const { id } = useParams();
+  const tipo = searchParams.get('tipoPessoa');
+  const pagina = searchParams.get('tipo');
 
   const { control, handleSubmit, formState: { errors }, trigger, watch, reset } = useForm<TPessoa>({
     defaultValues: {}  // Definindo o valor padrão
@@ -162,6 +167,36 @@ export const VFormCliente: React.FC = () => {
     navigate(`${Environment.CAMINHO_EQUIPAMENTOS}/${id}?tipo=${selectedValueTipo}`);
   };
 
+  const handleClickDelete = () => {
+    if (tipo) {
+      ClienteService.deleteById(Number(id), tipo as 'fisico' | 'juridico')
+        .then(res => {
+          if(res instanceof Error) {
+            alert(res.message);
+            return res.message;
+          }
+
+          alert('cliente deletado com sucesso');
+
+        })
+        .catch(error => console.log(error));
+
+      EquipamentosService.deleteByID(Number(id), tipo as 'fisico' | 'juridico')
+        .then(res => {
+          if(res instanceof Error) {
+            alert(res.message);
+            return res.message;
+          }
+  
+          alert('Equipamentos do cliente deletado com sucesso');
+  
+        })
+        .catch(error => console.log(error));
+
+      navigate('clientes?tipo=Fisico');
+    }
+  };
+
   return (
     <Paper component={Box} padding={2}>
       <form onSubmit={handleSubmit(selectedValueTipo === 'fisico' ? handleSubmitFormPessoaFisica : handleSubmitFormPessoaJuridica)} ref={formRef}>
@@ -169,11 +204,13 @@ export const VFormCliente: React.FC = () => {
           <Button variant='contained' disabled={data ? false : true} onClick={handleClickEquipamentos}>
           Equipamentos
           </Button>
-          <Button variant='outlined'>
-            <Icon>
-            delete
-            </Icon>
-          </Button>
+          {pagina !== 'Cadastrar' && (
+            <Button variant='outlined' onClick={handleClickDelete}>
+              <Icon>
+                delete
+              </Icon>
+            </Button>
+          )}
         </Box>
 
         {/* Form de endereço */}
@@ -353,17 +390,7 @@ export const VFormCliente: React.FC = () => {
 
           {(step === finalStep || !smDown) && (
             <Button type="submit" variant="contained" color="primary">
-              { data &&
-                (
-                  'Editar'
-                )
-              }
-
-              { !data && 
-                (
-                  'Cadastrar'
-                )
-              }
+              { data ? 'Editar' : 'Cadastrar'}
             </Button>
           )}
         </Box>

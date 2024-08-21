@@ -91,7 +91,7 @@ export const PdfFinalizacao: React.FC = () => {
                 <img
                   src={dadosTecnico.pathAssinatura}
                   style={{ maxHeight: '300px' }}
-                  alt="Evandro"
+                  alt="Tecnico"
                 />
               )}
               <br />
@@ -107,11 +107,16 @@ export const PdfFinalizacao: React.FC = () => {
               }}
             >
               <br />
-              <img
-                src={dadosPDF?.client_signature_url}
-                style={{ maxHeight: '300px' }}
-                alt="Franquia Angra"
-              />
+              {!(dadosPDF?.client_signature_url?.includes('https')) && (
+                'Não possui assinatura'
+              )}
+              {(dadosPDF?.client_signature_url?.includes('https')) && (
+                <img
+                  src={dadosPDF?.client_signature_url}
+                  style={{ maxHeight: '300px' }}
+                  alt="Responsável"
+                />
+              )}
               <br />
               <strong>Colaborador responsável</strong>
             </td>

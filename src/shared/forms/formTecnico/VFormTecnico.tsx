@@ -86,6 +86,20 @@ export const VFormTecnico: React.FC = () => {
     setTrocarAssinatura(true);
   };
 
+  const handleClickDelete = () => {
+    TecnicoService.deleteById(Number(id))
+      .then(res => {
+        if (res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+      
+        alert('Registro deletado com sucesso');
+        navigate('/tecnicos?tipo=Todos');
+      })
+      .catch(error => console.log(error));    
+  };
+
   return (
     <Paper component={Box} padding={2}>
       <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
@@ -108,6 +122,13 @@ export const VFormTecnico: React.FC = () => {
                     <Typography marginRight={1}>Assinatura</Typography>
                     <Icon>
                       edit
+                    </Icon>
+                              
+                  </Button>
+
+                  <Button onClick={handleClickDelete} size='small'>
+                    <Icon>
+                      delete
                     </Icon>
                               
                   </Button>

@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Box, Button, Paper, TextField } from '@mui/material';
+import { Box, Button, Icon, Paper, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { GruposServicosService } from '../../Service/api-JAVA/grupos-servicos/GruposServicosService';
@@ -24,6 +24,7 @@ export const VFormServicos: React.FC = () => {
   const [nomeGrupo, setNomeGrupo] = useState('');
 
   const grupo = searchParms.get('grupo');
+  const pagina = searchParms.get('tipo');
 
   useEffect(() => {
     if (!id) {
@@ -78,8 +79,32 @@ export const VFormServicos: React.FC = () => {
     }
   };
 
+  const handleClickDelete = () => {
+    ServicosService.deleteById(Number(id))
+      .then(res => {
+        if(res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+
+        alert('Registro deletado com sucesso');
+        navigate('/servicos?tipo=Todos&grupo=1');
+
+      })
+      .catch(error => console.log(error));
+  };
+
   return (
     <Paper component={Box} padding={1}>
+      <Box display={'flex'} justifyContent={'end'} paddingBottom={1}>
+        {pagina !== 'Cadastrar' && (
+          <Button variant='outlined' onClick={handleClickDelete}>
+            <Icon>
+            delete
+            </Icon>
+          </Button>
+        )}
+      </Box>
       <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
         {!id && (
           <VInputSelect
