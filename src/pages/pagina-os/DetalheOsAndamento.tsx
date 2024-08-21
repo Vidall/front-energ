@@ -1,12 +1,11 @@
 import { Box, Button, Grid, Icon, ImageList, ImageListItem } from '@mui/material';
-import { VFormOS, VUpload } from '../../shared/forms/formOS';
 import { useForm, Controller } from 'react-hook-form';
-import { ISendImage, IService, IServiceInOrder } from '../../shared/Service/api-JAVA/models/OrdemServico';
+import { ISendImage, IServiceInOrder } from '../../shared/Service/api-JAVA/models/OrdemServico';
 import { useEffect, useState } from 'react';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { LayoutPaginas } from '../../shared/Layout';
 import { useNavigate, useParams } from 'react-router';
-import { error } from 'console';
+import { ServicosService } from '../../shared/Service/api-JAVA/servicos/ServicosService';
 
 export const DetalheOsAndamento: React.FC = () => {
   const formMethod = useForm<ISendImage>();
@@ -129,13 +128,27 @@ export const DetalheOsAndamento: React.FC = () => {
     navigate(-1);
   };
 
+  const handleClickDelete = () => {
+    ServicosService.deleteByIdServiceInOrder(Number(id))
+      .then(res => {
+        if (res instanceof Error){
+          alert(res.message);
+          return res.message;
+        }
+        alert('Registro deletado com sucesso!');
+        navigate(-1);
+      })
+      .catch(error => console.log(error));
+
+  };
+
   return (
     <LayoutPaginas
       titulo='Área ordens serviços'
     >
       <Box display={'flex'} flexDirection={'column'} gap={5}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Button>
+          <Button onClick={handleClickDelete}>
             <Icon>delete</Icon>
           </Button>
           <Button onClick={handleClickRefresh}>

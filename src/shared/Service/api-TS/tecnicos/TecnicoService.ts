@@ -167,9 +167,29 @@ const updateById = async(id: number, tecnico: IUpdateTecnico): Promise<IUpdateTe
   }
 };
 
+const deleteById = async (id: number): Promise<void | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_TECNICOS}/${id}`;
+
+    const response = await ApiTS.delete(urlRelativa);
+
+    if (response.status === 200 || response.status === 204) {
+      return;
+    }
+
+    return new Error('Erro ao deletar o registro');
+
+  } catch (error) {
+    console.log(error);
+
+    return new Error('Erro ao deletar o registro');
+  }
+};
+
 export const TecnicoService = {
   getAll,
   create,
   getByID,
-  updateById
+  updateById,
+  deleteById
 };

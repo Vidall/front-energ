@@ -1,7 +1,6 @@
 import { Environment } from '../../../Enviroment';
 import { ApiTS } from '../axios-config';
 import axios from 'axios';
-import { IUpdateTecnico } from '../models/Tecnico';
 import { IEquipamento } from '../models/Equipamentos';
 
 interface ITecnicoComTotalCount {
@@ -168,10 +167,35 @@ const updateById = async(id: number, equipamento: Omit<IEquipamento, 'id'>): Pro
   }
 };
 
+const deleteByID = async (id: number, tipo: 'fisico' | 'juridico'): Promise<void | Error> => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_EQUIPAMENTOS}/${id}?tipo=${tipo}`;
+    const { data } = await ApiTS.delete(urlRelativa);
+
+    if (data) {
+      return;
+    }
+
+    return new Error('Erro ao deletar o registro');
+  } catch (error) {
+    console.log(error);
+    
+    if (axios.isAxiosError(error)) {
+      // Verifica se o erro tem uma resposta com dados de erro
+      if (error.response?.data && typeof error.response.data === 'object' && 'errors' in error.response.data) {
+        return new Error((error.response.data).errors.default || 'Erro ao deletar o registro');
+      }
+    }
+  
+    return new Error('Erro ao deletar o registro');
+  }
+};
+
 export const EquipamentosService = {
   getAll,
   create,
   getByID,
   updateById,
-  getByIdEquipamento
+  getByIdEquipamento,
+  deleteByID
 };
