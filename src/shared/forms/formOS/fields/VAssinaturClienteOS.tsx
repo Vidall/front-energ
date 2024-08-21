@@ -2,14 +2,14 @@ import SignatureCanvas from 'react-signature-canvas';
 import { Box, Typography, useTheme } from '@mui/material';
 import { useRef } from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { IUpdateTecnico } from '../../../Service/api-TS/models/Tecnico';
+import { ISendAssinaturaCliente } from '../../../Service/api-JAVA/models/OrdemServico';
 
 /*eslint-disable @typescript-eslint/no-explicit-any*/
 
 interface VTextFieldProps {
-  name: keyof IUpdateTecnico | 'file';
-  control: Control<IUpdateTecnico>;
-  errors: FieldErrors<IUpdateTecnico>;
+  name: keyof ISendAssinaturaCliente | 'file';
+  control: Control<ISendAssinaturaCliente>;
+  errors: FieldErrors<ISendAssinaturaCliente>;
   label: string;
   rules?: any; 
 }
@@ -26,7 +26,7 @@ const dataURLtoFile = (dataurl: any, filename: any) => {
   return new File([u8arr], filename, { type: mime });
 };
 
-export const VAssinaturaField: React.FC<VTextFieldProps> = ({ name, control, rules }) => {
+export const VAssinaturClienteOS: React.FC<VTextFieldProps> = ({ name, control, rules }) => {
   const theme = useTheme();
   const sigCanvas = useRef<SignatureCanvas>(null);
 

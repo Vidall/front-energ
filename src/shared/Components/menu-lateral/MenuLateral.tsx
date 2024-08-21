@@ -1,8 +1,7 @@
-import { Box, Divider, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Divider, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
 import { useAppThemeContext, useDrawerContext } from '../../Contexts';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { Environment } from '../../Enviroment';
-import { useMemo, useState } from 'react';
 
 interface IMenuLateralProps {
   children: React.ReactNode
@@ -15,23 +14,11 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
   const navigate = useNavigate();
   const { toggleTheme } = useAppThemeContext();
-  const location = useLocation();
-
-  const CaminhoUrlAtual = location.pathname;
-
-  const isPaginaPDF = useMemo(() => {
-    console.log(CaminhoUrlAtual);
-    if (CaminhoUrlAtual.includes('pdf')){
-      return true;
-    }
-
-    return false;
-  }, []);
 
   return (
     <>
-      <Drawer open={isDrawerOpen} onClose={toggleDrawerOpen} variant={smDown || isPaginaPDF ? 'temporary' : 'permanent'} className='menu-lateral'>
-        <Box width={isPaginaPDF ? theme.spacing(0): theme.spacing(28)} display="flex" flexDirection="column" height="100%">
+      <Drawer open={isDrawerOpen} onClose={toggleDrawerOpen} variant={smDown ? 'temporary' : 'permanent'}>
+        <Box width={theme.spacing(28)} display="flex" flexDirection="column" height="100%">
           <List>
             <ListItem>
               <ListItemButton onClick={() => navigate(Environment.CAMINHO_INICIO)}>
@@ -73,9 +60,9 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
         </Box>
       </Drawer>
 
-      <div style={{height: '100vh', marginLeft: smDown || isPaginaPDF ? 0 : theme.spacing(28)}} className='children-menu-lateral'>
+      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(28)}>
         {children}
-      </div>
+      </Box>
     </>
   );
 };

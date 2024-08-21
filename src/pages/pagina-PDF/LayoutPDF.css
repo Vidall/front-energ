@@ -30,10 +30,13 @@ table td {
 /* Estilos específicos para impressão */
 @media print {
   .print-button {
-      display: 'block';
+      display: 'none';
   }
   .menu-lateral {
       display: none;
+  }
+  .children-menu-lateral{
+    margin-left: 0;
   }
 }
 

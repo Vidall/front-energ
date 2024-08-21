@@ -116,6 +116,10 @@ export const StartOS: React.FC = () => {
       .catch(error => console.error(error));
   };
 
+  const handleClickPDF = () => {
+    navigate(`/ordens-de-servicos/pdf/${id}`);
+  };
+
   return (
     <LayoutPaginas
       titulo='Área da Ordem de serviço'
@@ -150,11 +154,16 @@ export const StartOS: React.FC = () => {
 
         <Box display={'flex'} justifyContent={'center'} flexDirection={'column'} gap={1}>
           <Button variant='contained' onClick={handleClickStart} disabled={status !== 'ABERTO' ? true : false}>
-            Iniciar
+            {status === 'ANDAMENTO' ? 'Executar' : status === 'ABERTO' ? 'Iniciar' : status === 'CANCELADO' ? 'Cancelado' : 'Finalizado'}
           </Button>
-          <Button variant='outlined' onClick={handleClickCancel} disabled={status === 'CANCELADO' ? true : false}>
-          Cancelar
+          <Button variant='outlined' onClick={handleClickCancel} disabled={status === 'CANCELADO' || status === 'FINALIZADO' || status === '' ? true : false}>
+            Cancelar
+          </Button>          
+          
+          <Button variant='contained' onClick={handleClickPDF} disabled={status !== 'FINALIZADO' ? true : false} >
+              Gerar PDF
           </Button>
+          
         </Box>
       </form>
     </LayoutPaginas>

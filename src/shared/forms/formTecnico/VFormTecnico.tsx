@@ -8,7 +8,6 @@ import {  ITecnico, IUpdateTecnico } from '../../Service/api-TS/models/Tecnico';
 import { TecnicoService } from '../../Service/api-TS/tecnicos/TecnicoService';
 import { Environment } from '../../Enviroment';
 
-/*eslint-disable react/prop-types*/
 /*eslint-disable @typescript-eslint/no-unused-vars */
 /*eslint-disable no-unused-vars */
 
@@ -58,7 +57,6 @@ export const VFormTecnico: React.FC = () => {
             alert(res.message);
             return res.message;
           }
-
           alert('Editado com sucesso');
           navigate(`${Environment.CAMINHO_TECNICOS}?tipo=Todos`);
         })

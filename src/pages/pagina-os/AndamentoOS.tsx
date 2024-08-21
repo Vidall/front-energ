@@ -1,25 +1,31 @@
 import { Controller, useForm } from 'react-hook-form';
-import { VAutoCompleteServicos, VFormOS, VTabelaServiceInOrder } from '../../shared/forms/formOS';
+import { VAutoCompleteServicos, VFormOS, VTabelaServiceInOrder, VTextFieldOS } from '../../shared/forms/formOS';
 import { LayoutPaginas } from '../../shared/Layout';
 import { Box, Button, Divider, FormControlLabel, Icon, Radio, RadioGroup, Theme, useMediaQuery,  } from '@mui/material';
 import { VInputSelect } from '../../shared/Components';
-import { IOs, IServiceInOrder, IServiceInOrderOutput } from '../../shared/Service/api-JAVA/models/OrdemServico';
+import { IOrdemFinalizacao, IOs, IPDF, IServiceInOrder, IServiceInOrderOutput } from '../../shared/Service/api-JAVA/models/OrdemServico';
 import { Idata, IGroupAllDTOOutputList, IGrupo } from '../../shared/Service/api-JAVA/models/GruposServicos';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { GruposServicosService } from '../../shared/Service/api-JAVA/grupos-servicos/GruposServicosService';
 import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadioVerificacaoServico';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { useNavigate, useParams } from 'react-router';
 import { error } from 'console';
 import { DetalheOsAndamento } from './DetalheOsAndamento';
+import { number } from 'yup';
 
 export const AndamentoOS:React.FC = () => {
   const formMethods = useForm<IServiceInOrder>();
+  const formMethodsFinalizar = useForm<IOs>();
   const smDown = useMediaQuery((theme:  Theme)=> theme.breakpoints.down('sm'));
   const [grupoServico, setGrupoServico] = useState<IGrupo[]>();
   const [listServiceInOrder, setListServiceInOrder] = useState<IServiceInOrderOutput[]>();
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const refreshPage = useCallback(() => {
+    window.location.reload();
+  }, []);
 
   const handleSubmitForm = (form: IServiceInOrder) => {
     OrdemServicoService.createServiceInOrder(Number(id), form)
@@ -30,7 +36,7 @@ export const AndamentoOS:React.FC = () => {
         }
 
         alert('Cadastrado com sucesso');
-        formMethods.reset({});
+        refreshPage();
       })
       .catch(error => console.log(error));
   };
@@ -83,6 +89,28 @@ export const AndamentoOS:React.FC = () => {
   const handleClickPDF = ()  => {
     navigate(`/ordens-de-servicos/pdf/${id}`);
   };
+  const handleClickAssinaturaCliente = ()  => {
+    navigate(`/ordens-de-servicos/detalhe/andamento/assinatura-cliente/${id}`);
+  };
+
+  const handleSubmitFinalizar = (form: IOrdemFinalizacao) => {
+    OrdemServicoService.StartOrCancelOrFinish(Number(id), 'finalizar', form)
+      .then(res => {
+        if(res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+
+        alert('Finalizado com sucesso');
+        handleClickVoltar();
+      })
+      .catch(error => console.log(error));
+
+  };
+
+  const handleClickVoltar = () => {
+    navigate(-4);
+  };
 
   return (
     <LayoutPaginas
@@ -91,10 +119,10 @@ export const AndamentoOS:React.FC = () => {
 
       <Box>
         <Box display={'flex'} justifyContent={'space-between'} paddingBottom={1}>
-          <Button variant='contained' size='small' onClick={handleClickTesteGerador}>
+          <Button variant='outlined' size='small' onClick={handleClickTesteGerador}>
             Teste gerador
           </Button>
-          <Button variant='contained' size='small' onClick={handleClickStatusGerador}>
+          <Button variant='outlined' size='small' onClick={handleClickStatusGerador}>
             Status gerador
           </Button>
         </Box>
@@ -135,7 +163,7 @@ export const AndamentoOS:React.FC = () => {
             </Box>
       
             <Box display={'flex'} justifyContent={'center'} marginTop={1}>
-              <Button type='submit'>
+              <Button type='submit' variant='contained'>
                   inserir serviço
               </Button>
             </Box>
@@ -159,14 +187,40 @@ export const AndamentoOS:React.FC = () => {
           </Box>
       
         </VFormOS>
-        <Box display={'flex'} justifyContent={'space-between'} paddingTop={1}>
-          <Button variant='text' onClick={handleClickPDF}>
+        
+        <VFormOS
+          formMethods={formMethodsFinalizar}
+          submitForm={formMethodsFinalizar.handleSubmit(handleSubmitFinalizar)}
+        >
+          <Box display={'flex'} justifyContent={'space-between'} paddingTop={1} paddingBottom={1}>
+            <Button variant='text' onClick={handleClickPDF}>
             PDF Prévia
-          </Button>
-          <Button variant='contained'>
+            </Button>
+            <Button variant='outlined' size='small' onClick={handleClickAssinaturaCliente}>
+            Assinatura cliente
+            </Button>
+          </Box>
+          <Divider/>
+          <Box paddingTop={1}>
+            <VTextFieldOS
+              name='generalObservations'
+              control={formMethodsFinalizar.control}
+              errors={formMethodsFinalizar.formState.errors}
+              label='Observavações gerais'
+              isMultiline={true}
+              
+            />
+            <Box display={'flex'} justifyContent={'space-between'}>
+              <Button variant='outlined' onClick={handleClickVoltar}>
+            Voltar
+              </Button>
+              <Button variant='contained' type='submit'>
             Finalizar
-          </Button>
-        </Box>
+              </Button>
+            </Box>
+          </Box>
+
+        </VFormOS>
       </Box>
 
     </LayoutPaginas>

@@ -13,6 +13,7 @@ export interface IOs {
   }
   escopoDosServicos: string
   client_equipment_id: number
+  generalObservations: string
 }
 
 export interface IReturnGetAllOs {
@@ -53,6 +54,11 @@ export interface IGetByIdOrdemStart {
 export interface IServiceInOrder {
   service: {
     id: number
+    name: string,
+    group: {
+      id: number,
+      name: string
+    }
   } 
   verificationBefore: string //'string' | 'Nstring'
   verificationAfter: string //'string' | 'Nstring'
@@ -152,6 +158,7 @@ export interface IPDF {
   client_type: string,
   client_equipment_id: number,
   technician_id: number,
+  client_signature_url: string
   endereco: {
     rua: string,
     numero: number,
@@ -229,5 +236,13 @@ export interface IPDF {
       operationTime_resfriamentoGerador: string
     }
   },
+  generalObservations: string
+}
+
+export interface ISendAssinaturaCliente {
+  file: File
+}
+
+export interface IOrdemFinalizacao {
   generalObservations: string
 }
