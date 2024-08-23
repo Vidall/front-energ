@@ -1,12 +1,13 @@
 import { Box, Button, FormControlLabel, Icon, Paper, Radio, Typography } from '@mui/material';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 
 import { VAssinaturaField, VRadioFieldTecnico, VTextFieldTecnico } from './fields';
 import {  ITecnico, IUpdateTecnico } from '../../Service/api-TS/models/Tecnico';
 import { TecnicoService } from '../../Service/api-TS/tecnicos/TecnicoService';
 import { Environment } from '../../Enviroment';
+import { SpanAlert } from '../../Components';
 
 /*eslint-disable @typescript-eslint/no-unused-vars */
 /*eslint-disable no-unused-vars */
@@ -18,6 +19,7 @@ export const VFormTecnico: React.FC = () => {
   const [trocarSenha, setTrocarSenha] = useState<boolean>();
   const [trocarAssinatura, setTrocarAssinatura] = useState<boolean>();
   const navigate = useNavigate();
+  const [alertInfo, setAlertInfo] = useState<{isVisible: boolean, message?: string, tipo?: 'success' | 'error' } | null>(null);
 
   const [searchParams ] = useSearchParams();
 
@@ -54,11 +56,28 @@ export const VFormTecnico: React.FC = () => {
       TecnicoService.updateById(Number(id), {...resData})
         .then(res => {         
           if (res instanceof Error) {
-            alert(res.message);
+            setAlertInfo({
+              isVisible: true,
+              message: res.message,
+              tipo: 'error',
+            });
+
+            setTimeout(() => {
+              setAlertInfo({isVisible: false});
+            }, 1200);
+            
             return res.message;
           }
-          alert('Editado com sucesso');
-          navigate(`${Environment.CAMINHO_TECNICOS}?tipo=Todos`);
+
+          setAlertInfo({
+            isVisible: true,
+            message: 'Registro atualizado com sucesso',
+            tipo: 'success',
+          });
+          setTimeout(() => {
+            setAlertInfo({isVisible: false});
+          }, 1200);
+
         })
         .catch(error => console.log(error));
       
@@ -101,166 +120,176 @@ export const VFormTecnico: React.FC = () => {
   };
 
   return (
-    <Paper component={Box} padding={2}>
-      <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
+    <>
+      { alertInfo?.isVisible && (
+        <SpanAlert
+          message={alertInfo.message!}
+          tipo={alertInfo.tipo!}
+          isNavigate={alertInfo.tipo === 'success' ? true : false}
+        />
+      )}
 
-        {/* Form de endereço */}
-        {(!trocarSenha && !trocarAssinatura)  && (
-          <Box>
-            <>
-              { trocarAssinatura || trocarSenha || tipo !== 'Cadastrar' && (
-                <Box display={'flex'} alignContent={'center'} justifyContent={'space-between'}>
-                  <Button onClick={handleEditarSenha} size='small'>
-                    <Typography marginRight={1}>Senha</Typography>
-                    <Icon>
+      <Paper component={Box} padding={2}>
+      
+        <form onSubmit={handleSubmit(handleSubmitForm)} ref={formRef}>
+
+          {/* Form de endereço */}
+          {(!trocarSenha && !trocarAssinatura)  && (
+            <Box>
+              <>
+                { trocarAssinatura || trocarSenha || tipo !== 'Cadastrar' && (
+                  <Box display={'flex'} alignContent={'center'} justifyContent={'space-between'}>
+                    <Button onClick={handleEditarSenha} size='small'>
+                      <Typography marginRight={1}>Senha</Typography>
+                      <Icon>
                       vpn_key
-                    </Icon>
+                      </Icon>
                               
-                  </Button>
+                    </Button>
 
-                  <Button onClick={handleTrocarAssinatura} size='small'>
-                    <Typography marginRight={1}>Assinatura</Typography>
-                    <Icon>
+                    <Button onClick={handleTrocarAssinatura} size='small'>
+                      <Typography marginRight={1}>Assinatura</Typography>
+                      <Icon>
                       edit
-                    </Icon>
+                      </Icon>
                               
-                  </Button>
+                    </Button>
 
-                  <Button onClick={handleClickDelete} size='small'>
-                    <Icon>
+                    <Button onClick={handleClickDelete} size='small'>
+                      <Icon>
                       delete
-                    </Icon>
+                      </Icon>
                               
-                  </Button>
-                </Box>
-              )
+                    </Button>
+                  </Box>
+                )
 
-              }
-              <VTextFieldTecnico
-                name='nome'
-                control={control}
-                label='Nome'
-                rules={{ required: 'Nome é obrigatória'}}
-                errors={errors}
-              />
-
-              <VTextFieldTecnico
-                name={'email'}
-                control={control}
-                label={'E-mail'}
-                rules={{ required: 'E-mail é obrigatório'}}
-                errors={errors}
-              />
-
-              <VTextFieldTecnico
-                name={'telefone'}
-                control={control}
-                label={'Telefone'}
-                rules={{ required: 'Telefone é obrigatório'}}
-                errors={errors}
-              />
-
-              <VTextFieldTecnico
-                name={'cpf'}
-                control={control}
-                label={'CPF'}
-                rules={{ required: 'CPF é obrigatório', pattern: {
-                  value: /^[0-9]+$/,
-                  message: 'Telefone deve conter apenas números'
-                }}}
-                errors={errors}
-              />
-
-              <VRadioFieldTecnico
-                control={control}
-                errors={errors}
-                label='Administrador ?'
-                name='admin'
-                defaultValue={0}
-                rules={{require: 'Esse campo é obrigatório'}}
-              >
-
-                <FormControlLabel value={1} control={<Radio />} label="Sim" disabled={!!data}/>
-                <FormControlLabel value={0} control={<Radio />} label="Não" disabled={!!data}/>
-
-              </VRadioFieldTecnico>
-            </>
-
-          </Box>
-        )}
-
-        {/* Form de senha */}
-        { (trocarSenha || tipo == 'Cadastrar')  && (
-          <Box>
-            <>
-              <VTextFieldTecnico
-                name={'senha'}
-                tipo={'password'}
-                control={control}
-                label={'Senha'}
-                rules={{ required: 'Senha é obrigatório'}}
-                errors={errors}
-              />
-          
-              { tipo !== 'Cadastrar' && (
+                }
                 <VTextFieldTecnico
-                  name={'updateSenha'}
-                  tipo={'password'}
+                  name='nome'
                   control={control}
-                  label={'Nova Senha'}
-                  rules={{ required: 'Nova senha é obrigatório'}}
+                  label='Nome'
+                  rules={{ required: 'Nome é obrigatória'}}
                   errors={errors}
                 />
-              )}
-            </>
 
-          </Box>
-          
-        )}
+                <VTextFieldTecnico
+                  name={'email'}
+                  control={control}
+                  label={'E-mail'}
+                  rules={{ required: 'E-mail é obrigatório'}}
+                  errors={errors}
+                />
 
-        {/* Form de assinatura */}
-        {(trocarAssinatura || tipo == 'Cadastrar') && (
-          <Box>
-            <VAssinaturaField
-              control={control}
-              errors={errors}
-              label='Assinatura'
-              name='file'
-              rules={{require: 'Este campo é obrigatório'}}
-            />
-          </Box>
-        )}
+                <VTextFieldTecnico
+                  name={'telefone'}
+                  control={control}
+                  label={'Telefone'}
+                  rules={{ required: 'Telefone é obrigatório'}}
+                  errors={errors}
+                />
 
-        {/* Form de contrato */}
-        {(tipo !== 'Cadastrar' && (!trocarAssinatura && !trocarSenha)) && (
-          <Box>
-            <Typography>Assinatura</Typography>
-            <img src={data?.pathAssinatura} alt="" />
-          </Box>
-        )}
+                <VTextFieldTecnico
+                  name={'cpf'}
+                  control={control}
+                  label={'CPF'}
+                  rules={{ required: 'CPF é obrigatório', pattern: {
+                    value: /^[0-9]+$/,
+                    message: 'Telefone deve conter apenas números'
+                  }}}
+                  errors={errors}
+                />
 
-        <Box display={'flex'} justifyContent={(trocarSenha || trocarAssinatura ) ? 'space-between' : 'end'} paddingTop={1}>
-          { (trocarSenha || trocarAssinatura) && (
-            <Button type="button" variant="outlined" color="primary" onClick={handleClickAnterior}>
-              Voltar
-            </Button>
+                <VRadioFieldTecnico
+                  control={control}
+                  errors={errors}
+                  label='Administrador ?'
+                  name='admin'
+                  defaultValue={0}
+                  rules={{require: 'Esse campo é obrigatório'}}
+                >
+
+                  <FormControlLabel value={1} control={<Radio />} label="Sim" disabled={!!data}/>
+                  <FormControlLabel value={0} control={<Radio />} label="Não" disabled={!!data}/>
+
+                </VRadioFieldTecnico>
+              </>
+
+            </Box>
           )}
+
+          {/* Form de senha */}
+          { (trocarSenha || tipo == 'Cadastrar')  && (
+            <Box>
+              <>
+                <VTextFieldTecnico
+                  name={'senha'}
+                  tipo={'password'}
+                  control={control}
+                  label={'Senha'}
+                  rules={{ required: 'Senha é obrigatório'}}
+                  errors={errors}
+                />
           
-          <Button type="submit" variant="contained" color="primary">
-            { data &&
+                { tipo !== 'Cadastrar' && (
+                  <VTextFieldTecnico
+                    name={'updateSenha'}
+                    tipo={'password'}
+                    control={control}
+                    label={'Nova Senha'}
+                    rules={{ required: 'Nova senha é obrigatório'}}
+                    errors={errors}
+                  />
+                )}
+              </>
+
+            </Box>
+          
+          )}
+
+          {/* Form de assinatura */}
+          {(trocarAssinatura || tipo == 'Cadastrar') && (
+            <Box>
+              <VAssinaturaField
+                control={control}
+                errors={errors}
+                label='Assinatura'
+                name='file'
+                rules={{require: 'Este campo é obrigatório'}}
+              />
+            </Box>
+          )}
+
+          {/* Form de contrato */}
+          {(tipo !== 'Cadastrar' && (!trocarAssinatura && !trocarSenha)) && (
+            <Box>
+              <Typography>Assinatura</Typography>
+              <img src={data?.pathAssinatura} alt="" />
+            </Box>
+          )}
+
+          <Box display={'flex'} justifyContent={(trocarSenha || trocarAssinatura ) ? 'space-between' : 'end'} paddingTop={1}>
+            { (trocarSenha || trocarAssinatura) && (
+              <Button type="button" variant="outlined" color="primary" onClick={handleClickAnterior}>
+              Voltar
+              </Button>
+            )}
+          
+            <Button type="submit" variant="contained" color="primary">
+              { data &&
                 (
                   'Editar'
                 )
-            }
+              }
 
-            { !data && 
+              { !data && 
                 (
                   'Cadastrar'
                 )
-            }
-          </Button>
-        </Box>
-      </form>
-    </Paper>
+              }
+            </Button>
+          </Box>
+        </form>
+      </Paper></>
   );
 };
