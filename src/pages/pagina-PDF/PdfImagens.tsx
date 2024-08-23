@@ -8,7 +8,7 @@ import { PessoaFisicaService } from '../../shared/Service/api-TS/clientes/Pessoa
 import './BootstrapPDF.css';
 import './BootstrapPDF_2.css';
 import './LayoutPDF.css';
-import { Box, Button, Paper } from '@mui/material';
+import { Box, Button, Paper, Theme, useMediaQuery } from '@mui/material';
 import { EquipamentosService } from '../../shared/Service/api-TS/equipamentos/EquipamentosService';
 import { IEquipamento } from '../../shared/Service/api-TS/models/Equipamentos';
 
@@ -17,6 +17,7 @@ export const PdfImagens: React.FC = () => {
   const [dadosCliente, setDadosCliente] = useState<TPessoa | undefined>();
   const [dadosEquipamento, setDadosEquipamento] = useState<IEquipamento | undefined>();
   const [groupedServices, setGroupedServices] = useState<{ [key: number]: { groupName: string, services: IServiceInOrder[] } }>({});
+  const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -60,7 +61,7 @@ export const PdfImagens: React.FC = () => {
                   <td className="alignCenter">
                     <img 
                       src={service.urlPhotoBefore}
-                      style={{ maxHeight: '300px' }}
+                      style={{ maxHeight: smDown ? '100px' : '300px', maxWidth: smDown ? '100px' : '300px' }}
                     /><br /><br />
                     <div 
                       style={{
@@ -75,7 +76,7 @@ export const PdfImagens: React.FC = () => {
                   <td className="alignCenter">
                     <img 
                       src={service.urlPhotoAfter} 
-                      style={{ maxHeight: '300px' }}
+                      style={{ maxHeight: smDown ? '100px' : '300px', maxWidth: smDown ? '100px' : '300px' }}
                     /><br /><br />
                     <div 
                       style={{

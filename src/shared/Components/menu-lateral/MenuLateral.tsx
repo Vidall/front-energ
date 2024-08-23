@@ -1,4 +1,4 @@
-import { Box, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { useAppThemeContext, useDrawerContext } from '../../Contexts';
 import { useNavigate } from 'react-router';
 import { Environment } from '../../Enviroment';
@@ -21,7 +21,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
   return (
     <>
-      <Drawer open={isDrawerOpen} onClose={toggleDrawerOpen} variant={smDown ? 'temporary' : 'permanent'}>
+      <Drawer open={isDrawerOpen} onClose={toggleDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} className='menu-lateral'>
         <Box width={theme.spacing(28)} display="flex" flexDirection="column" height="100%">
           <List>
             <ListItem>
@@ -72,19 +72,19 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
           <Box flexGrow={1} /> {/* Este Box irá ocupar o espaço disponível */}
           <List>
-            <ListItem>
+            {/* <ListItem>
               <ListItemButton onClick={toggleTheme}>
                 <ListItemIcon>
                   <Icon>contrast</Icon>
                 </ListItemIcon>
                 <ListItemText primary={'Tema'} />
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
           </List>
         </Box>
       </Drawer>
 
-      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(28)}>
+      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(28)} component={Paper} className='children-menu-lateral'>
         {children}
       </Box>
     </>

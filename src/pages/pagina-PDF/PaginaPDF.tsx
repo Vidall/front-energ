@@ -50,16 +50,17 @@ export const PaginaPDF: React.FC = () => {
       
       <PdfImagens/>
 
-      <div 
+      <Box 
+        component={Paper} className='print-button'
         style={{display: 'flex', justifyContent:'space-between', padding: 1}}
-        className="print-button">
+      >
         <Button  onClick={handleClickVoltar}>
           Voltar
         </Button>
         <Button onClick={handleClickImprimir} variant='contained'>
           Imprimir
         </Button>
-      </div>
+      </Box>
     </>
   );
 };

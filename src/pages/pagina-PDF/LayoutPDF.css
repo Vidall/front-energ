@@ -1,5 +1,3 @@
-
-
 /* Estilos gerais */
 .alignCenter {
   text-align: center;
@@ -30,14 +28,13 @@ table td {
 /* Estilos específicos para impressão */
 @media print {
   .print-button {
-      display: 'none';
+      display: none !important;
   }
   .menu-lateral {
-      display: none;
+      display: none !important;
   }
-  .children-menu-lateral{
-    margin-left: 0;
+  .children-menu-lateral {
+    margin: 0px !important;
   }
 }
-
 

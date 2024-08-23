@@ -8,11 +8,12 @@ import { PessoaFisicaService } from '../../shared/Service/api-TS/clientes/Pessoa
 import './BootstrapPDF.css';
 import './BootstrapPDF_2.css';
 import './LayoutPDF.css';
-import { Box, Button, Paper } from '@mui/material';
+import { Box, Button, Paper, Theme, useMediaQuery } from '@mui/material';
 
 export const PdfCabecalho: React.FC = () => {
   const [dadosPDF, setDadosPDF] = useState<IPDF>(); 
   const [dadosCliente, setDadosCliente] = useState<TPessoa | undefined>(); 
+  const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const navigate = useNavigate();
 
@@ -52,11 +53,11 @@ export const PdfCabecalho: React.FC = () => {
       <table className="table table-bordered">
         <tbody>
           <tr>
-            <th style={{ padding: 0 }}>
+            <th style={{ padding: 0, width: smDown ? '80px' : '205px'}}>
               <img 
                 src="/logoEnerg.png" 
                 style={{
-                  maxWidth: '205px',
+                  maxWidth: smDown ? '75px' : '205px',
                   marginTop: '5px',
                   maxHeight: '86px',
                   marginBottom: '5px',

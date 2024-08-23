@@ -8,7 +8,7 @@ import { PessoaFisicaService } from '../../shared/Service/api-TS/clientes/Pessoa
 import './BootstrapPDF.css';
 import './BootstrapPDF_2.css';
 import './LayoutPDF.css';
-import { Box, Button, Paper } from '@mui/material';
+import { Box, Button, Paper, Theme, useMediaQuery } from '@mui/material';
 import { EquipamentosService } from '../../shared/Service/api-TS/equipamentos/EquipamentosService';
 import { IEquipamento } from '../../shared/Service/api-TS/models/Equipamentos';
 import { ITecnico } from '../../shared/Service/api-TS/models/Tecnico';
@@ -17,6 +17,7 @@ import { TecnicoService } from '../../shared/Service/api-TS/tecnicos/TecnicoServ
 export const PdfFinalizacao: React.FC = () => {
   const [dadosPDF, setDadosPDF] = useState<IPDF>();
   const [dadosTecnico, setDadosTecnico] = useState<ITecnico>();
+  const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -90,7 +91,7 @@ export const PdfFinalizacao: React.FC = () => {
 
                 <img
                   src={dadosTecnico.pathAssinatura}
-                  style={{ maxHeight: '300px' }}
+                  style={{ maxHeight: smDown ? '100px' : '300px', maxWidth: smDown ? '100px' : '300px' } }
                   alt="Tecnico"
                 />
               )}
@@ -113,7 +114,7 @@ export const PdfFinalizacao: React.FC = () => {
               {(dadosPDF?.client_signature_url?.includes('https')) && (
                 <img
                   src={dadosPDF?.client_signature_url}
-                  style={{ maxHeight: '300px' }}
+                  style={{ maxHeight: smDown ? '100px' : '300px', maxWidth: smDown ? '100px' : '300px' } }
                   alt="Responsável"
                 />
               )}
