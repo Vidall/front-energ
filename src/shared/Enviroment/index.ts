@@ -14,12 +14,10 @@ export const Environment = {
   /**
    * URL base de onde está a API do backend
    */
-  URL_BASE_API_TS: 'http://localhost:3001',
-  // URL_BASE_API_TS: 'http://ec2-3-18-16-165.us-east-2.compute.amazonaws.com/apiTS',
-  URL_BASE_API_OS: 'http://localhost:8080',
-  // URL_BASE_API_OS: 'http://ec2-3-18-16-165.us-east-2.compute.amazonaws.com/apiJAVA',
-  URL_BASE_API_EMAIL: 'http://localhost:8081',
-  URL_BASE_FRONT: 'http://localhost:3000',
+  URL_BASE_API_TS: process.env.REACT_APP_URL_BASE_API_TS, 
+  URL_BASE_API_OS: process.env.REACT_APP_URL_BASE_API_OS, 
+  URL_BASE_API_EMAIL: process.env.REACT_APP_URL_BASE_API_EMAIL,
+  URL_BASE_FRONT: process.env.REACT_APP_URL_BASE_FRONT,
 
   CAMINHO_INICIO: '/inicio',
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',

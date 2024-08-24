@@ -1,0 +1,4 @@
+REACT_APP_URL_BASE_API_TS=http://localhost:3007
+REACT_APP_URL_BASE_API_OS=http://localhost:8080
+REACT_APP_URL_BASE_API_EMAIL=http://localhost:8081
+REACT_APP_URL_BASE_FRONT=http://localhost:3000
