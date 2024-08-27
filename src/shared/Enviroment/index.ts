@@ -16,8 +16,8 @@ export const Environment = {
    */
   URL_BASE_API_TS: 'http://91.108.125.52:3001', 
   URL_BASE_API_OS: 'http://91.108.125.52:8080',
-  URL_BASE_API_EMAIL: 'http://localhost:8081',
-  URL_BASE_FRONT: 'http://localhost:3000',
+  URL_BASE_API_EMAIL: 'http://91.108.125.52:8081',
+  URL_BASE_FRONT: 'http://91.108.125.52:3000',
 
   CAMINHO_INICIO: '/inicio',
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',
