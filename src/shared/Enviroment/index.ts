@@ -14,9 +14,9 @@ export const Environment = {
   /**
    * URL base de onde está a API do backend
    */
-  URL_BASE_API_TS: 'http://localhost:3001', 
-  URL_BASE_API_OS: 'http://localhost:8080',
-  URL_BASE_FRONT: 'http://localhost:3000',
+  URL_BASE_API_TS: process.env.REACT_APP_URL_BASE_API_TS, 
+  URL_BASE_API_OS: process.env.REACT_APP_URL_BASE_API_OS,
+  URL_BASE_FRONT: process.env.REACT_APP_URL_BASE_FRONT,
 
   CAMINHO_INICIO: '/inicio',
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',
