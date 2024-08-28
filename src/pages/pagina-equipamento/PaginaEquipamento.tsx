@@ -17,24 +17,24 @@ interface NomeEquipamento {
 
 const schema = yup.object().shape({
   tipoEquipamento: yup.string().required('Este campo é obrigatório'),
-  numeroAlternador: yup.number().required('Este campo é obrigatório'),
-  numeroMotor: yup.number().required('Este campo é obrigatório'),
+  numeroAlternador: yup.string().required('Este campo é obrigatório'),
+  numeroMotor: yup.string().required('Este campo é obrigatório'),
   numero: yup.string().required('Este campo é obrigatório'),
-  anoFabricacao: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
-  potenciaEletrica: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
-  potencia: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
+  anoFabricacao: yup.string().required('Este campo é obrigatório'),
+  potenciaEletrica: yup.string().required('Este campo é obrigatório'),
+  potencia: yup.string().required('Este campo é obrigatório'),
   motor: yup.string().required('Este campo é obrigatório'),
   alternador: yup.string().required('Este campo é obrigatório'),
   uscaModelo: yup.string().required('Este campo é obrigatório'),
-  tensao: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
-  corrente: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
+  tensao: yup.string().required('Este campo é obrigatório'),
+  corrente: yup.string().required('Este campo é obrigatório'),
   modeloMotor: yup.string().required('Este campo é obrigatório'),
   modeloAlternador: yup.string().required('Este campo é obrigatório'),
   painelControle: yup.string().required('Este campo é obrigatório'),
   fabricante: yup.string().required('Este campo é obrigatório'),
-  fatorPotencia: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
-  frequencia: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
-  horimetro: yup.number().typeError('O campo deve conter apenas números').required('Este campo é obrigatório'),
+  fatorPotencia: yup.string().required('Este campo é obrigatório'),
+  frequencia: yup.string().required('Este campo é obrigatório'),
+  horimetro: yup.string().required('Este campo é obrigatório'),
 });
 
 export const PaginaEquipamento: React.FC = () => {
@@ -150,11 +150,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Número do Alternador"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -164,11 +160,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Número do Motor"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -187,11 +179,7 @@ export const PaginaEquipamento: React.FC = () => {
           label="Ano de Fabricação"
           type='number'
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -201,11 +189,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Potência Elétrica"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -215,11 +199,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Potência"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -253,11 +233,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Tensão"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -267,11 +243,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Corrente"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -313,11 +285,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Fator de Potência"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -327,11 +295,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Frequência"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
@@ -341,11 +305,7 @@ export const PaginaEquipamento: React.FC = () => {
           errors={formMethods.formState.errors}
           label="Horímetro"
           rules={{
-            required: 'Este campo é obrigatório',
-            pattern: {
-              value: /^[0-9]+$/,
-              message: 'O campo deve conter apenas números'
-            }
+            required: 'Este campo é obrigatório'
           }}
         />
 
