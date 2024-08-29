@@ -15,35 +15,12 @@ interface NomeEquipamento {
   name: string;
 }
 
-const schema = yup.object().shape({
-  tipoEquipamento: yup.string().required('Este campo é obrigatório'),
-  numeroAlternador: yup.string().required('Este campo é obrigatório'),
-  numeroMotor: yup.string().required('Este campo é obrigatório'),
-  numero: yup.string().required('Este campo é obrigatório'),
-  anoFabricacao: yup.string().required('Este campo é obrigatório'),
-  potenciaEletrica: yup.string().required('Este campo é obrigatório'),
-  potencia: yup.string().required('Este campo é obrigatório'),
-  motor: yup.string().required('Este campo é obrigatório'),
-  alternador: yup.string().required('Este campo é obrigatório'),
-  uscaModelo: yup.string().required('Este campo é obrigatório'),
-  tensao: yup.string().required('Este campo é obrigatório'),
-  corrente: yup.string().required('Este campo é obrigatório'),
-  modeloMotor: yup.string().required('Este campo é obrigatório'),
-  modeloAlternador: yup.string().required('Este campo é obrigatório'),
-  painelControle: yup.string().required('Este campo é obrigatório'),
-  fabricante: yup.string().required('Este campo é obrigatório'),
-  fatorPotencia: yup.string().required('Este campo é obrigatório'),
-  frequencia: yup.string().required('Este campo é obrigatório'),
-  horimetro: yup.string().required('Este campo é obrigatório'),
-});
 
 export const PaginaEquipamento: React.FC = () => {
   const [nomeEquipamento, setNomeEquipamento] = useState<NomeEquipamento[]>([]);
   const [equipamento, setEquipamento] = useState<IEquipamento>();
   const [editing, setEditing] = useState<boolean>(false);
-  const formMethods = useForm<IEquipamentoDetalhe>({
-    resolver: yupResolver(schema),
-  });
+  const formMethods = useForm<IEquipamentoDetalhe>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const tipo = searchParams.get('tipo') as 'fisico' | 'juridico';
@@ -141,7 +118,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Tipo do Equipamento"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -149,9 +125,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Número do Alternador"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -159,9 +132,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Número do Motor"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -169,7 +139,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Número"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -177,10 +146,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Ano de Fabricação"
-          type='number'
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -188,9 +153,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Potência Elétrica"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -198,9 +160,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Potência"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -208,7 +167,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Motor"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -216,7 +174,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Alternador"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -224,7 +181,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="USCA Modelo"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -232,9 +188,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Tensão"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -242,9 +195,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Corrente"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -252,7 +202,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Modelo do Motor"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -260,7 +209,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Modelo do Alternador"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -268,7 +216,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Painel de Controle"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -276,7 +223,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Fabricante"
-          rules={{ required: 'Este campo é obrigatório' }}
         />
 
         <VTextFieldEquipamento
@@ -284,9 +230,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Fator de Potência"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -294,9 +237,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Frequência"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <VTextFieldEquipamento
@@ -304,9 +244,6 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Horímetro"
-          rules={{
-            required: 'Este campo é obrigatório'
-          }}
         />
 
         <Box display={'flex'} justifyContent={'end'} alignContent={'center'} paddingTop={1}>

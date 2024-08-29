@@ -88,6 +88,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
     if (newValue && endereco) {
       onEnderecoChange(endereco);
       onChange(newValue.id); // Passa apenas o ID para o estado do formulário
+      
     } else {
       onChange(null); // Nenhum valor selecionado, passa null
     }

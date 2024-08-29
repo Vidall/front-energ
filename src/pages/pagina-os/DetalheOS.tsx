@@ -160,7 +160,7 @@ export const DetalheOs: React.FC = () => {
         render={({field}) => (
           <VInputSelectEquipamento
             {...field}
-            dataSelect={equipamento ? equipamento : [{id: 80, name: ''}]}
+            dataSelect={equipamento ? equipamento : [{id: 0, name: 'Equipamento não cadastrado'}]}
           />
         )}
         
