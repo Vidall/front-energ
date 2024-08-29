@@ -9,6 +9,7 @@ import './BootstrapPDF.css';
 import './BootstrapPDF_2.css';
 import './LayoutPDF.css';
 import { Box, Button, Paper, Theme, useMediaQuery } from '@mui/material';
+import { PessoaJuridicaService } from '../../shared/Service/api-TS/clientes/PessoaJuridicaService';
 
 export const PdfCabecalho: React.FC = () => {
   const [dadosPDF, setDadosPDF] = useState<IPDF>(); 
@@ -19,21 +20,6 @@ export const PdfCabecalho: React.FC = () => {
 
   const { id } = useParams();
 
-  const dadosClienteAoCarregar = useCallback((id: number) => {
-
-    PessoaFisicaService.getByID(id)
-      .then(res => {
-        if (res instanceof Error) {
-          alert(res.message);
-          return res.message;
-        }
-
-        console.log(res);
-        setDadosCliente(res);
-      })
-      .catch(error => console.log(error));
-
-  },[]);
 
   useEffect(() => {
     OrdemServicoService.getPDF(Number(id))
@@ -44,7 +30,32 @@ export const PdfCabecalho: React.FC = () => {
         }
 
         setDadosPDF(res);
-        dadosClienteAoCarregar(res.client_id);
+        if(res.client_type === 'FISICO') {
+          PessoaFisicaService.getByID(res.client_id)
+          .then(res => {
+            if (res instanceof Error) {
+              alert(res.message);
+              return res.message;
+            }
+    
+            console.log(res);
+            setDadosCliente(res);
+          })
+          .catch(error => console.log(error));
+        } else if (res.client_type === 'JURIDICO') {
+          PessoaJuridicaService.getByID(res.client_id)
+          .then(res => {
+            if (res instanceof Error) {
+              alert(res.message);
+              return res.message;
+            }
+    
+            console.log(res);
+            setDadosCliente(res);
+          })
+          .catch(error => console.log(error));
+        }
+
       })
       .catch(error => console.log(error));
   },[]);

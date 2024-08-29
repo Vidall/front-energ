@@ -45,6 +45,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
 
   useEffect(() => {
     console.log(tipo)
+    if (!tipo) return
     if (tipo === 'FISICO') {
       setIsLoading(true);
       PessoaFisicaService.getAll(buscaDebounce)
@@ -55,7 +56,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
           }
           const idCliente = res.data.map(item => item.id)[0]?.toString() || '0'; 
           if (idCliente === '0') return alert('Não possui pessoa fisica cadastrada')
-          setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente: idCliente }, { replace: true });
+          //setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente: idCliente }, { replace: true });
           setDadosCliente(res.data);
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
           setIsLoading(false);
@@ -78,7 +79,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
           const idCliente = res.data.map(item => item.id)[0]?.toString() || '0'; 
           if (idCliente === '0') return alert('Não possui pessoa fisica cadastrada')
           console.log(idCliente)
-          setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
+           //setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
           setDadosCliente(res.data);
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
           setIsLoading(false);
@@ -96,7 +97,10 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
     if (newValue && endereco) {
       onEnderecoChange(endereco);
       onChange(newValue.id); // Passa apenas o ID para o estado do formulário
-      
+
+      const selectedIdCliente = newValue.id.toString();
+
+      setSearchParams({...Object.fromEntries(searchParms.entries()), idCliente: selectedIdCliente}, { replace: true})      
     } else {
       onChange(null); // Nenhum valor selecionado, passa null
     }

@@ -20,31 +20,6 @@ export const PdfEquipamento: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const dadosClienteAoCarregar = useCallback((id: number) => {
-    PessoaFisicaService.getByID(id)
-      .then((res) => {
-        if (res instanceof Error) {
-          alert(res.message);
-          return res.message;
-        }
-        console.log(res);
-        setDadosCliente(res);
-      })
-      .catch((error) => console.log(error));
-  }, []);
-
-  const dadosEquipamentoAoCarregar = useCallback((id: number) => {
-    EquipamentosService.getByIdEquipamento(Number(id))
-      .then((res) => {
-        if (res instanceof Error) {
-          alert(res.message);
-          return res.message;
-        }
-        setDadosEquipamento(res);
-      })
-      .catch((error) => console.log(error));
-  }, []);
-
   useEffect(() => {
     OrdemServicoService.getPDF(Number(id))
       .then((res) => {
@@ -54,11 +29,18 @@ export const PdfEquipamento: React.FC = () => {
         }
 
         setDadosPDF(res);
-        dadosClienteAoCarregar(res.client_id);
-        dadosEquipamentoAoCarregar(Number(res.client_equipment_id));
+        EquipamentosService.getByIdEquipamento(Number(res.client_equipment_id))
+        .then((res) => {
+          if (res instanceof Error) {
+            alert(res.message);
+            return res.message;
+          }
+          setDadosEquipamento(res);
+        })
+        .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
-  }, [id, dadosClienteAoCarregar]);
+  }, []);
 
   return (
     <>

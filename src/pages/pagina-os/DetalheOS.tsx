@@ -22,7 +22,7 @@ export const DetalheOs: React.FC = () => {
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const IdCliente = searchParams.get('idCliente') || '1';
+  const IdCliente = searchParams.get('idCliente');
 
   const handleSubmitForm = (form: IOs) => {
     console.log(form);
@@ -58,8 +58,8 @@ export const DetalheOs: React.FC = () => {
 
   const handleTipoPessoa = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log(value)
     setTipoPessoa(value);
+    setEquipamentoCliente(undefined)
   };
 
   const handleChangeEndereco = (event: React.ChangeEvent<HTMLInputElement>) => {
