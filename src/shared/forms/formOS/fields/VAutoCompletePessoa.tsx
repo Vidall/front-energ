@@ -54,8 +54,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             alert(res.message);
             return res.message;
           }
-          const idCliente = res.data.map(item => item.id)[0]?.toString() || '0'; 
-          if (idCliente === '0') return alert('Não possui pessoa fisica cadastrada')
+          const idCliente = res.data.map(item => item.id)[0]?.toString();
           //setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente: idCliente }, { replace: true });
           setDadosCliente(res.data);
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
@@ -76,8 +75,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             alert(res.message);
             return res.message;
           }
-          const idCliente = res.data.map(item => item.id)[0]?.toString() || '0'; 
-          if (idCliente === '0') return alert('Não possui pessoa fisica cadastrada')
+          const idCliente = res.data.map(item => item.id)[0]?.toString();
           console.log(idCliente)
            //setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
           setDadosCliente(res.data);

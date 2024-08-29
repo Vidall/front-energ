@@ -60,6 +60,8 @@ export const DetalheOs: React.FC = () => {
     const value = event.target.value;
     setTipoPessoa(value);
     setEquipamentoCliente(undefined)
+    formMethods.resetField('client_id')
+    setSearchParams({ ...Object.fromEntries(searchParams.entries()), idCliente: '' }, { replace: true });
   };
 
   const handleChangeEndereco = (event: React.ChangeEvent<HTMLInputElement>) => {
