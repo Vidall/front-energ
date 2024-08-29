@@ -44,6 +44,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
   const [buscaDebounce] = useDebounce(busca, 500);
 
   useEffect(() => {
+    console.log(tipo)
     if (tipo === 'FISICO') {
       setIsLoading(true);
       PessoaFisicaService.getAll(buscaDebounce)
@@ -53,7 +54,8 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             return res.message;
           }
           const idCliente = res.data.map(item => item.id)[0]?.toString() || '0'; 
-          setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
+          if (idCliente === '0') return alert('Não possui pessoa fisica cadastrada')
+          setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente: idCliente }, { replace: true });
           setDadosCliente(res.data);
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
           setIsLoading(false);
@@ -62,6 +64,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             setEndereco(enderecoObtido);
             onEnderecoChange(enderecoObtido); // Passa o endereço imediatamente para o componente pai
           }
+
         })
         .catch(error => console.error(error));
     } else if (tipo === 'JURIDICO') {
@@ -72,6 +75,11 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             alert(res.message);
             return res.message;
           }
+          const idCliente = res.data.map(item => item.id)[0]?.toString() || '0'; 
+          if (idCliente === '0') return alert('Não possui pessoa fisica cadastrada')
+          console.log(idCliente)
+          setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
+          setDadosCliente(res.data);
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
           setIsLoading(false);
           const enderecoObtido = res.data[0]?.endereco;

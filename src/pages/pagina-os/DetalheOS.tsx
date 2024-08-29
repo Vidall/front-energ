@@ -44,10 +44,11 @@ export const DetalheOs: React.FC = () => {
       EquipamentosService.getByID(Number(IdCliente), tipoPessoa.toLowerCase() as 'fisico' | 'juridico')
         .then(res => {
           if (res instanceof Error) {
-            alert(res.message);
+            alert('Cliente não possui equipamento');
             return res.message;
           }
-          setEquipamentoCliente(res.map(item => ({id: item.id, name: item.equipamento.tipoEquipamento})));
+          if (res.length === 0) return alert('Cliente não possui equipamento')
+          setEquipamentoCliente(res.map(item => ({id: item.id, name: item.equipamento.tipoEquipamento})))
         })
         .catch(error => console.log(error));
     } else {
@@ -57,6 +58,7 @@ export const DetalheOs: React.FC = () => {
 
   const handleTipoPessoa = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    console.log(value)
     setTipoPessoa(value);
   };
 
@@ -160,7 +162,7 @@ export const DetalheOs: React.FC = () => {
         render={({field}) => (
           <VInputSelectEquipamento
             {...field}
-            dataSelect={equipamento ? equipamento : [{id: 0, name: 'Equipamento não cadastrado'}]}
+            dataSelect={equipamento ? equipamento : [{id: 1000, name: 'Equipamento não cadastrado'}]}
           />
         )}
         
