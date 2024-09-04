@@ -58,7 +58,8 @@ export const PdfImagens: React.FC = () => {
             <React.Fragment key={index}>
               {group.services.map((service, idx) => (            
                 <tr>
-                  <td className="alignCenter">
+                  {service.urlPhotoBefore && (
+                    <td className="alignCenter">
                     <img 
                       src={service.urlPhotoBefore}
                       style={{ maxHeight: smDown ? '100px' : '300px', maxWidth: smDown ? '100px' : '300px' }}
@@ -73,7 +74,9 @@ export const PdfImagens: React.FC = () => {
                       <strong>{`Foto Antes ${service.service.name}`}</strong>
                     </div>
                   </td>
-                  <td className="alignCenter">
+                  )}
+                  {service.urlPhotoAfter && (
+                    <td className="alignCenter">
                     <img 
                       src={service.urlPhotoAfter} 
                       style={{ maxHeight: smDown ? '100px' : '300px', maxWidth: smDown ? '100px' : '300px' }}
@@ -88,6 +91,7 @@ export const PdfImagens: React.FC = () => {
                       <strong>{`Foto Depois ${service.service.name}`}</strong>
                     </div>
                   </td>
+                  )}
                 </tr>
               ))}
             </React.Fragment>

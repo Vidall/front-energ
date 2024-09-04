@@ -28,7 +28,6 @@ export const PdfCabecalho: React.FC = () => {
           alert(res.message);
           return res.message;
         }
-
         setDadosPDF(res);
         if(res.client_type === 'FISICO') {
           PessoaFisicaService.getByID(res.client_id)
@@ -37,8 +36,6 @@ export const PdfCabecalho: React.FC = () => {
               alert(res.message);
               return res.message;
             }
-    
-            console.log(res);
             setDadosCliente(res);
           })
           .catch(error => console.log(error));
@@ -150,7 +147,7 @@ export const PdfCabecalho: React.FC = () => {
           <tr style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>
             <td colSpan={3}>
               <strong>Possui Contrato </strong>
-              {dadosCliente?.possuiContrato === true ? 'Sim' : 'Não'}
+              {Number(dadosCliente?.possuiContrato) === 1 ? 'Sim' : 'Não'}
             </td>
             <td>
               <strong>Tipo de Contrato: </strong>

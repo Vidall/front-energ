@@ -15,39 +15,43 @@ interface NomeEquipamento {
   name: string;
 }
 
-
 export const PaginaEquipamento: React.FC = () => {
   const [nomeEquipamento, setNomeEquipamento] = useState<NomeEquipamento[]>([]);
   const [equipamento, setEquipamento] = useState<IEquipamento>();
   const [editing, setEditing] = useState<boolean>(false);
-  const formMethods = useForm<IEquipamentoDetalhe>();
+  const formMethods = useForm<IEquipamentoDetalhe>({
+    resolver: yupResolver(
+      yup.object().shape({
+        tipoEquipamento: yup.string().required('Tipo Equipamento é obrigatório'),
+      })
+    ),
+  });
   const [searchParams, setSearchParams] = useSearchParams();
 
   const tipo = searchParams.get('tipo') as 'fisico' | 'juridico';
   const grupo = Number(searchParams.get('grupo'));
   const { id } = useParams<{ id: string }>();
 
-  const handleSubmitForm = (formData: IEquipamentoDetalhe) => {
+  const handleSubmitForm = async (formData: IEquipamentoDetalhe) => {
+    const valid = await formMethods.trigger();
+    if (!valid) return;
+
+    const EquipamentoComId: Omit<IEquipamento, 'id'> = { equipamento: { ...formData }, idCliente: Number(id), tipo: tipo };
+
     if (editing) {
-      const EquipamentoComId: Omit<IEquipamento, 'id'> = { equipamento: { ...formData }, idCliente: Number(id), tipo: tipo };
       EquipamentosService.updateById(Number(grupo), EquipamentoComId)
         .then(res => {
           if (res instanceof Error) {
-            console.log(tipo);
             return res.message;
           }
-
           alert('Editado com sucesso');
         });
     } else {
-      const EquipamentoComId: Omit<IEquipamento, 'id'> = { equipamento: { ...formData }, idCliente: Number(id), tipo: tipo };
       EquipamentosService.create(EquipamentoComId)
         .then(res => {
           if (res instanceof Error) {
-            console.log(res.message);
             return res.message;
           }
-
           alert('Cadastrado com sucesso');
         });
     }
@@ -83,7 +87,7 @@ export const PaginaEquipamento: React.FC = () => {
           }
           if (res.equipamento !== undefined) {
             setEquipamento(res);
-          };
+          }
           formMethods.reset(res.equipamento);
         });
     }
@@ -92,15 +96,14 @@ export const PaginaEquipamento: React.FC = () => {
   const handleClickAdd = () => {
     setEditing(false);
     formMethods.reset({});
-    setSearchParams({...Object.fromEntries(searchParams.entries()), grupo: '0'}, {replace: true});
+    setSearchParams({ ...Object.fromEntries(searchParams.entries()), grupo: '0' }, { replace: true });
   };
 
   return (
     <LayoutPaginas titulo="Área equipamento">
-
       <Box display={'flex'} alignContent={'center'} justifyContent={'end'}>
         <Button onClick={handleClickAdd}>
-            Novo
+          Novo
           <Icon>
             add
           </Icon>
@@ -117,6 +120,7 @@ export const PaginaEquipamento: React.FC = () => {
           name="tipoEquipamento"
           control={formMethods.control}
           errors={formMethods.formState.errors}
+          rules={{ required: 'Este campo é obrigatório' }}
           label="Tipo do Equipamento"
         />
 
@@ -247,7 +251,7 @@ export const PaginaEquipamento: React.FC = () => {
         />
 
         <Box display={'flex'} justifyContent={'end'} alignContent={'center'} paddingTop={1}>
-          <Button type='submit' variant='contained'>
+          <Button type="submit" variant="contained">
             {editing ? 'Editar' : 'Cadastrar'}
           </Button>
         </Box>

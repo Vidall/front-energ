@@ -197,6 +197,10 @@ export const VFormCliente: React.FC = () => {
     }
   };
 
+  const handleChangeTipoPessoa = () => {
+    alert('mudou')
+  }
+
   return (
     <Paper component={Box} padding={2}>
       <form onSubmit={handleSubmit(selectedValueTipo === 'fisico' ? handleSubmitFormPessoaFisica : handleSubmitFormPessoaJuridica)} ref={formRef}>
