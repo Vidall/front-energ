@@ -2,6 +2,7 @@ import { Box, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListIt
 import { useAppThemeContext, useDrawerContext } from '../../Contexts';
 import { useNavigate } from 'react-router';
 import { Environment } from '../../Enviroment';
+import { useEffect, useState } from 'react';
 
 interface IMenuLateralProps {
   children: React.ReactNode
@@ -13,16 +14,24 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
   const navigate = useNavigate();
   const {toggleTheme} = useAppThemeContext();
+  const [isLogin, setIsLogin] = useState(false);
 
   const handleClick = (caminho: string) => {
     navigate(caminho);
     toggleDrawerOpen();
   };
 
+  useEffect(() => {
+    if (window.location.href.includes('entrar')) {
+      setIsLogin(true);
+    }
+
+  });
+
   return (
     <>
       <Drawer open={isDrawerOpen} onClose={toggleDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} className='menu-lateral'>
-        <Box width={theme.spacing(28)} display="flex" flexDirection="column" height="100%">
+        <Box width={isLogin ? theme.spacing(0) : theme.spacing(28)} display="flex" flexDirection="column" height="100%">
           <List>
             <ListItem>
               <ListItemButton onClick={() => handleClick('/inicio')}>
@@ -84,7 +93,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
         </Box>
       </Drawer>
 
-      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(28)} component={Paper} className='children-menu-lateral'>
+      <Box height="100vh" marginLeft={smDown || isLogin ? theme.spacing(0) : theme.spacing(28)} component={Paper} className='children-menu-lateral'>
         {children}
       </Box>
     </>

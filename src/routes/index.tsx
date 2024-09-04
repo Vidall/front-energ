@@ -12,11 +12,29 @@ import { PaginaStatusGerador } from '../pages/pagina-os/PaginaStatusGerador';
 import { PaginaTesteGerador } from '../pages/pagina-os/PaginaTesteGerador';
 import { PaginaPDF } from '../pages/pagina-PDF/PaginaPDF';
 import { PaginaAssinaturaCliente } from '../pages/pagina-os/paginaAssinaturaCliente';
+import { TelaLogin } from '../pages/pagina-login/TelaLogin';
+import { useEffect, useState } from 'react';
 
 export const AppRoutes = () => {
+  const [token, setToken] = useState<string | null>('');
+
+  useEffect(() => {
+    setToken(sessionStorage.getItem('access_token'));
+  }, []);
 
   return (
+
+    { token && (
+      <Route path='/entrar' element={<TelaLogin/>}/>
+    )} 
+    
     <Routes>
+      if (!token) {
+        <Route path='/inicio' element={<PaginaInicial/>}/>
+      }
+
+      <Route path='/entrar' element={<TelaLogin/>}/>
+      
       <Route path='/inicio' element={<PaginaInicial/>}/>
 
       <Route path='/ordens-de-servicos' element={<PaginaOS/>}/>
