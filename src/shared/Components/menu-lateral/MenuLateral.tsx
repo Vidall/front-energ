@@ -1,7 +1,6 @@
 import { Box, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { useAppThemeContext, useDrawerContext } from '../../Contexts';
 import { useNavigate } from 'react-router';
-import { Environment } from '../../Enviroment';
 import { useEffect, useState } from 'react';
 
 interface IMenuLateralProps {
@@ -13,7 +12,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
   const navigate = useNavigate();
-  const {toggleTheme} = useAppThemeContext();
+  const { toggleTheme } = useAppThemeContext();
   const [isLogin, setIsLogin] = useState(false);
 
   const handleClick = (caminho: string) => {
@@ -22,11 +21,10 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (window.location.href.includes('entrar')) {
-      setIsLogin(true);
-    }
-
-  });
+    // Verificar se há um token na sessionStorage para determinar o estado de login
+    const token = sessionStorage.getItem('access_token');
+    setIsLogin(!token);
+  }, []);
 
   return (
     <>
@@ -74,21 +72,14 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
                 <ListItemIcon>
                   <Icon>miscellaneous_services</Icon>
                 </ListItemIcon>
-                <ListItemText primary={'Os'} />
+                <ListItemText primary={'OS'} />
               </ListItemButton>
             </ListItem>
           </List>
 
           <Box flexGrow={1} /> {/* Este Box irá ocupar o espaço disponível */}
           <List>
-            {/* <ListItem>
-              <ListItemButton onClick={toggleTheme}>
-                <ListItemIcon>
-                  <Icon>contrast</Icon>
-                </ListItemIcon>
-                <ListItemText primary={'Tema'} />
-              </ListItemButton>
-            </ListItem> */}
+            {/* Se precisar de mais itens no menu */}
           </List>
         </Box>
       </Drawer>

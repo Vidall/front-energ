@@ -17,6 +17,7 @@ export const Environment = {
   URL_BASE_API_TS: process.env.REACT_APP_URL_BASE_API_TS, 
   URL_BASE_API_OS: process.env.REACT_APP_URL_BASE_API_OS,
   URL_BASE_FRONT: process.env.REACT_APP_URL_BASE_FRONT,
+  URL_BASE_KEY_CLOCK: process.env.REACT_APP_URL_BASE_API_KEY_CLOCK,
 
   CAMINHO_INICIO: '/inicio',
   CAMINHO_PESSOA_FISICA: '/clientes/pessoaFisica',
@@ -28,7 +29,11 @@ export const Environment = {
   CAMINHO_GRUPOS_SERVICOS: '/api/grupos_servicos',
   CAMINHO_SERVICOS: '/api/servicos',
   CAMINHO_ORDEM: '/api/ordem',
-  CAMINHO_SERVICO_IN_ORDER: '/api/servico_ordem'
+  CAMINHO_SERVICO_IN_ORDER: '/api/servico_ordem',
+
+  CAMINHO_TOKEN_ENDPOINT: '/realms/Energ/protocol/openid-connect/token',
+  CAMINHO_AUTHORIZATION_ENDPOINT: 'realms/Energ/protocol/openid-connect/auth'
+
 
   // /**
   //  * Caminhos da url para realizar operações com pessoas fisicas

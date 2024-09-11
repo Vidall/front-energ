@@ -1,21 +1,38 @@
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { ILogin } from '../../shared/Service/api-JAVA/models/Login';
+import { ILogin, IRetornoLogin } from '../../shared/Service/api-KEY-CLOCK/models/Login';
 import { useState } from 'react';
+import { LoginService } from '../../shared/Service/api-KEY-CLOCK/login/LoginService';
+import { useNavigate } from 'react-router';
 
 export const TelaLogin: React.FC = () => {
   const formMethods = useForm<ILogin>();
   const [isFieldVisible, setIsVisible] = useState(false);
+  const [accessToken, setAccesToken] = useState<string>();
+  const navigate = useNavigate();
 
-  const handleSubmitform = (form: any) => {
+  const handleSubmitform = (form: ILogin) => {
     console.log(form);
+    LoginService.entrar(form)
+      .then(res => {
+        if (res instanceof Error) {
+          alert('Erro ao fazer o login');
+          return res.message;
+        }
+
+        setAccesToken(res.access_token);
+        sessionStorage.setItem('access_token', res.access_token);
+        alert('Login com sucesso');
+        navigate('/iniciooo');
+      })
+      .catch(error => console.log(error));
   };
 
   return (
     <Box width={'100vw'} height={'100vh'} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{background: 'linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(130,50,117,0.8295693277310925) 49%, rgba(200,121,213,0.40940126050420167) 100%)'}}>
       <Paper component={Box} display={'flex'} flexDirection={'column'} gap={2} width={300} height={300} padding={1} justifyContent={'center'} sx={{background: 'rgba(255,255,255,0.8)'}}>
-        <Typography>Seja bem vindo</Typography>
-        <span>Entre com suas credências</span>
+        <Typography>Seja bem-vindo</Typography>
+        <span>Entre com suas credenciais</span>
 
         <form onSubmit={formMethods.handleSubmit(handleSubmitform)}>
           <Box display={'flex'} flexDirection={'column'} gap={2}>
@@ -27,7 +44,7 @@ export const TelaLogin: React.FC = () => {
                   size='small'
                   {...field}
                   fullWidth
-                  label="E-mail"
+                  label="Usuário"
                   variant="outlined">        
                 </TextField>
               )}
@@ -42,7 +59,9 @@ export const TelaLogin: React.FC = () => {
                   {...field}
                   fullWidth
                   label="Senha"
-                  variant="outlined">        
+                  variant="outlined"
+                  type='password'
+                  >        
                 </TextField>
               )}
             />
@@ -56,7 +75,7 @@ export const TelaLogin: React.FC = () => {
                 <TextField
                   {...field}
                   fullWidth
-                  label="grand-type"
+                  label="grant-type"
                   variant="outlined">        
                 </TextField>
               )}
