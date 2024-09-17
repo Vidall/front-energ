@@ -3,6 +3,8 @@ import { ApiTS } from '../axios-config';
 import axios from 'axios';
 import { IUpdateTecnico } from '../models/Tecnico';
 
+const access_token = sessionStorage.getItem('access_token');
+
 interface ITecnicoComTotalCount {
   data: ITecnico[],
   totalCount: number 
@@ -40,7 +42,8 @@ const create = async (tecnico: ITecnico): Promise<{ id: number } | Error> => {
 
     const response = await ApiTS.post(urlRelativa, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${access_token}`
       }
     });
 
@@ -68,9 +71,7 @@ const create = async (tecnico: ITecnico): Promise<{ id: number } | Error> => {
 const getAll = async (filter= '', page = 1, limit = Environment.LIMITE_DE_LINHAS): Promise<ITecnicoComTotalCount| Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_TECNICOS}?page=${Number(page)}&limit=${limit}&filter=${filter}`;
-    const { data, headers } = await ApiTS.get(urlRelativa, 
-      
-    );
+    const { data, headers } = await ApiTS.get(urlRelativa);
 
     if (data) {
       return {

@@ -20,6 +20,12 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
     toggleDrawerOpen();
   };
 
+  const handleClickLogout = () => {
+    navigate('/entrar')
+    sessionStorage.clear()
+    setIsLogin(true)
+  }
+
   useEffect(() => {
     // Verificar se há um token na sessionStorage para determinar o estado de login
     const token = sessionStorage.getItem('access_token');
@@ -79,7 +85,14 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
           <Box flexGrow={1} /> {/* Este Box irá ocupar o espaço disponível */}
           <List>
-            {/* Se precisar de mais itens no menu */}
+          <ListItem>
+              <ListItemButton onClick={() => handleClickLogout()}>
+                <ListItemIcon>
+                  <Icon>logout</Icon>
+                </ListItemIcon>
+                <ListItemText primary={'Sair'} />
+              </ListItemButton>
+            </ListItem>
           </List>
         </Box>
       </Drawer>

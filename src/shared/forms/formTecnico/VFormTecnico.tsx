@@ -85,6 +85,7 @@ export const VFormTecnico: React.FC = () => {
       TecnicoService.create(formData as ITecnico)
         .then(res => {
           if (res instanceof Error) {
+            alert(res.message)
             return res.message;
           }
           
