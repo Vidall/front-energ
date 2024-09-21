@@ -21,10 +21,10 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   };
 
   const handleClickLogout = () => {
-    navigate('/entrar')
-    sessionStorage.clear()
-    setIsLogin(true)
-  }
+    navigate('/entrar');
+    sessionStorage.clear();
+    setIsLogin(true);
+  };
 
   useEffect(() => {
     // Verificar se há um token na sessionStorage para determinar o estado de login
@@ -85,7 +85,17 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
           <Box flexGrow={1} /> {/* Este Box irá ocupar o espaço disponível */}
           <List>
-          <ListItem>
+            <ListItem>
+              <ListItemButton onClick={() => toggleTheme()}>
+                <ListItemIcon>
+                  <Icon>contrast</Icon>
+                </ListItemIcon>
+                <ListItemText primary={'mudar tema'} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+          <List>
+            <ListItem>
               <ListItemButton onClick={() => handleClickLogout()}>
                 <ListItemIcon>
                   <Icon>logout</Icon>
