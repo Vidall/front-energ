@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { VTextFieldEquipamento } from '../../shared/forms/formEquipamentos/fields/VTextFieldEquipamento';
 import { useForm } from 'react-hook-form';
 import { IEquipamento, IEquipamentoDetalhe } from '../../shared/Service/api-TS/models/Equipamentos';
-import { Box, Button, Divider, Icon } from '@mui/material';
+import { Box, Button, Divider, Icon, TextField } from '@mui/material';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -36,12 +36,14 @@ export const PaginaEquipamento: React.FC = () => {
     const valid = await formMethods.trigger();
     if (!valid) return;
 
-    const EquipamentoComId: Omit<IEquipamento, 'id'> = { equipamento: { ...formData }, idCliente: Number(id), tipo: tipo };
+    const EquipamentoComId: Omit<IEquipamento, 'id'> = { equipamento: { ...formData, horimetro: +(formData.horimetro ?? 0), KWH: +(formData.KWH ?? 0)}, horimetro_atual: +(formData.horimetro ?? 0) , idCliente: Number(id), tipo: tipo, KWH_atual: +(formData.KWH ?? 0) };
 
+    console.log(EquipamentoComId);
     if (editing) {
       EquipamentosService.updateById(Number(grupo), EquipamentoComId)
         .then(res => {
           if (res instanceof Error) {
+            alert(res.message);
             return res.message;
           }
           alert('Editado com sucesso');
@@ -50,6 +52,7 @@ export const PaginaEquipamento: React.FC = () => {
       EquipamentosService.create(EquipamentoComId)
         .then(res => {
           if (res instanceof Error) {
+            alert(res.message);
             return res.message;
           }
           alert('Cadastrado com sucesso');
@@ -75,7 +78,7 @@ export const PaginaEquipamento: React.FC = () => {
         }
       })
       .catch(error => console.log(error));
-  }, [id, tipo]);
+  }, []);
 
   useEffect(() => {
     setEditing(grupo ? true : false);
@@ -83,10 +86,12 @@ export const PaginaEquipamento: React.FC = () => {
       EquipamentosService.getByIdEquipamento(Number(grupo))
         .then(res => {
           if (res instanceof Error) {
+            alert(res.message);
             return res.message;
           }
           if (res.equipamento !== undefined) {
             setEquipamento(res);
+
           }
           formMethods.reset(res.equipamento);
         });
@@ -248,6 +253,15 @@ export const PaginaEquipamento: React.FC = () => {
           control={formMethods.control}
           errors={formMethods.formState.errors}
           label="Horímetro"
+          type='number'
+        />
+
+        <VTextFieldEquipamento
+          name="KWH"
+          control={formMethods.control}
+          errors={formMethods.formState.errors}
+          label="KWH"
+          type='number'
         />
 
         <Box display={'flex'} justifyContent={'end'} alignContent={'center'} paddingTop={1}>
@@ -255,7 +269,26 @@ export const PaginaEquipamento: React.FC = () => {
             {editing ? 'Editar' : 'Cadastrar'}
           </Button>
         </Box>
+
       </VFormEquipamentos>
+      <Box display={'flex'} gap={5} marginTop={5}>
+        <TextField
+          name="horimetro_atual"
+          label="Horímetro atual"
+          type='number'
+          value={equipamento?.horimetro_atual}
+          InputLabelProps={{ shrink: true }}
+        />
+
+        <TextField
+          name="KWH_atual"
+          label="KWH atual"
+          type='number'
+          value={equipamento?.KWH_atual}
+          InputLabelProps={{ shrink: true }}
+        />
+      </Box>
+      
     </LayoutPaginas>
   );
 };

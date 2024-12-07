@@ -1,0 +1,49 @@
+.installApp {
+  position: fixed; /* Garante que ocupe toda a tela mesmo ao rolar */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Leve cinza transparente */
+  z-index: 9999; /* Mantém o overlay acima de outros elementos */
+  display: flex; /* Facilita a centralização do filho */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+}
+
+.installAppFilho {
+  background: linear-gradient(180deg, rgba(115,37,119,1) 17%, rgba(167,77,151,1) 59%, rgba(236,218,232,1) 100%);
+  display: flex; /* Facilita a centralização do conteúdo interno */
+  flex-direction: column; /* Organiza os elementos em coluna */
+  align-items: center; /* Alinha os itens no centro horizontalmente */
+  justify-content: center; /* Centraliza os itens verticalmente */
+  text-align: center; /* Centraliza o texto */
+  max-width: 500px; /* Define um limite de largura */
+  width: 90%; /* Responsivo para dispositivos menores */
+  border-radius: 12px; /* Arredonda os cantos */
+  padding: 20px; /* Espaçamento interno */
+  color: #fff; /* Cor do texto */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra */
+  z-index: 1000; /* Garante que esteja acima do fundo */
+}
+
+.actions {
+  display: flex;
+  justify-content: center; /* Centraliza os botões */
+  gap: 16px; /* Espaçamento entre os botões */
+  margin-top: 15px;
+}
+
+.actions button { 
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3); /* Fundo semi-transparente */
+  border: none;
+  padding: 10px 20px; /* Botões maiores para usabilidade */
+  border-radius: 8px; /* Arredondamento dos botões */
+  cursor: pointer; /* Mostra o cursor como "mãozinha" */
+  transition: background 0.3s; /* Efeito suave ao passar o mouse */
+}
+
+.actions button:hover {
+  background: rgba(0, 0, 0, 0.5); /* Fundo mais escuro ao hover */
+}

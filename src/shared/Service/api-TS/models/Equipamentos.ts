@@ -19,10 +19,13 @@ export interface IEquipamento {
     fabricante?:string,
     fatorPotencia?: string,
     frequencia?: string,
-    horimetro?: string,
-    tipoEquipamento:string
+    horimetro?: number,
+    tipoEquipamento:string,
+    KWH?: number,
   },
-  idCliente:number
+  idCliente:number,
+  horimetro_atual: number,
+  KWH_atual: number,
  }
 
 export interface IEquipamentoDetalhe {
@@ -43,6 +46,7 @@ export interface IEquipamentoDetalhe {
   fabricante?:string,
   fatorPotencia?:string,
   frequencia?: string,
-  horimetro?: string,
+  horimetro?: number,
   tipoEquipamento:string
+  KWH?: number,
  }

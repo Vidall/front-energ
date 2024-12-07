@@ -44,8 +44,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
   const [buscaDebounce] = useDebounce(busca, 500);
 
   useEffect(() => {
-    console.log(tipo)
-    if (!tipo) return
+    if (!tipo) return;
     if (tipo === 'FISICO') {
       setIsLoading(true);
       PessoaFisicaService.getAll(buscaDebounce)
@@ -76,8 +75,8 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
             return res.message;
           }
           const idCliente = res.data.map(item => item.id)[0]?.toString();
-          console.log(idCliente)
-           //setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
+          console.log(idCliente);
+          //setSearchParams({ ...Object.fromEntries(searchParms.entries()), idCliente }, { replace: true });
           setDadosCliente(res.data);
           setRows(res.data.map(pessoa => ({ id: pessoa.id!, label: pessoa.nome })));
           setIsLoading(false);
@@ -98,7 +97,7 @@ export const VAutoCompletePessoa: React.FC<IAutoComplete> = ({ tipo, name, contr
 
       const selectedIdCliente = newValue.id.toString();
 
-      setSearchParams({...Object.fromEntries(searchParms.entries()), idCliente: selectedIdCliente}, { replace: true})      
+      setSearchParams({...Object.fromEntries(searchParms.entries()), idCliente: selectedIdCliente}, { replace: true});      
     } else {
       onChange(null); // Nenhum valor selecionado, passa null
     }

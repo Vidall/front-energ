@@ -1,15 +1,18 @@
-import { useForm } from 'react-hook-form';
-import { VFormStatusGerador, VInputSelectVerificacao, VRadioVerificacaoStatusGerador, VTextFieldStatusGerador } from '../../shared/forms/formOS';
+import { Controller, useForm } from 'react-hook-form';
+import { VFormStatusGerador, VRadioVerificacaoStatusGerador, VTextFieldStatusGerador } from '../../shared/forms/formOS';
 import { LayoutPaginas } from '../../shared/Layout';
 import { IStatusGerador } from '../../shared/Service/api-JAVA/models/OrdemServico';
-import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadioVerificacaoServico';
-import { Box, Button } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { useEffect, useState } from 'react';
+import { IEquipamento } from '../../shared/Service/api-TS/models/Equipamentos';
+import { EquipamentosService } from '../../shared/Service/api-TS/equipamentos/EquipamentosService';
 
 export const PaginaStatusGerador: React.FC = () => {
   const formMethods = useForm<IStatusGerador>();
+  const { control, handleSubmit} = useForm<IEquipamento>();
+  const [DataEquipamento, setDataEquipamento] = useState<IEquipamento>();
   const navigate = useNavigate();
 
   const { id } = useParams();
@@ -21,9 +24,20 @@ export const PaginaStatusGerador: React.FC = () => {
           alert(res.message);
           return res.message;
         }
+
+        EquipamentosService.getByIdEquipamento(res.client_equipment_id)
+          .then(res => {
+            if(res instanceof Error) {
+              alert(res.message);
+              return res.message;
+            }
+            setDataEquipamento(res);
+          })
+          .catch(err => {console.error(err);});
         formMethods.reset(res.generatorStatus);
       })
       .catch(error => console.log(error));
+      
   }, [id, formMethods]);
 
   const handleSubmitForm = (form: IStatusGerador) => {
@@ -43,10 +57,102 @@ export const PaginaStatusGerador: React.FC = () => {
     navigate(-1);
   };
 
+  //eslint-disable-next-line
+  const submitFormHorimetro = (formDataHorimetro: any) => {
+    try {
+      console.log(formDataHorimetro);
+      if (DataEquipamento) {
+        EquipamentosService.updateById(DataEquipamento!.id, {
+          idCliente: DataEquipamento.idCliente,
+          equipamento: DataEquipamento.equipamento,
+          tipo: DataEquipamento.tipo,
+          horimetro_atual: +(formDataHorimetro.horimetro_atual)
+
+        })
+          .then((res) => {
+            if (res instanceof Error) {
+              alert(res.message);
+              return res.message;
+            }
+  
+            alert('Atualizado novo horímetro');
+          })
+          .catch((err) =>{console.error(err);});
+      }
+    } catch (error) {
+      console.log(error);     
+    }
+  };
+  //eslint-disable-next-line
+  const submitFormKWH = (formDataKWH: any) => {
+    try {
+      if (DataEquipamento) {
+        EquipamentosService.updateById(DataEquipamento!.id, {
+          idCliente: DataEquipamento.idCliente,
+          equipamento: DataEquipamento.equipamento,
+          tipo: DataEquipamento.tipo,
+          KWH_atual: +(formDataKWH.KWH_atual)
+  
+        }).then((res) => {
+          if (res instanceof Error) {
+            alert(res.message);
+            return res.message;
+          }
+
+          alert('Atualizado novo KWH');
+        })
+          .catch((err) =>{console.error(err);});
+      }
+    }        
+    catch (error) {
+      console.log(error);     
+    }
+  };
+
   return (
     <LayoutPaginas
       titulo="Status gerador"
     >
+      <Box display={'flex'} alignItems={'center'}>
+        <form onSubmit={handleSubmit(submitFormHorimetro)} style={{display: 'flex', alignItems: 'center', gap: 18}}>
+          <Controller
+            name='horimetro_atual'
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label={`Horímetro Cadastrado: ${DataEquipamento?.horimetro_atual}`}
+                variant="outlined"                
+                size="small"
+                margin="normal"
+                InputLabelProps={{shrink: true}}
+              />
+            )}
+          />
+          <Button variant='contained' type='submit'>Atualizar</Button>
+        </form>
+      </Box>
+      <Box display={'flex'} alignItems={'center'}>
+        <form onSubmit={handleSubmit(submitFormKWH)} style={{display: 'flex', alignItems: 'center', gap: 18}}>
+          <Controller
+            name='KWH_atual'
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label={`KWH Cadastrado: ${DataEquipamento?.KWH_atual}`}
+                variant="outlined"                
+                size="small"
+                margin="normal"
+                InputLabelProps={{shrink: true}}
+
+              />
+            )}
+          />
+          <Button variant='contained' type='submit'>Atualizar</Button>
+        </form>
+      </Box>
+
       <VFormStatusGerador
         submitForm={formMethods.handleSubmit(handleSubmitForm)}
         formMethods={formMethods}

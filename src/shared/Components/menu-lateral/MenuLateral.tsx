@@ -1,7 +1,9 @@
 import { Box, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { useAppThemeContext, useDrawerContext } from '../../Contexts';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
+import { isToken } from 'typescript';
+import { useSearchParams } from 'react-router-dom';
 
 interface IMenuLateralProps {
   children: React.ReactNode
@@ -14,6 +16,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   const navigate = useNavigate();
   const { toggleTheme } = useAppThemeContext();
   const [isLogin, setIsLogin] = useState(false);
+  const currentURL = useLocation();
 
   const handleClick = (caminho: string) => {
     navigate(caminho);
@@ -29,8 +32,9 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   useEffect(() => {
     // Verificar se há um token na sessionStorage para determinar o estado de login
     const token = sessionStorage.getItem('access_token');
-    setIsLogin(!token);
-  }, []);
+    if (token) setIsLogin(false);
+    if (!token) setIsLogin(true); 
+  }, [currentURL]);
 
   return (
     <>

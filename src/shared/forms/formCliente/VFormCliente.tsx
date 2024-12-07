@@ -12,7 +12,6 @@ import { Environment } from '../../Enviroment';
 import { EquipamentosService } from '../../Service/api-TS/equipamentos/EquipamentosService';
 import { ClienteService } from '../../Service/api-TS/clientes/ClienteService';
 
-/*eslint-disable react/prop-types*/
 export const VFormCliente: React.FC = () => {
   const [data, setData] = useState<TPessoa>();
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -88,8 +87,8 @@ export const VFormCliente: React.FC = () => {
         PessoaFisicaService.updateById(Number(id), parserDataCliente(restData))
           .then((res) => {
             if (res instanceof Error) {
-              console.log(parserDataCliente(restData));
-              return alert(res.message);
+              alert(res.message);
+              throw new Error(res.message);
             }
   
             setData(formData);
@@ -104,7 +103,8 @@ export const VFormCliente: React.FC = () => {
         PessoaFisicaService.create(parserDataCliente(restData))
           .then((res) => {
             if (res instanceof Error) {
-              return alert(res.message);
+              alert(res.message);
+              return new Error(res.message);
             }
   
             setData(formData);
@@ -131,7 +131,8 @@ export const VFormCliente: React.FC = () => {
         PessoaJuridicaService.updateById(Number(id), parserDataCliente(formData))
           .then((res) => {
             if (res instanceof Error) {
-              return alert(res.message);
+              alert(res.message);
+              throw new Error(res.message);
             }
   
             setData(formData);
@@ -146,7 +147,9 @@ export const VFormCliente: React.FC = () => {
         PessoaJuridicaService.create(parserDataCliente(formData))
           .then((res) => {
             if (res instanceof Error) {
-              return alert(res.message);
+              alert(res.message);
+              console.log(formData);
+              throw new Error(res.message);
             }
   
             setData(formData);
@@ -196,10 +199,6 @@ export const VFormCliente: React.FC = () => {
       navigate('clientes?tipo=Fisico');
     }
   };
-
-  const handleChangeTipoPessoa = () => {
-    alert('mudou')
-  }
 
   return (
     <Paper component={Box} padding={2}>

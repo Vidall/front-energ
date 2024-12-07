@@ -1,18 +1,16 @@
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { ILogin, IRetornoLogin } from '../../shared/Service/api-KEY-CLOCK/models/Login';
+import { ILogin } from '../../shared/Service/api-KEY-CLOCK/models/Login';
 import { useState } from 'react';
 import { LoginService } from '../../shared/Service/api-KEY-CLOCK/login/LoginService';
 import { useNavigate } from 'react-router';
 
 export const TelaLogin: React.FC = () => {
   const formMethods = useForm<ILogin>();
-  const [isFieldVisible, setIsVisible] = useState(false);
   const [accessToken, setAccesToken] = useState<string>();
   const navigate = useNavigate();
 
   const handleSubmitform = (form: ILogin) => {
-    console.log(form);
     LoginService.entrar(form)
       .then(res => {
         if (res instanceof Error) {
@@ -22,10 +20,17 @@ export const TelaLogin: React.FC = () => {
 
         setAccesToken(res.access_token);
         sessionStorage.setItem('access_token', res.access_token);
-        alert('Login com sucesso');
-        navigate('/iniciooo');
+        alert('Login com sucesso'); 
+        navigate('/inicio');
       })
       .catch(error => console.log(error));
+    // if (form.username === 'Admin' && form.password === 'AngraEnerg2024#') {
+    //   sessionStorage.setItem('access_token', 'not_implementation');
+    //   alert('Login com sucesso'); 
+    //   navigate('/inicio');
+    // } else {
+    //   alert('Usuário ou senha inválidos');
+    // }
   };
 
   return (

@@ -9,12 +9,11 @@ interface VTextFieldProps {
   label: string;
   /*eslint-disable @typescript-eslint/no-explicit-any*/
   rules?: any;
-  editing?: boolean 
+  editing?: boolean;
+  defaultValue?: string;
 }
 
-/*eslint-disable react/prop-types*/
-
-export const VTextFieldCliente: React.FC<VTextFieldProps> = ({ name, control, errors, label, rules, editing=false }) => {
+export const VTextFieldCliente: React.FC<VTextFieldProps> = ({ name, control, errors, label, rules, editing=false, defaultValue }) => {
   const error = name !== undefined ? name.split('.').reduce((acc, key) => acc?.[key] ?? null, errors as any) : 'Erro ao validar o campo';
   
   return (
@@ -33,6 +32,7 @@ export const VTextFieldCliente: React.FC<VTextFieldProps> = ({ name, control, er
           error={!!error}
           helperText={error?.message}
           InputLabelProps={{ shrink: !!field.value }}
+          defaultValue={defaultValue}
         />
       )}
     />
