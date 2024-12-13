@@ -189,10 +189,33 @@ const deleteById = async (id: number): Promise<void | Error> => {
   }
 };
 
+const signin = async (dados: {email: string, senha: string}) => {
+  try {
+    const urlRelativa = `${Environment.CAMINHO_SIGNIN}`;
+    const response = await ApiTS.post(urlRelativa, dados);
+
+    if (response.status === 200 || response.status === 204 ) {
+      return response;
+    }
+
+    throw response.data.errors.default;
+
+  } catch (err: any) {
+    console.log(err);
+
+    if(err.response.data.errors.body) {
+      return new Error(JSON.stringify(err.response.data.errors.body));
+    } else if (err.response.data.errors.default) {
+      return new Error(JSON.stringify(err.response.data.errors.default));
+    }
+  }
+};
+
 export const TecnicoService = {
   getAll,
   create,
   getByID,
   updateById,
-  deleteById
+  deleteById,
+  signin
 };

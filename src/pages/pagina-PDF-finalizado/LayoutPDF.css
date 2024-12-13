@@ -1,0 +1,40 @@
+/* Estilos gerais */
+.alignCenter {
+  text-align: center;
+}
+
+table {
+  border-collapse: separate !important;
+}
+
+.table-dark,
+.table-dark > th,
+.table-dark > td {
+  background-color: #a1a4a5 !important;
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th,
+.table-dark tbody + tbody {
+  border-color: #a1a4a5 !important;
+}
+
+table td {
+  word-wrap: break-word; /* All browsers since IE 5.5+ */
+  overflow-wrap: break-word; /* Renamed property in CSS3 draft spec */
+}
+
+/* Estilos específicos para impressão */
+@media print {
+  .print-button {
+      display: none !important;
+  }
+  .menu-lateral {
+      display: none !important;
+  }
+  .children-menu-lateral {
+    margin: 0px !important;
+  }
+}
+

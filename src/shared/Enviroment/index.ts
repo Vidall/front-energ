@@ -25,6 +25,7 @@ export const Environment = {
   CAMINHO_TECNICOS: '/tecnicos',
   CAMINHO_EQUIPAMENTOS: '/equipamentos',
   CAMINHO_EQUIPAMENTOS_DETALHE: '/equipamentos/detalhe',
+  CAMINHO_SIGNIN: '/tecnicos/signin',
 
   CAMINHO_GRUPOS_SERVICOS: '/api/grupos_servicos',
   CAMINHO_SERVICOS: '/api/servicos',

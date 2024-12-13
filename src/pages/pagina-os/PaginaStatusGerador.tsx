@@ -99,7 +99,7 @@ export const PaginaStatusGerador: React.FC = () => {
             return res.message;
           }
 
-          alert('Atualizado novo KWH');
+          alert('Atualizado nova Energia KWh');
         })
           .catch((err) =>{console.error(err);});
       }
@@ -121,7 +121,7 @@ export const PaginaStatusGerador: React.FC = () => {
             render={({ field }) => (
               <TextField
                 {...field}
-                label={`Horímetro Cadastrado: ${DataEquipamento?.horimetro_atual}`}
+                label={`Horímetro: ${DataEquipamento?.horimetro_atual}`}
                 variant="outlined"                
                 size="small"
                 margin="normal"
@@ -140,7 +140,7 @@ export const PaginaStatusGerador: React.FC = () => {
             render={({ field }) => (
               <TextField
                 {...field}
-                label={`KWH Cadastrado: ${DataEquipamento?.KWH_atual}`}
+                label={`Energia (KWH): ${DataEquipamento?.KWH_atual}`}
                 variant="outlined"                
                 size="small"
                 margin="normal"

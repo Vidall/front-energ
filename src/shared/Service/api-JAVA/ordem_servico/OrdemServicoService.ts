@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
-import { ICountOS, IGetByIdOrdemStart, IOrdemComTotalCount, IOrdemFinalizacao, IOs, IPDF, IReturnGetAllOs, ISendAssinaturaCliente, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
+import { ICountOS, IGetByIdOrdemStart, IOrdemComTotalCount, IOrdemFinalizacao, IOs, IOsFinalizada, IPDF, IReturnGetAllOs, ISendAssinaturaCliente, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
 
 const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
@@ -169,7 +169,7 @@ const getByIdOrdemStart = async (id: number): Promise<IGetByIdOrdemStart | Error
   }
 };
 
-const StartOrCancelOrFinish = async(id: number, acao: 'iniciar' | 'cancelar' | 'finalizar', body?: IOrdemFinalizacao): Promise<void | Error> => {
+const StartOrCancelOrFinish = async(id: number, acao: 'iniciar' | 'cancelar' | 'finalizar', body?: IOsFinalizada): Promise<void | Error> => {
   try {
     const urlRelativa = `${Environment.CAMINHO_ORDEM}/${id}/${acao}`;
 

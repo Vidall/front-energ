@@ -25,16 +25,24 @@ export const DetalheOs: React.FC = () => {
   const IdCliente = searchParams.get('idCliente');
 
   const handleSubmitForm = (form: IOs) => {
-    console.log(form);
-    OrdemServicoService.create(form)
+    let numeroEndereco = form.endereco.numero;
+    if (isNaN(+(form.endereco.numero??0))) {
+      numeroEndereco = 0;
+    }
+    const OSCompleta = {
+      ...form, endereco: {...form.endereco, numero: numeroEndereco}
+    };
+    
+    OrdemServicoService.create(OSCompleta)
       .then(res => {
         if (res instanceof Error) {
           alert(res.message);
           return res.message;
         }
 
-        alert('Criado com sucesso');
+        alert(`ordem ${res.id} criado com sucesso`);
         navigate('ordens-de-servicos?tipo=Todos');
+
       })
       .catch(error => console.log(error));
   };
@@ -47,8 +55,8 @@ export const DetalheOs: React.FC = () => {
             alert('Cliente não possui equipamento');
             return res.message;
           }
-          if (res.length === 0) return alert('Cliente não possui equipamento')
-          setEquipamentoCliente(res.map(item => ({id: item.id, name: item.equipamento.tipoEquipamento})))
+          if (res.length === 0) return alert('Cliente não possui equipamento');
+          setEquipamentoCliente(res.map(item => ({id: item.id, name: item.equipamento.tipoEquipamento})));
         })
         .catch(error => console.log(error));
     } else {
@@ -59,8 +67,8 @@ export const DetalheOs: React.FC = () => {
   const handleTipoPessoa = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setTipoPessoa(value);
-    setEquipamentoCliente(undefined)
-    formMethods.resetField('client_id')
+    setEquipamentoCliente(undefined);
+    formMethods.resetField('client_id');
     setSearchParams({ ...Object.fromEntries(searchParams.entries()), idCliente: '' }, { replace: true });
   };
 

@@ -1,3 +1,7 @@
+import { TPessoa } from '../../api-TS/models/Clientes';
+import { IEquipamento } from '../../api-TS/models/Equipamentos';
+import { ITecnico } from './Tecnico';
+
 export interface IOs {
   id: number,
   type: 'ABERTO' | 'ANDAMENTO' | 'FINALIZADO' | 'CANCELADO',
@@ -13,7 +17,8 @@ export interface IOs {
   }
   escopoDosServicos: string
   client_equipment_id: number
-  generalObservations: string
+  generalObservations: string,
+  pathPDF: string
 }
 
 export interface IReturnGetAllOs {
@@ -34,11 +39,12 @@ export interface IOrdemComTotalCount {
 export interface IGetByIdOrdemStart {
   id: number,
 	status: string,
-	type: string,
+	type: 'ABERTO' | 'ANDAMENTO' | 'FINALIZADO' | 'CANCELADO',
 	scheduledDate: string,
 	client_id: number,
 	client_type: string,
 	technician_id: number,
+  client_equipment_id: number,
 	endereco: {
 		rua: string,
 		numero: number,
@@ -152,7 +158,7 @@ export interface ITesteGerador {
 export interface IPDF {
  id: number,
   status: string,
-  type: string,
+  type: 'ABERTO' | 'ANDAMENTO' | 'FINALIZADO' | 'CANCELADO',
   scheduledDate: string,
   client_id: number,
   client_type: string,
@@ -236,7 +242,8 @@ export interface IPDF {
       operationTime_resfriamentoGerador: string
     }
   },
-  generalObservations: string
+  generalObservations: string,
+  pathPDF: string,
 }
 
 export interface ISendAssinaturaCliente {
@@ -244,10 +251,16 @@ export interface ISendAssinaturaCliente {
 }
 
 export interface IOrdemFinalizacao {
-  generalObservations: string
+  generalObservations: string,
 }
 
 export interface ICountOS {
   abertas: number,
   total: number
+}
+
+export interface IOsFinalizada extends Omit<IOs, 'pathPDF' | 'technician_id' | 'client_id' | 'client_equipment_id' | 'client_type'>{
+  client: TPessoa,
+  client_equipment: IEquipamento,
+  technician: ITecnico
 }

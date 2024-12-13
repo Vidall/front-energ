@@ -1,27 +1,37 @@
 import { Controller, useForm } from 'react-hook-form';
 import { VAutoCompleteServicos, VFormOS, VTabelaServiceInOrder, VTextFieldOS } from '../../shared/forms/formOS';
 import { LayoutPaginas } from '../../shared/Layout';
-import { Box, Button, Divider, FormControlLabel, Icon, Radio, RadioGroup, Theme, useMediaQuery,  } from '@mui/material';
+import { Box, Button, Divider, FormControlLabel, Icon, Radio, RadioGroup, TextField, Theme, useMediaQuery,  } from '@mui/material';
 import { VInputSelect } from '../../shared/Components';
-import { IOrdemFinalizacao, IOs, IPDF, IServiceInOrder, IServiceInOrderOutput } from '../../shared/Service/api-JAVA/models/OrdemServico';
+import { IGetByIdOrdemStart, IOrdemFinalizacao, IOs, IOsFinalizada, IPDF, IServiceInOrder, IServiceInOrderOutput } from '../../shared/Service/api-JAVA/models/OrdemServico';
 import { Idata, IGroupAllDTOOutputList, IGrupo } from '../../shared/Service/api-JAVA/models/GruposServicos';
 import { useCallback, useEffect, useState } from 'react';
 import { GruposServicosService } from '../../shared/Service/api-JAVA/grupos-servicos/GruposServicosService';
 import { VRadioVerificacaoServico } from '../../shared/forms/formOS/fields/VRadioVerificacaoServico';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { useNavigate, useParams } from 'react-router';
-import { error } from 'console';
 import { DetalheOsAndamento } from './DetalheOsAndamento';
-import { number } from 'yup';
+import { PessoaJuridicaService } from '../../shared/Service/api-TS/clientes/PessoaJuridicaService';
+import { TPessoa } from '../../shared/Service/api-TS/models/Clientes';
+import { PessoaFisicaService } from '../../shared/Service/api-TS/clientes/PessoaFisicaService';
+import { EquipamentosService, ITecnico } from '../../shared/Service/api-TS/equipamentos/EquipamentosService';
+import { IEquipamento } from '../../shared/Service/api-TS/models/Equipamentos';
+import { TecnicoService } from '../../shared/Service/api-TS/tecnicos/TecnicoService';
 
 export const AndamentoOS:React.FC = () => {
   const formMethods = useForm<IServiceInOrder>();
-  const formMethodsFinalizar = useForm<IOs>();
+  const formMethodsFinalizar = useForm<IOrdemFinalizacao>();
   const smDown = useMediaQuery((theme:  Theme)=> theme.breakpoints.down('sm'));
   const [grupoServico, setGrupoServico] = useState<IGrupo[]>();
   const [listServiceInOrder, setListServiceInOrder] = useState<IServiceInOrderOutput[]>();
+  const [cliente, setClient] = useState<TPessoa>();
+  const [equipamento, setEquipamento] = useState<IEquipamento>();
+  const [tecnico, setTecnico] = useState<ITecnico>();
+  const [Os, setOs] = useState<IGetByIdOrdemStart>();
   const { id } = useParams();
   const navigate = useNavigate();
+  //eslint-disable-next-line
+  const [OsFinalizada, setOsFinalizada] = useState<IOsFinalizada>();
 
   const refreshPage = useCallback(() => {
     window.location.reload();
@@ -61,6 +71,74 @@ export const AndamentoOS:React.FC = () => {
         }
 
         setListServiceInOrder(res.servicesInOrder);
+          
+      })
+      .catch(error => console.log(error));
+
+    OrdemServicoService.getPDF(Number(id))
+      .then(res => {
+        if (res instanceof Error) {
+          alert(res.message);
+          return res.message;
+        }
+        
+        //eslint-disable-next-line
+        const { pathPDF, technician_id, client_equipment_id, client_id, client_type, ...OsPartial }: IPDF = res;
+        const OsFinalizadaSend: IOsFinalizada = {  
+          ...OsPartial,
+          client: {...cliente} as TPessoa,
+          client_equipment: {...equipamento} as IEquipamento,
+          technician: {...tecnico} as ITecnico,   
+          generalObservations: ''
+        };
+        setOsFinalizada(OsFinalizadaSend);
+        
+        console.log(res);
+        if (res.client_type === 'JURIDICO') {
+          PessoaJuridicaService.getByID(res.client_id)
+            .then(res => {
+              if (res instanceof Error) {
+                alert(res.message);
+                return res.message;
+              }
+              setClient(res);
+            })
+            .catch(error => console.log(error));
+            
+        } else if (res.client_type === 'FISICO') {
+          PessoaFisicaService.getByID(res.client_id)
+            .then(res => {
+              if (res instanceof Error) {
+                alert(res.message);
+                return res.message;
+              }
+              setClient(res);
+            })
+            .catch(error => console.log(error));
+        }
+
+        EquipamentosService.getByIdEquipamento(res.client_equipment_id)
+          .then(res => {
+            if (res instanceof Error) {
+              alert(res.message);
+              return res.message;
+            }
+
+            setEquipamento(res);
+          })
+          .catch(error => console.log(error));
+
+        TecnicoService.getByID(res.technician_id)
+          .then(res => {
+            if (res instanceof Error) {
+              alert(res.message);
+              return res.message;
+            }
+
+            setTecnico(res);
+          })
+          .catch(error => console.log(error));
+
       })
       .catch(error => console.log(error));
   },[]);
@@ -93,24 +171,36 @@ export const AndamentoOS:React.FC = () => {
     navigate(`/ordens-de-servicos/detalhe/andamento/assinatura-cliente/${id}`);
   };
 
-  const handleSubmitFinalizar = (form: IOrdemFinalizacao) => {
-    OrdemServicoService.StartOrCancelOrFinish(Number(id), 'finalizar', form)
-      .then(res => {
-        if(res instanceof Error) {
-          alert(res.message);
-          return res.message;
-        }
-
-        alert('Finalizado com sucesso');
-        handleClickVoltar();
-      })
-      .catch(error => console.log(error));
+  const handleSubmitFinalizar = (form: Partial<IOsFinalizada>) => {
+    if (OsFinalizada) {
+      const OSCompleta = {
+        ...OsFinalizada,
+        id: OsFinalizada?.id ? OsFinalizada.id : 0,
+        client: {...cliente} as TPessoa,
+        client_equipment: {...equipamento} as IEquipamento,
+        technician: {...tecnico} as ITecnico,
+        generalObservations: form.generalObservations??''
+      };
+  
+      console.log(OSCompleta);
+      OrdemServicoService.StartOrCancelOrFinish(Number(id), 'finalizar', OSCompleta)
+        .then(res => {
+          if(res instanceof Error) {
+            alert(res.message);
+            return res.message;
+          }
+  
+          alert('Finalizado com sucesso');
+          handleClickVoltar();
+        })
+        .catch(error => console.log(error));
+    }
 
   };
 
   const handleClickVoltar = () => {
     navigate(-4);
-  };
+  }; 
 
   return (
     <LayoutPaginas
@@ -202,13 +292,23 @@ export const AndamentoOS:React.FC = () => {
           </Box>
           <Divider/>
           <Box paddingTop={1}>
-            <VTextFieldOS
+            <Controller
               name='generalObservations'
               control={formMethodsFinalizar.control}
-              errors={formMethodsFinalizar.formState.errors}
-              label='Observavações gerais'
-              isMultiline={true}
-              
+              render={({field}) => (
+                <TextField
+                  {...field}
+                  label={'Observavações gerais'}
+                  fullWidth
+                  margin="normal"
+                  size="small"
+                  helperText={'Este campo é obrigatório'}
+                  InputLabelProps={{ shrink: !!field.value }}
+                  type={'text'}
+                  multiline={true}
+                  rows={4}                
+                />
+              )}
             />
             <Box display={'flex'} justifyContent={'space-between'}>
               <Button variant='outlined' onClick={handleClickVoltar}>

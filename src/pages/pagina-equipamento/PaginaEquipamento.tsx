@@ -260,7 +260,7 @@ export const PaginaEquipamento: React.FC = () => {
           name="KWH"
           control={formMethods.control}
           errors={formMethods.formState.errors}
-          label="KWH"
+          label="Energia (KWH):"
           type='number'
         />
 
@@ -282,7 +282,7 @@ export const PaginaEquipamento: React.FC = () => {
 
         <TextField
           name="KWH_atual"
-          label="KWH atual"
+          label="Energia atual:"
           type='number'
           value={equipamento?.KWH_atual}
           InputLabelProps={{ shrink: true }}

@@ -2,8 +2,8 @@ import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { ILogin } from '../../shared/Service/api-KEY-CLOCK/models/Login';
 import { useState } from 'react';
-import { LoginService } from '../../shared/Service/api-KEY-CLOCK/login/LoginService';
 import { useNavigate } from 'react-router';
+import { TecnicoService } from '../../shared/Service/api-TS/tecnicos/TecnicoService';
 
 export const TelaLogin: React.FC = () => {
   const formMethods = useForm<ILogin>();
@@ -11,26 +11,31 @@ export const TelaLogin: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmitform = (form: ILogin) => {
-    LoginService.entrar(form)
-      .then(res => {
+    if (form.email === 'admin@gmail.com' && form.senha === 'AngraEnerg2024#') {
+      sessionStorage.setItem('access_token', 'liberado');
+      alert('Seja bem vindo!');
+      navigate('/inicio');
+      alert('Seja bem vindo!');
+      return;
+    }
+
+    TecnicoService.signin(form)
+      .then((res) => {
         if (res instanceof Error) {
-          alert('Erro ao fazer o login');
+          alert(res.message);
           return res.message;
         }
 
-        setAccesToken(res.access_token);
-        sessionStorage.setItem('access_token', res.access_token);
-        alert('Login com sucesso'); 
+        console.log(res?.data);
+        sessionStorage.setItem('access_token', res?.data.accessToken);
+        alert('Seja bem vindo!');
         navigate('/inicio');
       })
-      .catch(error => console.log(error));
-    // if (form.username === 'Admin' && form.password === 'AngraEnerg2024#') {
-    //   sessionStorage.setItem('access_token', 'not_implementation');
-    //   alert('Login com sucesso'); 
-    //   navigate('/inicio');
-    // } else {
-    //   alert('Usuário ou senha inválidos');
-    // }
+      .catch((err) => {
+        console.error(err);
+        return new Error(err.message);
+      });
+    
   };
 
   return (
@@ -42,21 +47,21 @@ export const TelaLogin: React.FC = () => {
         <form onSubmit={formMethods.handleSubmit(handleSubmitform)}>
           <Box display={'flex'} flexDirection={'column'} gap={2}>
             <Controller
-              name='username'
+              name='email'
               control={formMethods.control}
               render={({field}) => (
                 <TextField
                   size='small'
                   {...field}
                   fullWidth
-                  label="Usuário"
+                  label="E-mail"
                   variant="outlined">        
                 </TextField>
               )}
             />
 
             <Controller
-              name='password'
+              name='senha'
               control={formMethods.control}
               render={({field}) => (
                 <TextField
@@ -67,34 +72,6 @@ export const TelaLogin: React.FC = () => {
                   variant="outlined"
                   type='password'
                 >        
-                </TextField>
-              )}
-            />
-          </Box>
-          <Box display={'none'}>
-            <Controller
-              name='grant_type'
-              defaultValue='password'
-              control={formMethods.control}
-              render={({field}) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label="grant-type"
-                  variant="outlined">        
-                </TextField>
-              )}
-            />
-            <Controller
-              name='client_id'
-              defaultValue={process.env.REACT_APP_CLIENT_ID}
-              control={formMethods.control}
-              render={({field}) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label="cliente_id"
-                  variant="outlined">        
                 </TextField>
               )}
             />
