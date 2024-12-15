@@ -1,7 +1,7 @@
 import {useEffect, useState } from 'react';
 import { OrdemServicoService } from '../../shared/Service/api-JAVA/ordem_servico/OrdemServicoService';
 import { useParams } from 'react-router';
-import { IPDF } from '../../shared/Service/api-JAVA/models/OrdemServico';
+import { IOsFinalizada, IPDF } from '../../shared/Service/api-JAVA/models/OrdemServico';
 import { TPessoa } from '../../shared/Service/api-TS/models/Clientes';
 import { PessoaFisicaService } from '../../shared/Service/api-TS/clientes/PessoaFisicaService';
 
@@ -11,9 +11,10 @@ import './LayoutPDF.css';
 import { PessoaJuridicaService } from '../../shared/Service/api-TS/clientes/PessoaJuridicaService';
 import { useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/system';
+import axios from 'axios';
 
-export const PdfCabecalho: React.FC = () => {
-  const [dadosPDF, setDadosPDF] = useState<IPDF>(); 
+export const PdfCabecalhoFinalizado: React.FC = () => {
+  const [dadosPDF, setDadosPDF] = useState<IOsFinalizada>(); 
   const [dadosCliente, setDadosCliente] = useState<TPessoa | undefined>(); 
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
@@ -26,28 +27,17 @@ export const PdfCabecalho: React.FC = () => {
           alert(res.message);
           return res.message;
         }
-        setDadosPDF(res);
-        if(res.client_type === 'FISICO') {
-          PessoaFisicaService.getByID(res.client_id)
-            .then(res => {
-              if (res instanceof Error) {
-                alert(res.message);
-                return res.message;
-              }
-              setDadosCliente(res);
-            })
-            .catch(error => console.log(error));
-        } else if (res.client_type === 'JURIDICO') {
-          PessoaJuridicaService.getByID(res.client_id)
-            .then(res => {
-              if (res instanceof Error) {
-                alert(res.message);
-                return res.message;
-              }
-              setDadosCliente(res);
-            })
-            .catch(error => console.log(error));
-        }
+        axios.get(res.pathPDF)
+        .then((res) => {
+          if (res instanceof Error) {
+            alert('Erro ao consultar a Os finalizada')
+            return res.message;
+          }
+
+          setDadosPDF(res.data)
+
+        })
+        .catch(error => console.error(error))
       })
       .catch(error => console.log(error));
   },[]);
@@ -104,50 +94,50 @@ export const PdfCabecalho: React.FC = () => {
             </td>
             <td>
               <strong> Código Cliente: </strong>
-              {dadosCliente?.id}
+              {dadosPDF?.client?.id}
             </td>
             <td>
-              <strong> {dadosCliente?.tipo === 'fisico' ? 'CPF' : 'CNPJ'} </strong>
-              {dadosCliente?.tipo === 'fisico' ? dadosCliente.cpf : dadosCliente?.cnpj}
+              <strong> {dadosPDF?.client?.tipo === 'fisico' ? 'CPF' : 'CNPJ'} </strong>
+              {dadosPDF?.client?.tipo === 'fisico' ? dadosPDF?.client.cpf : dadosPDF?.client?.cnpj}
             </td>
           </tr>
           <tr style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>
             <td colSpan={3}>
-              <strong> Cliente: </strong> {dadosCliente?.nome}
+              <strong> Cliente: </strong> {dadosPDF?.client?.nome}
             </td>
             <td>
               <strong>Unidade: </strong>
-              {dadosCliente?.endereco.cidade}
+              {dadosPDF?.client?.endereco.cidade}
             </td>
           </tr>
           <tr style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>
             <td colSpan={2}>
               <strong>Contato: </strong>
-              {dadosCliente?.nomeContato}
+              {dadosPDF?.client?.nomeContato}
             </td>
             <td>
               <strong>telefone: </strong>
-              {dadosCliente?.telefone}
+              {dadosPDF?.client?.telefone}
             </td>
             <td>
               <strong>e-Mail: </strong>
-              {dadosCliente?.email}
+              {dadosPDF?.client?.email}
             </td>
           </tr>
           <tr style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>
             <td colSpan={4}>
               <strong>Endereço Atendimento: </strong> 
-              {dadosCliente?.endereco.rua}, {dadosCliente?.endereco.numero}, {dadosCliente?.endereco.bairro}, {dadosCliente?.endereco.cidade}
+              {dadosPDF?.endereco.rua}, {dadosPDF?.endereco.numero}, {dadosPDF?.endereco.bairro}, {dadosPDF?.endereco.cidade}
             </td>
           </tr>
           <tr style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>
             <td colSpan={3}>
               <strong>Possui Contrato </strong>
-              {Number(dadosCliente?.possuiContrato) === 1 ? 'Sim' : 'Não'}
+              {Number(dadosPDF?.client?.possuiContrato) === 1 ? 'Sim' : 'Não'}
             </td>
             <td>
               <strong>Tipo de Contrato: </strong>
-              {dadosCliente?.tipoContrato}
+              {dadosPDF?.client?.tipoContrato}
             </td>
           </tr>
         </tbody>

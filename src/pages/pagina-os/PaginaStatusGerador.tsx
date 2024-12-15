@@ -60,11 +60,10 @@ export const PaginaStatusGerador: React.FC = () => {
   //eslint-disable-next-line
   const submitFormHorimetro = (formDataHorimetro: any) => {
     try {
-      console.log(formDataHorimetro);
       if (DataEquipamento) {
         EquipamentosService.updateById(DataEquipamento!.id, {
           idCliente: DataEquipamento.idCliente,
-          equipamento: DataEquipamento.equipamento,
+          equipamento: {...DataEquipamento.equipamento},
           tipo: DataEquipamento.tipo,
           horimetro_atual: +(formDataHorimetro.horimetro_atual)
 
@@ -89,7 +88,7 @@ export const PaginaStatusGerador: React.FC = () => {
       if (DataEquipamento) {
         EquipamentosService.updateById(DataEquipamento!.id, {
           idCliente: DataEquipamento.idCliente,
-          equipamento: DataEquipamento.equipamento,
+          equipamento: {...DataEquipamento.equipamento},
           tipo: DataEquipamento.tipo,
           KWH_atual: +(formDataKWH.KWH_atual)
   

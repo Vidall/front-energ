@@ -12,7 +12,7 @@ import { Box, Button, Paper, Theme, useMediaQuery } from '@mui/material';
 import { EquipamentosService } from '../../shared/Service/api-TS/equipamentos/EquipamentosService';
 import { IEquipamento } from '../../shared/Service/api-TS/models/Equipamentos';
 
-export const PdfImagens: React.FC = () => {
+export const PdfImagensFinalizado: React.FC = () => {
   const [dadosPDF, setDadosPDF] = useState<IPDF>();
   const [dadosCliente, setDadosCliente] = useState<TPessoa | undefined>();
   const [dadosEquipamento, setDadosEquipamento] = useState<IEquipamento | undefined>();

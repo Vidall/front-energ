@@ -117,7 +117,7 @@ export const StartOS: React.FC = () => {
   };
 
   const handleClickPDF = () => {
-    navigate(`/ordens-de-servicos/pdf/${id}`);
+    navigate(`/ordens-de-servicos/pdf/finalizado/${id}`);
   };
 
   return (

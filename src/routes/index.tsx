@@ -14,6 +14,7 @@ import { PaginaPDF } from '../pages/pagina-PDF/PaginaPDF';
 import { PaginaAssinaturaCliente } from '../pages/pagina-os/paginaAssinaturaCliente';
 import { TelaLogin } from '../pages/pagina-login/TelaLogin';
 import PrivateRoute from './PrivateRoute';
+import { PaginaPdfFinalizado } from '../pages/pagina-PDF-finalizado/PaginaPdfFinalizado';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/ordens-de-servicos/detalhe/andamento/teste-gerador/:id" element={<PrivateRoute element={PaginaTesteGerador} />} />
       <Route path="/ordens-de-servicos/detalhe/andamento/assinatura-cliente/:id" element={<PrivateRoute element={PaginaAssinaturaCliente} />} />
       <Route path="/ordens-de-servicos/pdf/:id" element={<PrivateRoute element={PaginaPDF} />} />
+      <Route path="/ordens-de-servicos/pdf/finalizado/:id" element={<PrivateRoute element={PaginaPdfFinalizado} />} />
       <Route path="/clientes" element={<PrivateRoute element={PaginaCliente} />} />
       <Route path="/clientes/detalhe/:id" element={<PrivateRoute element={DetalhePessoa} />} />
       <Route path="/tecnicos" element={<PrivateRoute element={PaginaTecnico} />} />

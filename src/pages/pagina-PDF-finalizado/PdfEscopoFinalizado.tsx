@@ -12,14 +12,13 @@ import { Box, Button, Paper } from '@mui/material';
 import { EquipamentosService } from '../../shared/Service/api-TS/equipamentos/EquipamentosService';
 import { IEquipamento } from '../../shared/Service/api-TS/models/Equipamentos';
 
-export const PdfDemonstrativoMO: React.FC = () => {
+export const PdfEscopoFinalizado: React.FC = () => {
   const [dadosPDF, setDadosPDF] = useState<IPDF>();
   const [dadosCliente, setDadosCliente] = useState<TPessoa | undefined>();
   const [dadosEquipamento, setDadosEquipamento] = useState<IEquipamento | undefined>();
 
   const navigate = useNavigate();
   const { id } = useParams();
-
 
   useEffect(() => {
     OrdemServicoService.getPDF(Number(id))
@@ -39,38 +38,17 @@ export const PdfDemonstrativoMO: React.FC = () => {
       <table className="table table-bordered">
         <tbody>
           <tr className="table-dark">
-            <td colSpan={8} className="alignCenter" style={{ color: 'black' }}>
-              <strong>DEMONSTRATIVO DE MÃO DE OBRA</strong>
+            <td colSpan={8} className="alignCenter" style={{color: 'black'}}>
+              <strong>ESCOPO DOS SERVIÇOS</strong>
             </td>
+          </tr>
+          <tr>
+            <td>
+              {dadosPDF?.escopoDosServicos}                                                     
+            </td>
+
           </tr>
 
-          <tr
-            className="table-borderless"
-            style={{ fontSize: '10px', fontFamily: 'sans-serif', textAlign: 'center' }}
-          >
-            <td>
-              <strong>Data agendado</strong>
-            </td>
-            <td>
-              <strong>Hora Início Atividade</strong>
-            </td>
-            <td>
-              <strong>Hora Término Atividade</strong>
-            </td>
-          </tr>
-
-          <tr
-            className="table-borderless"
-            style={{ fontSize: '10px', fontFamily: 'sans-serif', textAlign: 'center' }}
-          >
-            <td style={{ verticalAlign: 'bottom' }}>{dadosPDF?.scheduledDate ? dadosPDF?.scheduledDate : 'Ainda não agendado'}</td>
-            <td style={{ verticalAlign: 'bottom' }}>
-              {dadosPDF?.workData.start ? dadosPDF?.workData.start : 'Ainda não iniciado'}
-            </td>
-            <td style={{ verticalAlign: 'bottom' }}>
-              {dadosPDF?.workData.end ? dadosPDF?.workData.end : 'Ainda não finalizado'}
-            </td>
-          </tr>
         </tbody>
       </table>
     </>

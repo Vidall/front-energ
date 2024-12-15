@@ -14,7 +14,7 @@ import { IEquipamento } from '../../shared/Service/api-TS/models/Equipamentos';
 import { ITecnico } from '../../shared/Service/api-TS/models/Tecnico';
 import { TecnicoService } from '../../shared/Service/api-TS/tecnicos/TecnicoService';
 
-export const PdfFinalizacao: React.FC = () => {
+export const PdfFinalizacaoFinalizado: React.FC = () => {
   const [dadosPDF, setDadosPDF] = useState<IPDF>();
   const [dadosTecnico, setDadosTecnico] = useState<ITecnico>();
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));

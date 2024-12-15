@@ -1,8 +1,9 @@
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import { Environment } from '../../../Enviroment';
 import { ApiOS } from '../axios-config';
 import { IGrupoServicosCreated, IGruposServicosComTotal, IServiceComTotalCount, IServices } from '../models/GruposServicos';
 import { ICountOS, IGetByIdOrdemStart, IOrdemComTotalCount, IOrdemFinalizacao, IOs, IOsFinalizada, IPDF, IReturnGetAllOs, ISendAssinaturaCliente, IService, IServiceInOrder, IStatusGerador, ITesteGerador } from '../models/OrdemServico';
+import { url } from 'inspector';
 
 const create = async (servico: IOs): Promise<IOs | Error> => {
   try {
